@@ -12,7 +12,7 @@ func resourceServer() *schema.Resource {
     Delete: resourceServerDelete,
 
     Schema: map[string]*schema.Schema{
-      "address": &schema.Schema{
+        "address": &schema.Schema{
         Type:     schema.TypeString,
         Required: true,
         },
@@ -29,6 +29,21 @@ func resourceServerCreate(d *schema.ResourceData, m interface{}) error {
 
 func resourceServerRead(d *schema.ResourceData, m interface{}) error {
   //Here will be implemented the GET REST call
+
+  //Example :
+  //client := m.(*MyClient)
+
+  // Attempt to read from an upstream API
+  //obj, ok := client.Get(d.Id())
+
+  // If the resource does not exist, inform Terraform. We want to immediately
+  // return here to prevent further processing.
+  //if !ok {
+  //  d.SetId("")
+  //  return nil
+  //}
+
+  //d.Set("address", obj.Address)
   return nil
 }
 
@@ -39,5 +54,6 @@ func resourceServerUpdate(d *schema.ResourceData, m interface{}) error {
 
 func resourceServerDelete(d *schema.ResourceData, m interface{}) error {
   //Here will be implemented the DELETE REST call
+  d.SetId("")
   return nil
 }

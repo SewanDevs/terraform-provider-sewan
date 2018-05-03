@@ -33,4 +33,4 @@ website/vendor
 !command/test-fixtures/**/.terraform/
 
 # sewan provider binary
-terraform-provider-sewan
+*terraform-provider-sewan

@@ -1,0 +1,19 @@
+*WARNING : This page is uncomplete, for now, a work-around is used with deprecated postman interceptor chrome addon coupled with deprecated postman chrome extension *
+# Required tools
+* postman google app : https://www.getpostman.com/
+* firefox : https://www.mozilla.org/en-US/
+
+# Intercept web client airdrum API calls
+1. Create a new profile of firefox (name it "proxy") :
+```
+    $ firefox --ProfileManager # it opens the firefox profile manager
+
+    $ firefox -P proxy # it starts the firefox instance named "proxy"
+```
+* Set up a proxy to firefox : option/advanced/network/connection settings/manual proxy config/
+
+  enter your ip address + port 5555 as HTTP proxy
+* With firefox proxy instance : login to the airdrum web client with the admin account
+(contact a sysadmin to get the admin password):
+https://next.cloud-datacenter.fr/fr/enterprise/sewan-rd-cloud-beta/dashboard?username=admin%40SewanRDCloudBta&password=< add the password here >
+* Start interception by creating a proxy with postman, on default port 5555 : https://www.getpostman.com/docs/v6/postman/sending_api_requests/capturing_http_requests

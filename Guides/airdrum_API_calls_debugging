@@ -17,3 +17,6 @@
 (contact a sysadmin to get the admin password):
 https://next.cloud-datacenter.fr/fr/enterprise/sewan-rd-cloud-beta/dashboard?username=admin%40SewanRDCloudBta&password=< add the password here >
 * Start interception by creating a proxy with postman, on default port 5555 : https://www.getpostman.com/docs/v6/postman/sending_api_requests/capturing_http_requests
+
+#OR
+google-chrome --proxy-server="127.0.0.1:5555"

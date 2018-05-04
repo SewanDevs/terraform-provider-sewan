@@ -1,8 +1,11 @@
-package main
+package sewan
 
 import (
   "github.com/hashicorp/terraform/helper/schema"
+  //"terraform-poc/terraform-provider-sewan/httpReqBuilder"
 )
+
+// Create an HTTP client instance
 
 func resourceServer() *schema.Resource {
   return &schema.Resource{

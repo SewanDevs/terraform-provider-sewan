@@ -6,6 +6,7 @@
 # Docs sources
 * https://www.terraform.io/docs/extend/writing-custom-providers.html
 * terraform provider plugin example : https://github.com/terraform-providers/terraform-provider-aws
+* write terraform plugin tutorial : http://container-solutions.com/write-terraform-provider-part-1/
 
 #  Technicals prerequisites :
 * learn golang :

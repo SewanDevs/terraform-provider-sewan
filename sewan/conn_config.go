@@ -1,4 +1,4 @@
-package httpReqBuilder
+package sewan
 
 func getConnToken() string {
   var token string

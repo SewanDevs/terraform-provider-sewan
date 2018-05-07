@@ -11,6 +11,7 @@ func Provider() *schema.Provider {
 			"sewan_serverVM": resourceVM(),
 			"sewan_clientVM": resourceVM(),
 		},
+		ConfigureFunc: providerConfigure,
 	}
 }
 

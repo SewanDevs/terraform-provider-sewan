@@ -32,7 +32,7 @@ func resourceVM() *schema.Resource {
   }
 }
 
-type Machine struct {
+type VM struct {
 	Name string
   Address string
   CPUs int
@@ -46,34 +46,34 @@ type AirDrumClient struct {
 	MaxRetries int
 }
 
-func Configure(d *schema.ResourceData) (interface{}, error) {
-	Client := AirdrumClient{
+func providerConfigure(d *schema.ResourceData) (interface{}, error) {
+	SewanClient := AirDrumClient{
 		ApiToken:   d.Get("api_key").(string),
 		Endpoint:   d.Get("endpoint").(string),
 		Timeout:    d.Get("timeout").(int),
 		MaxRetries: d.Get("max_retries").(int),
-	}
-  // Validate here the api token has not expired
-	return &Client, nil
+  }
+
+	return &SewanClient, nil
 }
 
 func resourceVMCreate(d *schema.ResourceData, m interface{}) error {
 
-  //sewanClient := m.(*MyClient)
+  //sewanClient := m.(*sewanClient)
 
-  machine := Machine{
+  VMInstance := VM{
 		Name: d.Get("name").(string),
     Address: d.Get("address").(string),
     CPUs: d.Get("cpus").(int),
 		RAM:  d.Get("ram").(int),
 	}
 
-  //err := client.CreateMachine(&machine)
+  //err := SewanClient.CreateMachine(&VMInstance)
   //if err != nil {
   //  return err
   //}
 
-  d.SetId(machine.Name)
+  d.SetId(VMInstance.Name)
 
   return nil
 }

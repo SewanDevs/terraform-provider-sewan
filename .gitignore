@@ -34,3 +34,6 @@ website/vendor
 
 # sewan provider binary
 *terraform-provider-sewan
+
+# logs folder
+logs/

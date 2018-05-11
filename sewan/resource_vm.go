@@ -89,7 +89,7 @@ func resourceVMCreate(d *schema.ResourceData, m interface{}) error {
 	var requestBody bytes.Buffer
 	var responseBody string
 	client := &http.Client{}
-	logger := loggerCreate("resourceVMCreate.log")
+	logger := loggerCreate("resourceVMCreate_" + VMInstance.Vdc + "_" + VMInstance.Name + ".log")
 
 	// NB : The following 2 vars will be deleted when the provider config will be handled
 	var dest string
@@ -122,6 +122,9 @@ func resourceVMCreate(d *schema.ResourceData, m interface{}) error {
 	req.Header.Add("Accept-Encoding", "gzip, deflate, br")
 	req.Header.Add("Accept-Language", "fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7")
 
+	logger.Println("Creation of ", VMInstance.Name, "request Header = ", req.Header)
+	logger.Println("Creation of ", VMInstance.Name, "request body = ", req.Body)
+
 	resp, create_err := client.Do(req)
 	defer resp.Body.Close()
 
@@ -138,8 +141,6 @@ func resourceVMCreate(d *schema.ResourceData, m interface{}) error {
 		logger.Println("Creation of ", VMInstance.Name, " response body read error ", create_resp_body_read_err)
 	}
 
-	logger.Println("Creation of ", VMInstance.Name, "request Header = ", req.Header)
-	logger.Println("Creation of ", VMInstance.Name, "request body = ", req.Body)
 	logger.Println("Creation of ", VMInstance.Name, " response status = ", resp.Status)
 	logger.Println("Creation of ", VMInstance.Name, " response body = ", responseBody)
 

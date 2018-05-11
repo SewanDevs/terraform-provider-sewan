@@ -11,18 +11,17 @@ func Provider() *schema.Provider {
 			"sewan_serverVM": resourceVM(),
 			"sewan_clientVM": resourceVM(),
 		},
-		//ConfigureFunc: providerConfigure,
 	}
 }
 
 func providerSchema() map[string]*schema.Schema {
 	return map[string]*schema.Schema{
-		"api_token": &schema.Schema{
+		"air_drum_token": &schema.Schema{
 			Type:        schema.TypeString,
 			Required:    true,
 			Description: "Airdrum session token",
 		},
-		"endpoint": &schema.Schema{
+		"air_drum_url": &schema.Schema{
 			Type:        schema.TypeString,
 			Required:    true,
 			Description: "Airdrum API's URL",

@@ -1,0 +1,117 @@
+Sewan Provider Log : 2018/05/11 14:22:11 resource_vm.go:108: Test println in file and in console
+Sewan Provider Log : 2018/05/11 14:22:11 resource_vm.go:108: Test println in file and in console
+Sewan Provider Log : 2018/05/11 14:22:11 resource_vm.go:108: Test println in file and in console
+Sewan Provider Log : 2018/05/11 14:24:15 resource_vm.go:108: Test println in file and in console
+Sewan Provider Log : 2018/05/11 14:24:15 resource_vm.go:142: req Header =  map[Origin:[https://next.cloud-datacenter.fr] User-Agent:[Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36] Accept:[*/*] Accept-Encoding:[gzip, deflate, br] Accept-Language:[fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7] Host:[next.cloud-datacenter.fr] Connection:[keep-alive] Authorization:[Token 53278f61bad8d42ecb75cff430427747794cc4dd] Content-Type:[application/json] Referer:[https://next.cloud-datacenter.fr/fr/datacenter/enterprise/sewan-rd-cloud-beta/vdc/view/sewan-rd-cloud-beta-dc1-terraf/vm/create]]
+Sewan Provider Log : 2018/05/11 14:24:15 resource_vm.go:143: 
+
+Sewan Provider Log : 2018/05/11 14:24:15 resource_vm.go:144: req body =  {{"name":"client1","vdc":"sewan-rd-cloud-beta-dc1-terraf","ram":1,"cpu":1,"disk_image":"nil","boot":"on disk","template":"centos7-rd-dc1","vdc_resource_disk":"sewan-rd-cloud-beta-dc1-terraf-sewan-rd-cloud-beta-mono-storage_enterprise","backup":"backup-no-backup"}}
+Sewan Provider Log : 2018/05/11 14:24:15 resource_vm.go:145: 
+
+Sewan Provider Log : 2018/05/11 14:24:15 resource_vm.go:148: ---------------
+Sewan Provider Log : 2018/05/11 14:24:15 resource_vm.go:149: 
+
+Sewan Provider Log : 2018/05/11 14:24:15 resource_vm.go:108: Test println in file and in console
+Sewan Provider Log : 2018/05/11 14:24:15 resource_vm.go:142: req Header =  map[Referer:[https://next.cloud-datacenter.fr/fr/datacenter/enterprise/sewan-rd-cloud-beta/vdc/view/sewan-rd-cloud-beta-dc1-terraf/vm/create] Host:[next.cloud-datacenter.fr] Authorization:[Token 53278f61bad8d42ecb75cff430427747794cc4dd] Origin:[https://next.cloud-datacenter.fr] Accept:[*/*] Accept-Language:[fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7] Connection:[keep-alive] User-Agent:[Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36] Content-Type:[application/json] Accept-Encoding:[gzip, deflate, br]]
+Sewan Provider Log : 2018/05/11 14:24:15 resource_vm.go:143: 
+
+Sewan Provider Log : 2018/05/11 14:24:15 resource_vm.go:144: req body =  {{"name":"skeleton-server","vdc":"sewan-rd-cloud-beta-dc1-terraf","ram":2,"cpu":2,"disk_image":"nil","boot":"on disk","template":"centos7-rd-dc1","vdc_resource_disk":"sewan-rd-cloud-beta-dc1-terraf-sewan-rd-cloud-beta-mono-storage_enterprise","backup":"backup-no-backup"}}
+Sewan Provider Log : 2018/05/11 14:24:15 resource_vm.go:145: 
+
+Sewan Provider Log : 2018/05/11 14:24:15 resource_vm.go:148: ---------------
+Sewan Provider Log : 2018/05/11 14:24:15 resource_vm.go:149: 
+
+Sewan Provider Log : 2018/05/11 14:24:15 resource_vm.go:108: Test println in file and in console
+Sewan Provider Log : 2018/05/11 14:24:15 resource_vm.go:142: req Header =  map[Referer:[https://next.cloud-datacenter.fr/fr/datacenter/enterprise/sewan-rd-cloud-beta/vdc/view/sewan-rd-cloud-beta-dc1-terraf/vm/create] Accept-Encoding:[gzip, deflate, br] Connection:[keep-alive] Authorization:[Token 53278f61bad8d42ecb75cff430427747794cc4dd] User-Agent:[Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36] Accept:[*/*] Host:[next.cloud-datacenter.fr] Origin:[https://next.cloud-datacenter.fr] Content-Type:[application/json] Accept-Language:[fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7]]
+Sewan Provider Log : 2018/05/11 14:24:15 resource_vm.go:143: 
+
+Sewan Provider Log : 2018/05/11 14:24:15 resource_vm.go:144: req body =  {{"name":"client2","vdc":"sewan-rd-cloud-beta-dc1-terraf","ram":1,"cpu":1,"disk_image":"nil","boot":"on disk","template":"centos7-rd-dc1","vdc_resource_disk":"sewan-rd-cloud-beta-dc1-terraf-sewan-rd-cloud-beta-mono-storage_enterprise","backup":"backup-no-backup"}}
+Sewan Provider Log : 2018/05/11 14:24:15 resource_vm.go:145: 
+
+Sewan Provider Log : 2018/05/11 14:24:15 resource_vm.go:148: ---------------
+Sewan Provider Log : 2018/05/11 14:24:15 resource_vm.go:149: 
+
+Sewan Provider Log : 2018/05/11 14:24:15 resource_vm.go:166: resp status =  400 Bad Request
+Sewan Provider Log : 2018/05/11 14:24:15 resource_vm.go:167: 
+
+Sewan Provider Log : 2018/05/11 14:24:15 resource_vm.go:168: resp code statut =  400
+Sewan Provider Log : 2018/05/11 14:24:15 resource_vm.go:169: 
+
+Sewan Provider Log : 2018/05/11 14:24:15 resource_vm.go:170: resp body =  {"disk_image":["L'object avec slug=nil n'existe pas."]}
+Sewan Provider Log : 2018/05/11 14:24:15 resource_vm.go:166: resp status =  400 Bad Request
+Sewan Provider Log : 2018/05/11 14:24:15 resource_vm.go:167: 
+
+Sewan Provider Log : 2018/05/11 14:24:15 resource_vm.go:168: resp code statut =  400
+Sewan Provider Log : 2018/05/11 14:24:15 resource_vm.go:169: 
+
+Sewan Provider Log : 2018/05/11 14:24:15 resource_vm.go:170: resp body =  {"disk_image":["L'object avec slug=nil n'existe pas."]}
+Sewan Provider Log : 2018/05/11 14:24:15 resource_vm.go:166: resp status =  400 Bad Request
+Sewan Provider Log : 2018/05/11 14:24:15 resource_vm.go:167: 
+
+Sewan Provider Log : 2018/05/11 14:24:15 resource_vm.go:168: resp code statut =  400
+Sewan Provider Log : 2018/05/11 14:24:15 resource_vm.go:169: 
+
+Sewan Provider Log : 2018/05/11 14:24:15 resource_vm.go:170: resp body =  {"disk_image":["L'object avec slug=nil n'existe pas."]}
+Sewan Provider Log : 2018/05/11 14:32:51 resource_vm.go:108: Test println in file and in console
+Sewan Provider Log : 2018/05/11 14:32:51 resource_vm.go:108: Test println in file and in console
+Sewan Provider Log : 2018/05/11 14:32:51 resource_vm.go:142: req Header =  map[Connection:[keep-alive] Authorization:[Token 53278f61bad8d42ecb75cff430427747794cc4dd] Origin:[https://next.cloud-datacenter.fr] User-Agent:[Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36] Accept:[*/*] Accept-Encoding:[gzip, deflate, br] Host:[next.cloud-datacenter.fr] Content-Type:[application/json] Referer:[https://next.cloud-datacenter.fr/fr/datacenter/enterprise/sewan-rd-cloud-beta/vdc/view/sewan-rd-cloud-beta-dc1-terraf/vm/create] Accept-Language:[fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7]]
+Sewan Provider Log : 2018/05/11 14:32:51 resource_vm.go:143: 
+
+Sewan Provider Log : 2018/05/11 14:32:51 resource_vm.go:144: req body =  {{"name":"skeleton-server","vdc":"sewan-rd-cloud-beta-dc1-terraf","ram":2,"cpu":2,"disk_image":"","boot":"on disk","template":"centos7-rd-dc1","vdc_resource_disk":"sewan-rd-cloud-beta-dc1-terraf-sewan-rd-cloud-beta-mono-storage_enterprise","backup":"backup-no-backup"}}
+Sewan Provider Log : 2018/05/11 14:32:51 resource_vm.go:145: 
+
+Sewan Provider Log : 2018/05/11 14:32:51 resource_vm.go:148: ---------------
+Sewan Provider Log : 2018/05/11 14:32:51 resource_vm.go:149: 
+
+Sewan Provider Log : 2018/05/11 14:32:51 resource_vm.go:142: req Header =  map[Host:[next.cloud-datacenter.fr] Accept:[*/*] Referer:[https://next.cloud-datacenter.fr/fr/datacenter/enterprise/sewan-rd-cloud-beta/vdc/view/sewan-rd-cloud-beta-dc1-terraf/vm/create] Accept-Language:[fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7] Connection:[keep-alive] Authorization:[Token 53278f61bad8d42ecb75cff430427747794cc4dd] Origin:[https://next.cloud-datacenter.fr] User-Agent:[Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36] Content-Type:[application/json] Accept-Encoding:[gzip, deflate, br]]
+Sewan Provider Log : 2018/05/11 14:32:51 resource_vm.go:143: 
+
+Sewan Provider Log : 2018/05/11 14:32:51 resource_vm.go:144: req body =  {{"name":"client1","vdc":"sewan-rd-cloud-beta-dc1-terraf","ram":1,"cpu":1,"disk_image":"","boot":"on disk","template":"centos7-rd-dc1","vdc_resource_disk":"sewan-rd-cloud-beta-dc1-terraf-sewan-rd-cloud-beta-mono-storage_enterprise","backup":"backup-no-backup"}}
+Sewan Provider Log : 2018/05/11 14:32:51 resource_vm.go:145: 
+
+Sewan Provider Log : 2018/05/11 14:32:51 resource_vm.go:148: ---------------
+Sewan Provider Log : 2018/05/11 14:32:51 resource_vm.go:149: 
+
+Sewan Provider Log : 2018/05/11 14:32:51 resource_vm.go:108: Test println in file and in console
+Sewan Provider Log : 2018/05/11 14:32:51 resource_vm.go:142: req Header =  map[Host:[next.cloud-datacenter.fr] User-Agent:[Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36] Content-Type:[application/json] Accept-Language:[fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7] Accept-Encoding:[gzip, deflate, br] Connection:[keep-alive] Authorization:[Token 53278f61bad8d42ecb75cff430427747794cc4dd] Origin:[https://next.cloud-datacenter.fr] Accept:[*/*] Referer:[https://next.cloud-datacenter.fr/fr/datacenter/enterprise/sewan-rd-cloud-beta/vdc/view/sewan-rd-cloud-beta-dc1-terraf/vm/create]]
+Sewan Provider Log : 2018/05/11 14:32:51 resource_vm.go:143: 
+
+Sewan Provider Log : 2018/05/11 14:32:51 resource_vm.go:144: req body =  {{"name":"client2","vdc":"sewan-rd-cloud-beta-dc1-terraf","ram":1,"cpu":1,"disk_image":"","boot":"on disk","template":"centos7-rd-dc1","vdc_resource_disk":"sewan-rd-cloud-beta-dc1-terraf-sewan-rd-cloud-beta-mono-storage_enterprise","backup":"backup-no-backup"}}
+Sewan Provider Log : 2018/05/11 14:32:51 resource_vm.go:145: 
+
+Sewan Provider Log : 2018/05/11 14:32:51 resource_vm.go:148: ---------------
+Sewan Provider Log : 2018/05/11 14:32:51 resource_vm.go:149: 
+
+Sewan Provider Log : 2018/05/11 14:32:51 resource_vm.go:166: resp status =  201 Created
+Sewan Provider Log : 2018/05/11 14:32:51 resource_vm.go:167: 
+
+Sewan Provider Log : 2018/05/11 14:32:51 resource_vm.go:168: resp code statut =  201
+Sewan Provider Log : 2018/05/11 14:32:51 resource_vm.go:169: 
+
+Sewan Provider Log : 2018/05/11 14:32:51 resource_vm.go:170: resp body =  {"id":1040,"name":"client2","slug":"sewan-rd-cloud-beta-dc1-terraf-client2","vdc":"sewan-rd-cloud-beta-dc1-terraf","ram":1,"cpu":1,"state":"LOCKED","disks":[{"name":"disk-centos7-rd-DC1-1","size":20,"v_disk":"sewan-rd-cloud-beta-dc1-terraf-sewan-rd-cloud-beta-mono-storage_enterprise","slug":"sewan-rd-cloud-beta-dc1-terraf-client2-disk-centos7-rd-dc1-1"}],"os":"CentOS","nics":[],"token":null,"platform_name":"clouddcnext-client2","backup":"backup-no-backup","disk_image":null,"boot":"on disk","backup_size":0,"comment":null,"outsourcing":null,"dynamic_field":null}
+Sewan Provider Log : 2018/05/11 14:32:51 resource_vm.go:166: resp status =  201 Created
+Sewan Provider Log : 2018/05/11 14:32:51 resource_vm.go:167: 
+
+Sewan Provider Log : 2018/05/11 14:32:51 resource_vm.go:168: resp code statut =  201
+Sewan Provider Log : 2018/05/11 14:32:51 resource_vm.go:169: 
+
+Sewan Provider Log : 2018/05/11 14:32:51 resource_vm.go:170: resp body =  {"id":1039,"name":"client1","slug":"sewan-rd-cloud-beta-dc1-terraf-client1","vdc":"sewan-rd-cloud-beta-dc1-terraf","ram":1,"cpu":1,"state":"LOCKED","disks":[{"name":"disk-centos7-rd-DC1-1","size":20,"v_disk":"sewan-rd-cloud-beta-dc1-terraf-sewan-rd-cloud-beta-mono-storage_enterprise","slug":"sewan-rd-cloud-beta-dc1-terraf-client1-disk-centos7-rd-dc1-1"}],"os":"CentOS","nics":[],"token":null,"platform_name":"clouddcnext-client1","backup":"backup-no-backup","disk_image":null,"boot":"on disk","backup_size":0,"comment":null,"outsourcing":null,"dynamic_field":null}
+Sewan Provider Log : 2018/05/11 14:32:51 resource_vm.go:166: resp status =  201 Created
+Sewan Provider Log : 2018/05/11 14:32:51 resource_vm.go:167: 
+
+Sewan Provider Log : 2018/05/11 14:32:51 resource_vm.go:168: resp code statut =  201
+Sewan Provider Log : 2018/05/11 14:32:51 resource_vm.go:169: 
+
+Sewan Provider Log : 2018/05/11 14:32:51 resource_vm.go:170: resp body =  {"id":1041,"name":"skeleton-server","slug":"sewan-rd-cloud-beta-dc1-terraf-skeleton-server","vdc":"sewan-rd-cloud-beta-dc1-terraf","ram":2,"cpu":2,"state":"LOCKED","disks":[{"name":"disk-centos7-rd-DC1-1","size":20,"v_disk":"sewan-rd-cloud-beta-dc1-terraf-sewan-rd-cloud-beta-mono-storage_enterprise","slug":"sewan-rd-cloud-beta-dc1-terraf-skeleton-server-disk-centos7-rd-dc1-1"}],"os":"CentOS","nics":[],"token":null,"platform_name":"clouddcnext-skeleton-server","backup":"backup-no-backup","disk_image":null,"boot":"on disk","backup_size":0,"comment":null,"outsourcing":null,"dynamic_field":null}
+Sewan Provider Log : 2018/05/11 14:58:49 Creation of  client1 request Header =  map[Accept:[*/*] Referer:[https://next.cloud-datacenter.fr/fr/datacenter/enterprise/sewan-rd-cloud-beta/vdc/view/sewan-rd-cloud-beta-dc1-terraf/vm/create] Host:[next.cloud-datacenter.fr] Connection:[keep-alive] Authorization:[Token 53278f61bad8d42ecb75cff430427747794cc4dd] Origin:[https://next.cloud-datacenter.fr] User-Agent:[Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36] Content-Type:[application/json] Accept-Encoding:[gzip, deflate, br] Accept-Language:[fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7]]
+Sewan Provider Log : 2018/05/11 14:58:49 Creation of  client1 request body =  {{"name":"client1","vdc":"sewan-rd-cloud-beta-dc1-terraf","ram":1,"cpu":1,"disk_image":"","boot":"on disk","template":"centos7-rd-dc1","vdc_resource_disk":"sewan-rd-cloud-beta-dc1-terraf-sewan-rd-cloud-beta-mono-storage_enterprise","backup":"backup-no-backup"}}
+Sewan Provider Log : 2018/05/11 14:58:49 Creation of  skeleton-server request Header =  map[Host:[next.cloud-datacenter.fr] User-Agent:[Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36] Content-Type:[application/json] Referer:[https://next.cloud-datacenter.fr/fr/datacenter/enterprise/sewan-rd-cloud-beta/vdc/view/sewan-rd-cloud-beta-dc1-terraf/vm/create] Accept-Language:[fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7] Connection:[keep-alive] Authorization:[Token 53278f61bad8d42ecb75cff430427747794cc4dd] Origin:[https://next.cloud-datacenter.fr] Accept:[*/*] Accept-Encoding:[gzip, deflate, br]]
+Sewan Provider Log : 2018/05/11 14:58:49 Creation of  skeleton-server request body =  {{"name":"skeleton-server","vdc":"sewan-rd-cloud-beta-dc1-terraf","ram":2,"cpu":2,"disk_image":"","boot":"on disk","template":"centos7-rd-dc1","vdc_resource_disk":"sewan-rd-cloud-beta-dc1-terraf-sewan-rd-cloud-beta-mono-storage_enterprise","backup":"backup-no-backup"}}
+Sewan Provider Log : 2018/05/11 14:58:49 Creation of  client2 request Header =  map[User-Agent:[Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/66.0.3359.139 Safari/537.36] Accept:[*/*] Accept-Encoding:[gzip, deflate, br] Accept-Language:[fr-FR,fr;q=0.9,en-US;q=0.8,en;q=0.7] Connection:[keep-alive] Authorization:[Token 53278f61bad8d42ecb75cff430427747794cc4dd] Origin:[https://next.cloud-datacenter.fr] Content-Type:[application/json] Referer:[https://next.cloud-datacenter.fr/fr/datacenter/enterprise/sewan-rd-cloud-beta/vdc/view/sewan-rd-cloud-beta-dc1-terraf/vm/create] Host:[next.cloud-datacenter.fr]]
+Sewan Provider Log : 2018/05/11 14:58:49 Creation of  client2 request body =  {{"name":"client2","vdc":"sewan-rd-cloud-beta-dc1-terraf","ram":1,"cpu":1,"disk_image":"","boot":"on disk","template":"centos7-rd-dc1","vdc_resource_disk":"sewan-rd-cloud-beta-dc1-terraf-sewan-rd-cloud-beta-mono-storage_enterprise","backup":"backup-no-backup"}}
+Sewan Provider Log : 2018/05/11 14:58:50 Creation of  client1  response status =  201 Created
+Sewan Provider Log : 2018/05/11 14:58:50 Creation of  client1  response body =  {"id":1042,"name":"client1","slug":"sewan-rd-cloud-beta-dc1-terraf-client1","vdc":"sewan-rd-cloud-beta-dc1-terraf","ram":1,"cpu":1,"state":"LOCKED","disks":[{"name":"disk-centos7-rd-DC1-1","size":20,"v_disk":"sewan-rd-cloud-beta-dc1-terraf-sewan-rd-cloud-beta-mono-storage_enterprise","slug":"sewan-rd-cloud-beta-dc1-terraf-client1-disk-centos7-rd-dc1-1"}],"os":"CentOS","nics":[],"token":null,"platform_name":"clouddcnext-client1","backup":"backup-no-backup","disk_image":null,"boot":"on disk","backup_size":0,"comment":null,"outsourcing":null,"dynamic_field":null}
+Sewan Provider Log : 2018/05/11 14:58:50 Creation of  client2  response status =  201 Created
+Sewan Provider Log : 2018/05/11 14:58:50 Creation of  client2  response body =  {"id":1043,"name":"client2","slug":"sewan-rd-cloud-beta-dc1-terraf-client2","vdc":"sewan-rd-cloud-beta-dc1-terraf","ram":1,"cpu":1,"state":"LOCKED","disks":[{"name":"disk-centos7-rd-DC1-1","size":20,"v_disk":"sewan-rd-cloud-beta-dc1-terraf-sewan-rd-cloud-beta-mono-storage_enterprise","slug":"sewan-rd-cloud-beta-dc1-terraf-client2-disk-centos7-rd-dc1-1"}],"os":"CentOS","nics":[],"token":null,"platform_name":"clouddcnext-client2","backup":"backup-no-backup","disk_image":null,"boot":"on disk","backup_size":0,"comment":null,"outsourcing":null,"dynamic_field":null}
+Sewan Provider Log : 2018/05/11 14:58:50 Creation of  skeleton-server  response status =  201 Created
+Sewan Provider Log : 2018/05/11 14:58:50 Creation of  skeleton-server  response body =  {"id":1044,"name":"skeleton-server","slug":"sewan-rd-cloud-beta-dc1-terraf-skeleton-server","vdc":"sewan-rd-cloud-beta-dc1-terraf","ram":2,"cpu":2,"state":"LOCKED","disks":[{"name":"disk-centos7-rd-DC1-1","size":20,"v_disk":"sewan-rd-cloud-beta-dc1-terraf-sewan-rd-cloud-beta-mono-storage_enterprise","slug":"sewan-rd-cloud-beta-dc1-terraf-skeleton-server-disk-centos7-rd-dc1-1"}],"os":"CentOS","nics":[],"token":null,"platform_name":"clouddcnext-skeleton-server","backup":"backup-no-backup","disk_image":null,"boot":"on disk","backup_size":0,"comment":null,"outsourcing":null,"dynamic_field":null}

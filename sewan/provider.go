@@ -36,5 +36,10 @@ func providerSchema() map[string]*schema.Schema {
 			Required:    true,
 			Description: "Max times a connection will be retry.",
 		},
+		/*"logFolderPath": &schema.Schema{
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "Provider logs folder.",
+		},*/
 	}
 }

@@ -9,4 +9,5 @@ type AirDrumConfig struct {
   AirDrumURL string
   Timeout int
   Max_retries int
+	/*LogFolderPath string*/
 }

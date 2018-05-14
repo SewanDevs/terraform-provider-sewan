@@ -3,10 +3,11 @@ provider "sewan" {
   air_drum_url = "https://next.cloud-datacenter.fr/api/clouddc/vm/"
   timeout = 20
   max_retries = 3
+  /*logFolderPath = "logs"*/
 }
 
 resource "sewan_serverVM" "skeleton-server" {
-  name = "skeleton-server"
+  name = "skeleton-serverA"
   vdc = "sewan-rd-cloud-beta-dc1-terraf"
   ram  = "2"
   cpu = "2"
@@ -18,7 +19,7 @@ resource "sewan_serverVM" "skeleton-server" {
 }
 
 resource "sewan_clientVM" "skeleton-client1" {
-  name = "client1"
+  name = "client1A"
   vdc = "sewan-rd-cloud-beta-dc1-terraf"
   ram  = "1"
   cpu = "1"
@@ -30,7 +31,7 @@ resource "sewan_clientVM" "skeleton-client1" {
 }
 
 resource "sewan_clientVM" "skeleton-client2" {
-  name = "client2"
+  name = "client2A"
   vdc = "sewan-rd-cloud-beta-dc1-terraf"
   ram  = "1"
   cpu = "1"

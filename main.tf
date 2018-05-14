@@ -7,7 +7,7 @@ provider "sewan" {
 }
 
 resource "sewan_serverVM" "skeleton-server" {
-  name = "skeleton-serverA"
+  name = "skeleton-server"
   vdc = "sewan-rd-cloud-beta-dc1-terraf"
   ram  = "2"
   cpu = "2"
@@ -19,7 +19,7 @@ resource "sewan_serverVM" "skeleton-server" {
 }
 
 resource "sewan_clientVM" "skeleton-client1" {
-  name = "client1A"
+  name = "client1"
   vdc = "sewan-rd-cloud-beta-dc1-terraf"
   ram  = "1"
   cpu = "1"
@@ -31,7 +31,7 @@ resource "sewan_clientVM" "skeleton-client1" {
 }
 
 resource "sewan_clientVM" "skeleton-client2" {
-  name = "client2A"
+  name = "client2"
   vdc = "sewan-rd-cloud-beta-dc1-terraf"
   ram  = "1"
   cpu = "1"

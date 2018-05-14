@@ -5,6 +5,7 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 	"net/http"
 	"io/ioutil"
+	"errors"
 )
 
 func resourceVM() *schema.Resource {
@@ -90,6 +91,9 @@ func resourceVMCreate(d *schema.ResourceData, m interface{}) error {
 	var responseBody string
 	client := &http.Client{}
 	logger := loggerCreate("resourceVMCreate_" + VMInstance.Vdc + "_" + VMInstance.Name + ".log")
+	var returnError error
+	returnError = nil
+	const ResourceCreationHTTPSuccessCode = 201
 
 	// NB : The following 2 vars will be deleted when the provider config will be handled
 	var dest string
@@ -107,7 +111,7 @@ func resourceVMCreate(d *schema.ResourceData, m interface{}) error {
 	requestBody.WriteString("\"backup\":\"" + VMInstance.Backup + "\"}")
 
 	dest = "https://next.cloud-datacenter.fr/api/clouddc/vm/"
-	argToken = "53278f61bad8d42ecb75cff430427747794cc4dd"
+	argToken = "1da20f2c4aca833d0b67c7538ba3e8c3cd5b73fa"
 
 	req, _ := http.NewRequest("POST", dest, &requestBody)
 
@@ -144,7 +148,11 @@ func resourceVMCreate(d *schema.ResourceData, m interface{}) error {
 	logger.Println("Creation of ", VMInstance.Name, " response status = ", resp.Status)
 	logger.Println("Creation of ", VMInstance.Name, " response body = ", responseBody)
 
-	return nil
+	if resp.StatusCode != ResourceCreationHTTPSuccessCode {
+		logger.Println("returnError = ", resp.Status, responseBody)
+		returnError = errors.New(resp.Status + responseBody)
+	}
+	return returnError
 }
 
 func resourceVMRead(d *schema.ResourceData, m interface{}) error {

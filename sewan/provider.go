@@ -26,20 +26,5 @@ func providerSchema() map[string]*schema.Schema {
 			Required:    true,
 			Description: "Airdrum API's URL",
 		},
-		"timeout": &schema.Schema{
-			Type:        schema.TypeInt,
-			Required:    true,
-			Description: "session's timeout",
-		},
-		"max_retries": &schema.Schema{
-			Type:        schema.TypeInt,
-			Required:    true,
-			Description: "Max times a connection will be retry.",
-		},
-		/*"logFolderPath": &schema.Schema{
-			Type:        schema.TypeString,
-			Required:    true,
-			Description: "Provider logs folder.",
-		},*/
 	}
 }

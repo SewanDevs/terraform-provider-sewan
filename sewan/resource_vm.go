@@ -1,10 +1,10 @@
 package sewan
 
 import (
-	"github.com/hashicorp/terraform/helper/schema"
 	"bytes"
 	"encoding/json"
 	"errors"
+	"github.com/hashicorp/terraform/helper/schema"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -12,13 +12,14 @@ import (
 )
 
 const RESOURCE_CREATE_HTTP_SUCCESS_CODE = 201
+const RESOURCE_UPDATE_HTTP_SUCCESS_CODE = 200
 const RESOURCE_DELETE_HTTP_SUCCESS_CODE = 200
 const RESOURCE_GET_HTTP_SUCCESS_CODE = 200
 const RESOURCE_GET_HTTP_NOT_FOUND_CODE = 404
 
 // NB : The following 2 vars will be deleted when the provider config will be handled
 const DEST_REQ_URL = "https://next.cloud-datacenter.fr/api/clouddc/vm/"
-const CONN_TOKEN = "17f061821bac9e12f9a2ded3928e624ae7c28448"
+const CONN_TOKEN = "26e9cba39d1f66bfb916f10a0815158ed55d24d7"
 
 func resourceVM() *schema.Resource {
 	return &schema.Resource{
@@ -41,7 +42,7 @@ func resourceVM() *schema.Resource {
 			},
 			"vdc_resource_disk": &schema.Schema{
 				Type:     schema.TypeString,
-				Optional: true,
+				Required: true,
 			},
 			"ram": &schema.Schema{
 				Type:     schema.TypeString,
@@ -51,14 +52,38 @@ func resourceVM() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"template": &schema.Schema{
+			//"template": &schema.Schema{
+			//	Type:     schema.TypeString,
+			//	Required: true,
+			//},
+			"os": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			//"os": &schema.Schema{
-			//	Type:     schema.TypeString,
-			//	Optional: true,
-			//},
+			"disks": &schema.Schema{
+				Type:     schema.TypeList,
+				Required: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"name": &schema.Schema{
+							Type:     schema.TypeString,
+							Required: true,
+						},
+						"size": &schema.Schema{
+							Type:     schema.TypeString,
+							Required: true,
+						},
+						"v_disk": &schema.Schema{
+							Type:     schema.TypeString,
+							Required: true,
+						},
+						"slug": &schema.Schema{
+							Type:     schema.TypeString,
+							Optional: true,
+						},
+					},
+				},
+			},
 			//"nic": &schema.Schema{
 			//	Type:     schema.TypeString,
 			//	Optional: true,
@@ -77,7 +102,7 @@ func resourceVM() *schema.Resource {
 			},
 			"disk_image": &schema.Schema{
 				Type:     schema.TypeString,
-				Optional: true,
+				Required: true,
 			},
 			"boot": &schema.Schema{
 				Type:     schema.TypeString,
@@ -104,22 +129,22 @@ func resourceVM() *schema.Resource {
 }
 
 type VM struct {
-	Name              string
-	Slug              string
-	Vdc               string
-	Vdc_resource_disk string
-	RAM               string
-	CPU               string
-	Template          string
-	State             string
-	Disks             string
-	//Os                string
+	Name string `json:"name"`
+	//Slug              string
+	Vdc               string `json:"vdc"`
+	Vdc_resource_disk string `json:"vdc_resource_disk"`
+	RAM               string `json:"ram"`
+	CPU               string `json:"cpu"`
+	//Template          string
+	State string        `json:"state"`
+	Disks []interface{} `json:"disks"`
+	OS    string        `json:"os"`
 	//Nics              string
 	//Token             string
 	//Plateform_name    string
-	Backup     string
-	Disk_image string
-	Boot       string
+	Backup     string `json:"backup"`
+	Disk_image string `json:"disk_image"`
+	Boot       string `json:"boot"`
 	//Backup_size       string
 	//Comment           string
 	//Outsourcing       string
@@ -129,23 +154,21 @@ type VM struct {
 func vmInstanceCreate(d *schema.ResourceData) VM {
 	return VM{
 		Name: d.Get("name").(string),
-
-		//Slug:"",
+		//Slug: d.Get("slug").(string),
 		//State:"",
-		//Disks:"",
+		Disks: d.Get("disks").([]interface{}),
 		//Token:"",
 		//Plateform_name:"",
 		//Comment:"",
 		//Outsourcing:"",
 		//Dynamic_field:"",
-
 		Vdc:  d.Get("vdc").(string),
 		CPU:  d.Get("cpu").(string),
 		RAM:  d.Get("ram").(string),
 		Boot: d.Get("boot").(string),
 		//Nics:              d.Get("nics").(string),
-		Template: d.Get("template").(string),
-		//Os:                d.Get("os").(string),
+		//Template:	d.Get("template").(string),
+		OS:     d.Get("os").(string),
 		Backup: d.Get("backup").(string),
 		//Backup_size:       d.Get("backup_size").(string),
 		Vdc_resource_disk: d.Get("vdc_resource_disk").(string),
@@ -155,7 +178,7 @@ func vmInstanceCreate(d *schema.ResourceData) VM {
 
 func resourceVMCreate(d *schema.ResourceData, m interface{}) error {
 	vmInstance := vmInstanceCreate(d)
-	var requestBody bytes.Buffer
+	//var requestBody bytes.Buffer
 	var responseBody string
 	var resp_body_reader interface{}
 	logger := loggerCreate("resourceVM_Create_" + vmInstance.Vdc + "_" + vmInstance.Name + ".log")
@@ -165,18 +188,25 @@ func resourceVMCreate(d *schema.ResourceData, m interface{}) error {
 
 	logger.Println("--------------- ", vmInstance.Name, " CREATE -----------------")
 
-	requestBody.WriteString("{\"name\":\"" + vmInstance.Name + "\",")
-	requestBody.WriteString("\"vdc\":\"" + vmInstance.Vdc + "\",")
-	requestBody.WriteString("\"ram\":" + vmInstance.RAM + ",")
-	requestBody.WriteString("\"cpu\":" + vmInstance.RAM + ",")
-	requestBody.WriteString("\"disk_image\":\"" + vmInstance.Disk_image + "\",")
-	requestBody.WriteString("\"boot\":\"" + vmInstance.Boot + "\",")
-	//requestBody.WriteString("\"nics\":" + vmInstance.Nic + ",")
-	requestBody.WriteString("\"template\":\"" + vmInstance.Template + "\",")
-	requestBody.WriteString("\"vdc_resource_disk\":\"" + vmInstance.Vdc_resource_disk + "\",")
-	requestBody.WriteString("\"backup\":\"" + vmInstance.Backup + "\"}")
+	vm_struct := VM{
+		Name:              vmInstance.Name,
+		Vdc:               vmInstance.Vdc,
+		Vdc_resource_disk: vmInstance.Vdc_resource_disk,
+		RAM:               vmInstance.RAM,
+		CPU:               vmInstance.CPU,
+		Disks:             vmInstance.Disks,
+		OS:                vmInstance.OS,
+		Backup:            vmInstance.Backup,
+		Disk_image:        vmInstance.Disk_image,
+		Boot:              vmInstance.Boot,
+	}
 
-	req, _ := http.NewRequest("POST", DEST_REQ_URL, &requestBody)
+	vm_json, err_json := json.Marshal(vm_struct)
+	logger.Println("vm_struct =", vm_struct)
+	logger.Println("err_json =", err_json)
+	logger.Println("vm_json =", vm_json)
+
+	req, _ := http.NewRequest("POST", DEST_REQ_URL, bytes.NewBuffer(vm_json))
 
 	req.Header.Add("authorization", "Token "+CONN_TOKEN)
 	req.Header.Add("content-type", "application/json")
@@ -263,30 +293,9 @@ func resourceVMRead(d *schema.ResourceData, m interface{}) error {
 		resp_body_json_err := json.Unmarshal(bodyBytes, &resp_body_reader)
 		if resp_body_json_err != nil {
 			returnError = resp_body_json_err
-		}
+		} else {
 		resp_body_map := resp_body_reader.(map[string]interface{})
-		var read_value interface{}
-		for key, value := range resp_body_map {
-			switch value_type := value.(type) {
-			case string:
-				read_value=value
-			case float64:
-				read_value = strconv.FormatFloat(value.(float64), 'f', -1, 64)
-			case []interface{}:
-				for i, u := range value_type {
-					logger.Println(i, u)
-				}
-				read_value=value
-			default:
-				if value==nil{
-					read_value=nil
-				}else{
-					returnError = errors.New("Not able to fetch the value of" + key + "field.")
-				}
-			}
-			logger.Println("Set \"",key,"\" to \"",read_value,"\"")
-			d.Set(key, read_value)
-			read_value=nil
+		returnError = update_local_resource_state(resp_body_map, logger, d)
 		}
 	} else if resp.StatusCode == RESOURCE_GET_HTTP_NOT_FOUND_CODE {
 		logger.Println(vmName, " not found, The resource may have been deleted by an other Airdrum API client.")
@@ -304,10 +313,68 @@ func resourceVMRead(d *schema.ResourceData, m interface{}) error {
 func resourceVMUpdate(d *schema.ResourceData, m interface{}) error {
 	vmName := d.Get("name").(string)
 	vmId := d.Id()
+	var responseBody string
+	var returnError error
+	var destREAD_URL strings.Builder
+	destREAD_URL.WriteString("https://next.cloud-datacenter.fr/api/clouddc/vm/")
+	destREAD_URL.WriteString(vmId)
+	destREAD_URL.WriteString("/")
+	s_destREAD_URL := destREAD_URL.String()
+	client := &http.Client{}
 	logger := loggerCreate("resourceVM_Update_" + vmName + ".log")
+
 	logger.Println("--------------- ", vmName, " ( id= ", vmId, ") UPDATE -----------------")
-	logger.Println("Function not yet implemented")
-	return nil
+
+	vm_struct := VM{
+		Name:              vmName,
+		Vdc:               d.Get("vdc").(string),
+		Vdc_resource_disk: d.Get("vdc_resource_disk").(string),
+		RAM:               d.Get("ram").(string),
+		CPU:               d.Get("cpu").(string),
+		Disks:             d.Get("disks").([]interface{}),
+		OS:                d.Get("os").(string),
+		Backup:            d.Get("backup").(string),
+		Disk_image:        d.Get("disk_image").(string),
+		Boot:              d.Get("boot").(string),
+	}
+
+	vm_json, err_json := json.Marshal(vm_struct)
+	logger.Println("vm_struct =", vm_struct)
+	logger.Println("err_json =", err_json)
+	logger.Println("vm_json =", vm_json)
+
+	req, _ := http.NewRequest("PUT", s_destREAD_URL, bytes.NewBuffer(vm_json))
+
+	req.Header.Add("authorization", "Token "+CONN_TOKEN)
+	req.Header.Add("content-type", "application/json")
+
+	logger.Println("Update of ", vmName, "request Header = ", req.Header)
+	logger.Println("Update of ", vmName, "request body = ", req.Body)
+
+	resp, create_err := client.Do(req)
+	defer resp.Body.Close()
+	bodyBytes, update_resp_body_read_err := ioutil.ReadAll(resp.Body)
+	responseBody = string(bodyBytes)
+
+	if create_err != nil {
+		logger.Println("Update of ", vmName, " response reception error : ", create_err)
+		returnError = errors.New("Update of " + vmName + " response reception error : " + create_err.Error())
+	}
+
+	if update_resp_body_read_err != nil {
+		logger.Println("Update of ", vmName, " response body read error ", update_resp_body_read_err)
+		returnError = errors.New("Update of " + vmName + " response body read error " + update_resp_body_read_err.Error())
+	}
+
+	logger.Println("Update of ", vmName, " response status = ", resp.Status)
+	logger.Println("Update of ", vmName, " response body = ", responseBody)
+
+	if resp.StatusCode != RESOURCE_UPDATE_HTTP_SUCCESS_CODE {
+		logger.Println("Update of ", vmName, " resource failed : ", resp.Status, responseBody)
+		returnError = errors.New(resp.Status + responseBody)
+	}
+
+	return returnError
 }
 
 func resourceVMDelete(d *schema.ResourceData, m interface{}) error {

@@ -15,7 +15,12 @@ func update_local_resource_state(body map[string]interface{}, logger *log.Logger
 	for key, value := range body {
 		read_value,returnError = read_element(key, value, logger)
 		logger.Println("Set \"", key, "\" to \"", read_value, "\"")
-		d.Set(key, read_value)
+    if key=="id"{
+      s_id := strconv.FormatFloat(value.(float64), 'f', -1, 64)
+      d.SetId(s_id)
+    }else{
+      d.Set(key, read_value)
+    }
 		read_value = nil
 	}
 	return returnError

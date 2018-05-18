@@ -7,7 +7,6 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 	"io/ioutil"
 	"net/http"
-	"strconv"
 	"strings"
 )
 
@@ -32,10 +31,10 @@ func resourceVM() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			//"slug": &schema.Schema{
-			//	Type:     schema.TypeString,
-			//	Optional: true,
-			//},
+			"slug": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 			"vdc": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
@@ -54,7 +53,7 @@ func resourceVM() *schema.Resource {
 			},
 			//"template": &schema.Schema{
 			//	Type:     schema.TypeString,
-			//	Required: true,
+			//	Optional: true,
 			//},
 			"os": &schema.Schema{
 				Type:     schema.TypeString,
@@ -79,100 +78,122 @@ func resourceVM() *schema.Resource {
 						},
 						"slug": &schema.Schema{
 							Type:     schema.TypeString,
+							Computed: true,
+						},
+					},
+				},
+			},
+			"nics": &schema.Schema{
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"vlan": &schema.Schema{
+							Type:     schema.TypeString,
+							Required: true,
+						},
+						"mac_adress": &schema.Schema{
+							Type:     schema.TypeString,
+							Computed: true,
+						},
+						"connected": &schema.Schema{
+							Type:     schema.TypeString,
 							Optional: true,
 						},
 					},
 				},
 			},
-			//"nic": &schema.Schema{
-			//	Type:     schema.TypeString,
-			//	Optional: true,
-			//},
-			//"token": &schema.Schema{
-			//	Type:     schema.TypeString,
-			//	Optional: true,
-			//},
-			//"plateform_name": &schema.Schema{
-			//	Type:     schema.TypeString,
-			//	Optional: true,
-			//},
+			"token": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+				Sensitive: true,
+			},
+			"platform_name": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 			"backup": &schema.Schema{
 				Type:     schema.TypeString,
-				Optional: true,
+				Required: true,
 			},
 			"disk_image": &schema.Schema{
 				Type:     schema.TypeString,
-				Required: true,
+				Optional: true,
 			},
 			"boot": &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			//"backup_size": &schema.Schema{
-			//	Type:     schema.TypeString,
-			//	Optional: true,
-			//},
-			//"comment": &schema.Schema{
-			//	Type:     schema.TypeString,
-			//	Optional: true,
-			//},
-			//"outsourcing": &schema.Schema{
-			//	Type:     schema.TypeString,
-			//	Optional: true,
-			//},
-			//"dynamic_field": &schema.Schema{
-			//	Type:     schema.TypeString,
-			//	Optional: true,
-			//},
+			"backup_size": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"comment": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+			"state": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"outsourcing": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+				Sensitive: true,
+			},
+			"dynamic_field": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+			},
 		},
 	}
 }
 
 type VM struct {
 	Name string `json:"name"`
-	//Slug              string
-	Vdc               string `json:"vdc"`
+	Slug string `json:"slug"`
+	Vdc string `json:"vdc"`
 	Vdc_resource_disk string `json:"vdc_resource_disk"`
-	RAM               string `json:"ram"`
-	CPU               string `json:"cpu"`
-	//Template          string
-	State string        `json:"state"`
+	RAM string `json:"ram"`
+	CPU string `json:"cpu"`
+	//Template string `json:"template"`
+	State string `json:"state"`
 	Disks []interface{} `json:"disks"`
-	OS    string        `json:"os"`
-	//Nics              string
-	//Token             string
-	//Plateform_name    string
-	Backup     string `json:"backup"`
+	OS string `json:"os"`
+	Nics []interface{} `json:"nics"`
+	Token string `json:"token"`
+	Platform_name string `json:"platform_name"`
+	Backup string `json:"backup"`
 	Disk_image string `json:"disk_image"`
-	Boot       string `json:"boot"`
-	//Backup_size       string
-	//Comment           string
-	//Outsourcing       string
-	//Dynamic_field     string
+	Boot string `json:"boot"`
+	Backup_size string `json:"backup_size"`
+	Comment string `json:"comment"`
+	Outsourcing string `json:"outsourcing"`
+	Dynamic_field string `json:"dynamic_field"`
 }
 
 func vmInstanceCreate(d *schema.ResourceData) VM {
 	return VM{
 		Name: d.Get("name").(string),
-		//Slug: d.Get("slug").(string),
-		//State:"",
-		Disks: d.Get("disks").([]interface{}),
-		//Token:"",
-		//Plateform_name:"",
-		//Comment:"",
-		//Outsourcing:"",
-		//Dynamic_field:"",
-		Vdc:  d.Get("vdc").(string),
-		CPU:  d.Get("cpu").(string),
-		RAM:  d.Get("ram").(string),
+		Comment:d.Get("comment").(string),
+		Dynamic_field:d.Get("dynamic_field").(string),
+		Vdc: d.Get("vdc").(string),
+		CPU: d.Get("cpu").(string),
+		RAM: d.Get("ram").(string),
 		Boot: d.Get("boot").(string),
-		//Nics:              d.Get("nics").(string),
+		Disks: d.Get("disks").([]interface{}),
+		Nics: d.Get("nics").([]interface{}),
 		//Template:	d.Get("template").(string),
-		OS:     d.Get("os").(string),
+		OS: d.Get("os").(string),
 		Backup: d.Get("backup").(string),
-		//Backup_size:       d.Get("backup_size").(string),
 		Vdc_resource_disk: d.Get("vdc_resource_disk").(string),
-		Disk_image:        d.Get("disk_image").(string),
+		Disk_image: d.Get("disk_image").(string),
+		Slug: d.Get("slug").(string),
+		State: d.Get("state").(string),
+		Backup_size: d.Get("backup_size").(string),
+		Token: d.Get("token").(string),
+		Platform_name: d.Get("platform_name").(string),
+		Outsourcing: d.Get("outsourcing").(string),
 	}
 }
 
@@ -189,16 +210,26 @@ func resourceVMCreate(d *schema.ResourceData, m interface{}) error {
 	logger.Println("--------------- ", vmInstance.Name, " CREATE -----------------")
 
 	vm_struct := VM{
-		Name:              vmInstance.Name,
-		Vdc:               vmInstance.Vdc,
+		Name: vmInstance.Name,
+		Slug: vmInstance.Slug,
+		Vdc:  vmInstance.Vdc,
 		Vdc_resource_disk: vmInstance.Vdc_resource_disk,
-		RAM:               vmInstance.RAM,
-		CPU:               vmInstance.CPU,
-		Disks:             vmInstance.Disks,
-		OS:                vmInstance.OS,
-		Backup:            vmInstance.Backup,
-		Disk_image:        vmInstance.Disk_image,
-		Boot:              vmInstance.Boot,
+		RAM: vmInstance.RAM,
+		CPU: vmInstance.CPU,
+		//Template: vmInstance.Template,
+		State: vmInstance.State,
+		Disks: vmInstance.Disks,
+		OS: vmInstance.OS,
+		Nics: vmInstance.Nics,
+		Token: vmInstance.Token,
+		Platform_name: vmInstance.Platform_name,
+		Backup: vmInstance.Backup,
+		Disk_image: vmInstance.Disk_image,
+		Boot: vmInstance.Boot,
+		Backup_size: vmInstance.Backup_size,
+		Comment: vmInstance.Comment,
+		Outsourcing: vmInstance.Outsourcing,
+		Dynamic_field: vmInstance.Dynamic_field,
 	}
 
 	vm_json, err_json := json.Marshal(vm_struct)
@@ -241,12 +272,22 @@ func resourceVMCreate(d *schema.ResourceData, m interface{}) error {
 			returnError = resp_body_json_err
 		}
 		resp_body_map := resp_body_reader.(map[string]interface{})
-		for key, value := range resp_body_map {
-			if key == "id" {
-				s_id := strconv.FormatFloat(value.(float64), 'f', -1, 64)
-				defer d.SetId(s_id)
-			}
-		}
+		_ = update_local_resource_state(resp_body_map, logger, d)
+
+		//for key, value := range resp_body_map {
+		//	if key == "id" {
+		//		s_id := strconv.FormatFloat(value.(float64), 'f', -1, 64)
+		//		defer d.SetId(s_id)
+		//	}else{
+		//		defer d.Set(key,value)
+		//	}
+		//	//if key == "nics" {
+		//	//	for key_map, value_map := range value {
+		//	//		d.Set(key, read_value)
+		//	//		read_value = nil
+		//	//	}
+		//	//}
+		//}
 	}
 
 	return returnError
@@ -326,16 +367,26 @@ func resourceVMUpdate(d *schema.ResourceData, m interface{}) error {
 	logger.Println("--------------- ", vmName, " ( id= ", vmId, ") UPDATE -----------------")
 
 	vm_struct := VM{
-		Name:              vmName,
-		Vdc:               d.Get("vdc").(string),
+		Name: d.Get("name").(string),
+		Slug: d.Get("slug").(string),
+		Vdc: d.Get("vdc").(string),
 		Vdc_resource_disk: d.Get("vdc_resource_disk").(string),
-		RAM:               d.Get("ram").(string),
-		CPU:               d.Get("cpu").(string),
-		Disks:             d.Get("disks").([]interface{}),
-		OS:                d.Get("os").(string),
-		Backup:            d.Get("backup").(string),
-		Disk_image:        d.Get("disk_image").(string),
-		Boot:              d.Get("boot").(string),
+		RAM: d.Get("ram").(string),
+		CPU: d.Get("cpu").(string),
+		//Template: vmInstance.Template,
+		State: d.Get("state").(string),
+		Disks: d.Get("disks").([]interface{}),
+		OS: d.Get("os").(string),
+		Nics: d.Get("nics").([]interface{}),
+		Token: d.Get("token").(string),
+		Platform_name: d.Get("platform_name").(string),
+		Backup: d.Get("backup").(string),
+		Disk_image: d.Get("disk_image").(string),
+		Boot: d.Get("boot").(string),
+		Backup_size: d.Get("backup_size").(string),
+		Comment: d.Get("comment").(string),
+		Outsourcing: d.Get("outsourcing").(string),
+		Dynamic_field: d.Get("dynamic_field").(string),
 	}
 
 	vm_json, err_json := json.Marshal(vm_struct)

@@ -11,6 +11,7 @@ func Provider() *schema.Provider {
       "sewan_clouddc_vm": resource_vm(),
       "sewan_clouddc_vdc": resource_vdc(),
     },
+    ConfigureFunc: providerConfigure,
   }
 }
 
@@ -27,4 +28,13 @@ func providerSchema() map[string]*schema.Schema {
       Description: "Airdrum API's URL",
     },
   }
+}
+
+func providerConfigure(d *schema.ResourceData) (interface{}, error) {
+  config := Config{
+    Api_token: d.Get("api_token").(string),
+    Api_url: d.Get("api_url").(string),
+  }
+
+  return config.Client()
 }

@@ -1,6 +1,6 @@
 provider "sewan" {
-  air_drum_token = "fe72e08234447ac80a3a438689a2ac6682df5f25"
-  air_drum_url = "https://next.cloud-datacenter.fr/api/clouddc/vm/"
+  api_token = "fe72e08234447ac80a3a438689a2ac6682df5f25"
+  api_url = "https://next.cloud-datacenter.fr/api/clouddc/vm/"
 }
 
 resource "sewan_clouddc_vm" "skeleton-server1" {

@@ -2,7 +2,7 @@ package sewan
 
 import (
   "github.com/hashicorp/terraform/helper/schema"
-  "terraform-provider-sewan/sewan_go_sdk"
+  sdk "terraform-provider-sewan/sewan_go_sdk"
 )
 
 func resource_vm() *schema.Resource {
@@ -136,8 +136,9 @@ func resource_vm_create(d *schema.ResourceData, m interface{}) error {
   var creationError error
   creationError = nil
   var apiCreationResponse map[string]interface{}
+  sewan := m.(*Client).sewan
   client := sewan_go_sdk.ClientCreate()
-  creationError,apiCreationResponse = sewan_go_sdk.Create_vm_resource(d,client)
+  creationError,apiCreationResponse = sdk.Create_vm_resource(d,client)
   if creationError==nil {
     creationError = Update_local_resource_state(apiCreationResponse, d)
   }

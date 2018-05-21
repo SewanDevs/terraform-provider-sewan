@@ -7,28 +7,45 @@ Terraform Provider
 
 <img src="https://cdn.rawgit.com/hashicorp/terraform-website/master/content/source/assets/images/logo-hashicorp.svg" width="600px">
 
+Maintainers
+-----------
+
+This provider plugin is maintained by the Sewwan team at *<insert here a like to Sewan's maintenance team>*
+
 Requirements
 ------------
 
 -	[Terraform](https://www.terraform.io/downloads.html) 0.10.x
 -	[Go](https://golang.org/doc/install) 1.8 (to build the provider plugin)
 
+Usage
+---------------------
+
+```
+# For example, restrict template version in 0.1.x
+provider "template" {
+  version = "~> 0.1"
+}
+```
+
 Building The Provider
 ---------------------
 
-<!-- Clone repository to: `$GOPATH/src/github.com/terraform-providers/<Sewan provider path when exists>`
+*<We assume that gitlab.com/sewan/terraform-provider-sewan will be the public repo for sewan terraform provider*
+
+Clone repository to: `$GOPATH/src/gitlab.com/sewan/terraform-provider-sewan`
 
 ```sh
-$ mkdir -p $GOPATH/src/github.com/terraform-providers; cd $GOPATH/src/github.com/terraform-providers
-$ git clone git@github.com:terraform-providers/terraform-provider-docker
+$ mkdir -p $GOPATH/src/gitlab.com/terraform-providers; cd $GOPATH/src/gitlab.com/terraform-providers
+$ git clone git@gitlab.com:sewan/terraform-provider-sewan
 ```
 
 Enter the provider directory and build the provider
 
 ```sh
-$ cd $GOPATH/src/github.com/terraform-providers/terraform-provider-docker
+$ cd $GOPATH/src/gitlab.com/terraform-providers
 $ make build
-```*/
+```
 
 Using the provider
 ----------------------
@@ -37,14 +54,14 @@ Using the provider
 Developing the Provider
 ---------------------------
 
-*/If you wish to work on the provider, you'll first need [Go](http://www.golang.org) installed on your machine (version 1.8+ is *required*). You'll also need to correctly setup a [GOPATH](http://golang.org/doc/code.html#GOPATH), as well as adding `$GOPATH/bin` to your `$PATH`.
+If you wish to work on the provider, you'll first need [Go](http://www.golang.org) installed on your machine (version 1.8+ is *required*). You'll also need to correctly setup a [GOPATH](http://golang.org/doc/code.html#GOPATH), as well as adding `$GOPATH/bin` to your `$PATH`.
 
 To compile the provider, run `make build`. This will build the provider and put the provider binary in the `$GOPATH/bin` directory.
 
 ```sh
-$ make build
+$ make bin
 ...
-$ $GOPATH/bin/terraform-provider-docker
+$ $GOPATH/bin/terraform-provider-sewan
 ...
 ```
 
@@ -60,24 +77,4 @@ In order to run the full suite of Acceptance tests, run `make testacc`.
 
 ```sh
 $ make testacc
-# e.g. run a single acceptance test: e.g. 'TestAccDockerRegistryImage_private' in 'data_source_docker_registry_image_test.go'
-go test -v -timeout 30s github.com/terraform-providers/terraform-provider-docker/docker -run ^TestAccDockerRegistryImage_private$
 ```
-
-In order to extend the provider and test it with `terraform`, build the provider as mentioned above with
-```sh
-$ make build
-```
-
-Remove an explicit version of the provider you develop, because `terraform` will fetch
-the locally built one in `$GOPATH/bin`
-```hcl
-provider "docker" {
-  # version = "~> 0.1.2"
-  ...
-}
-```/*
-
-Don't forget to run `terraform init` each time you rebuild the provider. Check [here](https://www.youtube.com/watch?v=TMmovxyo5sY&t=30m14s) for a more detailed explanation.
-
-You can check the latest released version of a provider at https://releases.hashicorp.com/terraform-provider-docker/. -->

@@ -16,13 +16,9 @@ const RESOURCE_DELETE_HTTP_SUCCESS_CODE = 200
 const RESOURCE_GET_HTTP_SUCCESS_CODE = 200
 const RESOURCE_GET_HTTP_NOT_FOUND_CODE = 404
 
-// NB : The following 2 vars will be deleted when the provider config will be handled
-const DEST_REQ_URL = "https://next.cloud-datacenter.fr/api/clouddc/vm/"
-const CONN_TOKEN = "fe72e08234447ac80a3a438689a2ac6682df5f25"
-
-func vm_url_builder(id string) string{
+func get_vm_url(api_url string, id string) string{
   var vm_url strings.Builder
-  vm_url.WriteString(DEST_REQ_URL)
+  vm_url.WriteString(api_url)
   vm_url.WriteString(id)
   vm_url.WriteString("/")
   return vm_url.String()
@@ -76,7 +72,7 @@ func vmInstanceCreate(d *schema.ResourceData) vm {
   }
 }
 
-func Create_vm_resource(d *schema.ResourceData,client *http.Client) (error, map[string]interface{}) {
+func (client Http_client) Create_vm_resource(d *schema.ResourceData) (error, map[string]interface{}) {
   vmInstance := vmInstanceCreate(d)
   var responseBody string
   var resp_body_reader interface{}
@@ -90,15 +86,15 @@ func Create_vm_resource(d *schema.ResourceData,client *http.Client) (error, map[
   logger.Println("err_json =", err_json)
   logger.Println("vm_json =", vm_json)
 
-  req, _ := http.NewRequest("POST", DEST_REQ_URL, bytes.NewBuffer(vm_json))
+  req, _ := http.NewRequest("POST", client.Conf.Api_url, bytes.NewBuffer(vm_json))
 
-  req.Header.Add("authorization", "Token "+CONN_TOKEN)
+  req.Header.Add("authorization", "Token "+client.Conf.Api_token)
   req.Header.Add("content-type", "application/json")
 
   logger.Println("Creation of ", vmInstance.Name, "request Header = ", req.Header)
   logger.Println("Creation of ", vmInstance.Name, "request body = ", req.Body)
 
-  resp, create_err := client.Do(req)
+  resp, create_err := client.Net_http_client.Do(req)
   defer resp.Body.Close()
   bodyBytes, create_resp_body_read_err := ioutil.ReadAll(resp.Body)
   responseBody = string(bodyBytes)
@@ -129,7 +125,7 @@ func Create_vm_resource(d *schema.ResourceData,client *http.Client) (error, map[
   return createError, airDrumAPICreationResponse
 }
 
-func Read_vm_resource(d *schema.ResourceData,client *http.Client) (error, map[string]interface{}, bool) {
+func Read_vm_resource(d *schema.ResourceData,client Http_client) (error, map[string]interface{}, bool) {
   var readError error
   readError = nil
   var resource_exists bool
@@ -137,15 +133,15 @@ func Read_vm_resource(d *schema.ResourceData,client *http.Client) (error, map[st
   var airDrumAPICreationResponse map[string]interface{}
   var responseBody string
   var resp_body_reader interface{}
-  s_vm_url := vm_url_builder(d.Id())
+  s_vm_url := get_vm_url(client.Conf.Api_url,d.Id())
   logger := loggerCreate("read_vm_" + d.Get("name").(string) + ".log")
   logger.Println("--------------- ", d.Get("name").(string), " ( id= ", d.Id(), ") READ -----------------")
 
   req, _ := http.NewRequest("GET", s_vm_url, nil)
 
-  req.Header.Add("authorization", "Token "+CONN_TOKEN)
+  req.Header.Add("authorization", "Token "+client.Conf.Api_token)
 
-  resp, read_req_err := client.Do(req)
+  resp, read_req_err := client.Net_http_client.Do(req)
   defer resp.Body.Close()
 
   bodyBytes, read_resp_body_read_err := ioutil.ReadAll(resp.Body)
@@ -178,12 +174,12 @@ func Read_vm_resource(d *schema.ResourceData,client *http.Client) (error, map[st
   return readError,airDrumAPICreationResponse,resource_exists
 }
 
-func Update_vm_resource(d *schema.ResourceData,client *http.Client) (error) {
+func Update_vm_resource(d *schema.ResourceData,client Http_client) (error) {
   var responseBody string
   var updateError error
   updateError = nil
   vmInstance := vmInstanceCreate(d)
-  s_vm_url := vm_url_builder(d.Id())
+  s_vm_url := get_vm_url(client.Conf.Api_url,d.Id())
   logger := loggerCreate("update_vm_" + d.Get("name").(string) + ".log")
 
   logger.Println("--------------- ", d.Get("name").(string), " ( id= ", d.Id(), ") UPDATE -----------------")
@@ -195,13 +191,13 @@ func Update_vm_resource(d *schema.ResourceData,client *http.Client) (error) {
 
   req, _ := http.NewRequest("PUT", s_vm_url, bytes.NewBuffer(vm_json))
 
-  req.Header.Add("authorization", "Token "+CONN_TOKEN)
+  req.Header.Add("authorization", "Token "+client.Conf.Api_token)
   req.Header.Add("content-type", "application/json")
 
   logger.Println("Update of ", d.Get("name").(string), "request Header = ", req.Header)
   logger.Println("Update of ", d.Get("name").(string), "request body = ", req.Body)
 
-  resp, create_err := client.Do(req)
+  resp, create_err := client.Net_http_client.Do(req)
   defer resp.Body.Close()
   bodyBytes, update_resp_body_read_err := ioutil.ReadAll(resp.Body)
   responseBody = string(bodyBytes)
@@ -227,20 +223,20 @@ func Update_vm_resource(d *schema.ResourceData,client *http.Client) (error) {
   return updateError
 }
 
-func Delete_vm_resource(d *schema.ResourceData,client *http.Client) (error) {
+func Delete_vm_resource(d *schema.ResourceData,client Http_client) (error) {
   var responseBody string
   var deleteError error
   deleteError = nil
-  s_vm_url := vm_url_builder(d.Id())
+  s_vm_url := get_vm_url(client.Conf.Api_url,d.Id())
   logger := loggerCreate("update_vm_" + d.Get("name").(string) + ".log")
 
   logger.Println("--------------- ", d.Get("name").(string), " ( id= ", d.Id(), ") DELETE -----------------")
 
   req, _ := http.NewRequest("DELETE", s_vm_url, nil)
 
-  req.Header.Add("authorization", "Token "+CONN_TOKEN)
+  req.Header.Add("authorization", "Token "+client.Conf.Api_token)
 
-  resp, delete_err := client.Do(req)
+  resp, delete_err := client.Net_http_client.Do(req)
   defer resp.Body.Close()
 
   bodyBytes, delete_resp_body_read_err := ioutil.ReadAll(resp.Body)

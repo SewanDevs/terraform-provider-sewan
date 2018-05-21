@@ -1,9 +1,9 @@
 provider "sewan" {
-  air_drum_token = "17f061821bac9e12f9a2ded3928e624ae7c28448"
+  air_drum_token = "fe72e08234447ac80a3a438689a2ac6682df5f25"
   air_drum_url = "https://next.cloud-datacenter.fr/api/clouddc/vm/"
 }
 
-resource "sewan_serverVM" "skeleton-server1" {
+resource "sewan_clouddc_vm" "skeleton-server1" {
   name = "skeleton-server1"
   vdc = "sewan-rd-cloud-beta-dc1-terraf"
   os = "CentOS"
@@ -37,8 +37,8 @@ resource "sewan_serverVM" "skeleton-server1" {
   backup = "backup-no-backup"
 }
 
-resource "sewan_serverVM" "skeleton-client1" {
-  name = "client1"
+resource "sewan_clouddc_vm" "skeleton-client1" {
+  name = "skeleton-client1"
   vdc = "sewan-rd-cloud-beta-dc1-terraf"
   os = "CentOS"
   ram  = "1"
@@ -62,8 +62,8 @@ resource "sewan_serverVM" "skeleton-client1" {
   backup = "backup-no-backup"
 }
 
-resource "sewan_serverVM" "skeleton-client2" {
-  name = "client2"
+resource "sewan_clouddc_vm" "skeleton-client2" {
+  name = "skeleton-client2"
   vdc = "sewan-rd-cloud-beta-dc1-terraf"
   os = "CentOS"
   ram  = "1"

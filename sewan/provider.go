@@ -17,12 +17,12 @@ func Provider() *schema.Provider {
 
 func providerSchema() map[string]*schema.Schema {
   return map[string]*schema.Schema{
-    "air_drum_token": &schema.Schema{
+    "api_token": &schema.Schema{
       Type:        schema.TypeString,
       Required:    true,
       Description: "Airdrum session token",
     },
-    "air_drum_url": &schema.Schema{
+    "api_url": &schema.Schema{
       Type:        schema.TypeString,
       Required:    true,
       Description: "Airdrum API's URL",
@@ -35,6 +35,5 @@ func providerConfigure(d *schema.ResourceData) (interface{}, error) {
     Api_token: d.Get("api_token").(string),
     Api_url: d.Get("api_url").(string),
   }
-
   return config.Client()
 }

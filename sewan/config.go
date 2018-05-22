@@ -31,7 +31,7 @@ func (c *Config) Client() (*Client, error) {
     return nil, err
   }
 
-  //validate token here
+  // TODO : validate token here
 
   return &Client{api}, nil
 }

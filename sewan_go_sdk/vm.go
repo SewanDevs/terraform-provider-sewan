@@ -72,7 +72,7 @@ func vmInstanceCreate(d *schema.ResourceData) vm {
   }
 }
 
-func (client Http_client) Create_vm_resource(d *schema.ResourceData) (error, map[string]interface{}) {
+func (sewan API) Create_vm_resource(d *schema.ResourceData) (error, map[string]interface{}) {
   vmInstance := vmInstanceCreate(d)
   var responseBody string
   var resp_body_reader interface{}
@@ -86,15 +86,15 @@ func (client Http_client) Create_vm_resource(d *schema.ResourceData) (error, map
   logger.Println("err_json =", err_json)
   logger.Println("vm_json =", vm_json)
 
-  req, _ := http.NewRequest("POST", client.Conf.Api_url, bytes.NewBuffer(vm_json))
+  req, _ := http.NewRequest("POST", sewan.URL, bytes.NewBuffer(vm_json))
 
-  req.Header.Add("authorization", "Token "+client.Conf.Api_token)
+  req.Header.Add("authorization", "Token " + sewan.Token)
   req.Header.Add("content-type", "application/json")
 
   logger.Println("Creation of ", vmInstance.Name, "request Header = ", req.Header)
   logger.Println("Creation of ", vmInstance.Name, "request body = ", req.Body)
 
-  resp, create_err := client.Net_http_client.Do(req)
+  resp, create_err := sewan.Client.Do(req)
   defer resp.Body.Close()
   bodyBytes, create_resp_body_read_err := ioutil.ReadAll(resp.Body)
   responseBody = string(bodyBytes)
@@ -125,7 +125,7 @@ func (client Http_client) Create_vm_resource(d *schema.ResourceData) (error, map
   return createError, airDrumAPICreationResponse
 }
 
-func Read_vm_resource(d *schema.ResourceData,client Http_client) (error, map[string]interface{}, bool) {
+func (sewan API) Read_vm_resource(d *schema.ResourceData) (error, map[string]interface{}, bool) {
   var readError error
   readError = nil
   var resource_exists bool
@@ -133,15 +133,15 @@ func Read_vm_resource(d *schema.ResourceData,client Http_client) (error, map[str
   var airDrumAPICreationResponse map[string]interface{}
   var responseBody string
   var resp_body_reader interface{}
-  s_vm_url := get_vm_url(client.Conf.Api_url,d.Id())
+  s_vm_url := get_vm_url(sewan.URL,d.Id())
   logger := loggerCreate("read_vm_" + d.Get("name").(string) + ".log")
   logger.Println("--------------- ", d.Get("name").(string), " ( id= ", d.Id(), ") READ -----------------")
 
   req, _ := http.NewRequest("GET", s_vm_url, nil)
 
-  req.Header.Add("authorization", "Token "+client.Conf.Api_token)
+  req.Header.Add("authorization", "Token "+sewan.Token)
 
-  resp, read_req_err := client.Net_http_client.Do(req)
+  resp, read_req_err := sewan.Client.Do(req)
   defer resp.Body.Close()
 
   bodyBytes, read_resp_body_read_err := ioutil.ReadAll(resp.Body)
@@ -174,12 +174,12 @@ func Read_vm_resource(d *schema.ResourceData,client Http_client) (error, map[str
   return readError,airDrumAPICreationResponse,resource_exists
 }
 
-func Update_vm_resource(d *schema.ResourceData,client Http_client) (error) {
+func (sewan API) Update_vm_resource(d *schema.ResourceData) (error) {
   var responseBody string
   var updateError error
   updateError = nil
   vmInstance := vmInstanceCreate(d)
-  s_vm_url := get_vm_url(client.Conf.Api_url,d.Id())
+  s_vm_url := get_vm_url(sewan.URL,d.Id())
   logger := loggerCreate("update_vm_" + d.Get("name").(string) + ".log")
 
   logger.Println("--------------- ", d.Get("name").(string), " ( id= ", d.Id(), ") UPDATE -----------------")
@@ -191,13 +191,13 @@ func Update_vm_resource(d *schema.ResourceData,client Http_client) (error) {
 
   req, _ := http.NewRequest("PUT", s_vm_url, bytes.NewBuffer(vm_json))
 
-  req.Header.Add("authorization", "Token "+client.Conf.Api_token)
+  req.Header.Add("authorization", "Token "+sewan.Token)
   req.Header.Add("content-type", "application/json")
 
   logger.Println("Update of ", d.Get("name").(string), "request Header = ", req.Header)
   logger.Println("Update of ", d.Get("name").(string), "request body = ", req.Body)
 
-  resp, create_err := client.Net_http_client.Do(req)
+  resp, create_err := sewan.Client.Do(req)
   defer resp.Body.Close()
   bodyBytes, update_resp_body_read_err := ioutil.ReadAll(resp.Body)
   responseBody = string(bodyBytes)
@@ -223,20 +223,20 @@ func Update_vm_resource(d *schema.ResourceData,client Http_client) (error) {
   return updateError
 }
 
-func Delete_vm_resource(d *schema.ResourceData,client Http_client) (error) {
+func (sewan API) Delete_vm_resource(d *schema.ResourceData) (error) {
   var responseBody string
   var deleteError error
   deleteError = nil
-  s_vm_url := get_vm_url(client.Conf.Api_url,d.Id())
+  s_vm_url := get_vm_url(sewan.URL,d.Id())
   logger := loggerCreate("update_vm_" + d.Get("name").(string) + ".log")
 
   logger.Println("--------------- ", d.Get("name").(string), " ( id= ", d.Id(), ") DELETE -----------------")
 
   req, _ := http.NewRequest("DELETE", s_vm_url, nil)
 
-  req.Header.Add("authorization", "Token "+client.Conf.Api_token)
+  req.Header.Add("authorization", "Token " + sewan.Token)
 
-  resp, delete_err := client.Net_http_client.Do(req)
+  resp, delete_err := sewan.Client.Do(req)
   defer resp.Body.Close()
 
   bodyBytes, delete_resp_body_read_err := ioutil.ReadAll(resp.Body)

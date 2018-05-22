@@ -2,7 +2,6 @@ package sewan
 
 import (
   "github.com/hashicorp/terraform/helper/schema"
-  sdk "terraform-provider-sewan/sewan_go_sdk"
 )
 
 func resource_vm() *schema.Resource {
@@ -137,8 +136,7 @@ func resource_vm_create(d *schema.ResourceData, m interface{}) error {
   creationError = nil
   var apiCreationResponse map[string]interface{}
   sewan := m.(*Client).sewan
-  client := sewan_go_sdk.ClientCreate()
-  creationError,apiCreationResponse = sdk.Create_vm_resource(d,client)
+  creationError,apiCreationResponse = sewan.Create_vm_resource(d)
   if creationError==nil {
     creationError = Update_local_resource_state(apiCreationResponse, d)
   }
@@ -150,8 +148,8 @@ func resource_vm_read(d *schema.ResourceData, m interface{}) error {
   readError = nil
   var resource_exists bool
   var apiCreationResponse map[string]interface{}
-  client := sewan_go_sdk.ClientCreate()
-  readError,apiCreationResponse,resource_exists = sewan_go_sdk.Read_vm_resource(d,client)
+  sewan := m.(*Client).sewan
+  readError,apiCreationResponse,resource_exists = sewan.Read_vm_resource(d)
   if readError==nil {
     if resource_exists==true {
       readError = Update_local_resource_state(apiCreationResponse, d)
@@ -165,16 +163,16 @@ func resource_vm_read(d *schema.ResourceData, m interface{}) error {
 func resource_vm_update(d *schema.ResourceData, m interface{}) error {
   var updateError error
   updateError = nil
-  client := sewan_go_sdk.ClientCreate()
-  updateError = sewan_go_sdk.Update_vm_resource(d,client)
+  sewan := m.(*Client).sewan
+  updateError = sewan.Update_vm_resource(d)
   return updateError
 }
 
 func resource_vm_delete(d *schema.ResourceData, m interface{}) error {
   var deleteError error
   deleteError = nil
-  client := sewan_go_sdk.ClientCreate()
-  deleteError= sewan_go_sdk.Delete_vm_resource(d,client)
+  sewan := m.(*Client).sewan
+  deleteError= sewan.Delete_vm_resource(d)
   if deleteError==nil {
     Delete_resource(d)
   }

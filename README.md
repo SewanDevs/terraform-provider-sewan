@@ -22,8 +22,8 @@ Usage
 ---------------------
 
 ```
-# For example, restrict template version in 0.1.x
-provider "template" {
+# For example, restrict sewan version in 0.1.x
+provider "sewan" {
   version = "~> 0.1"
 }
 ```

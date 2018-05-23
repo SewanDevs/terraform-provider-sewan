@@ -3,56 +3,83 @@ layout: "sewan"
 page_title: "Provider: Sewan"
 sidebar_current: "docs-sewan-index"
 description: |-
-  The Sewan provider is used to sewan strings for other Terraform resources.
+  The Sewan provider is used to interact with Sewan "AirDrum" API to provide vdc and vms.
 ---
 
 # Sewan Provider
 
-The sewan provider exposes data sources to use templates to generate
-strings for other Terraform resources or outputs.
+The Sewan provider is used to interact with Sewan "AirDrum" API to provide vdc and vms.
 
 Use the navigation to the left to read about the available data sources.
 
 ## Example Usage
 
 ```hcl
-# Sewan for initial configuration bash script
-data "template_file" "init" {
-  sewan = "${file("init.tpl")}"
-
-  vars {
-    consul_address = "${aws_instance.consul.private_ip}"
-  }
+provider "sewan" {
+  api_token = "111111111111111111"
+  api_url = "https://next.cloud-datacenter.fr/api/clouddc/vm/"
 }
 
-# Create a web server
-resource "aws_instance" "web" {
-  # ...
+resource "sewan_clouddc_vm" "server_resource_name" {
+  name = "server_name"
+  vdc = "sewan-rd-cloud-beta-dc1-terraf"
+  os = "CentOS"
+  ram  = "2"
+  cpu = "2"
+  disk_image = ""
+  nics=[
+  {
+    vlan="internal-2412"
+    connected=true
+  },
+  {
+    vlan="internal-2410"
+    connected=true
+  },
+  ]
+  disks=[
+    {
+      name="disk-centos7-rd-DC1-1"
+      size=20
+      v_disk="sewan-rd-cloud-beta-dc1-terraf-sewan-rd-cloud-beta-mono-storage_enterprise"
+    },
+    {
+      name="disk-centos7-rd-DC1-2"
+      size=20
+      v_disk="sewan-rd-cloud-beta-dc1-terraf-sewan-rd-cloud-beta-mono-storage_enterprise"
+    }
+  ]
+  boot = "on disk"
+  vdc_resource_disk = "sewan-rd-cloud-beta-dc1-terraf-sewan-rd-cloud-beta-mono-storage_enterprise"
+  backup = "backup-no-backup"
+}
 
-  user_data = "${data.template_file.init.rendered}"
+resource "sewan_clouddc_vm" "client_resource_name" {
+  name = "client_name"
+  vdc = "sewan-rd-cloud-beta-dc1-terraf"
+  os = "CentOS"
+  ram  = "1"
+  cpu = "1"
+  disk_image = ""
+  nics=[
+  {
+    vlan="internal-2404"
+    connected=true
+  },
+  ]
+  disks=[
+    {
+      name="disk-centos7-rd-DC1-1"
+      size=20
+      v_disk="sewan-rd-cloud-beta-dc1-terraf-sewan-rd-cloud-beta-mono-storage_enterprise"
+    },
+  ]
+  boot = "on disk"
+  vdc_resource_disk = "sewan-rd-cloud-beta-dc1-terraf-sewan-rd-cloud-beta-mono-storage_enterprise"
+  backup = "backup-no-backup"
 }
 ```
 
-Or using an inline sewan:
+NB 1 : add info about how to get a valid token
 
-```hcl
-# Sewan for initial configuration bash script
-data "template_file" "init" {
-  sewan = "$${consul_address}:1234"
-
-  vars {
-    consul_address = "${aws_instance.consul.private_ip}"
-  }
-}
-
-# Create a web server
-resource "aws_instance" "web" {
-  # ...
-
-  user_data = "${data.template_file.init.rendered}"
-}
-```
-
--> **Note:** Inline templates must escape their interpolations (as seen
-by the double `$` above). Unescaped interpolations will be processed
-_before_ the sewan.
+NB 2 : add info about how to choose api url

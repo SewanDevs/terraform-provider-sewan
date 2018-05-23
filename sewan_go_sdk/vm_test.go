@@ -1,6 +1,9 @@
 package sewan_go_sdk
 
-import "testing"
+import (
+	"testing"
+	"github.com/hashicorp/terraform/helper/schema"
+)
 
 func TestGet_vm_url(t *testing.T) {
 	test_cases := []struct {

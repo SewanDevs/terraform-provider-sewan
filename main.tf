@@ -1,6 +1,6 @@
 provider "sewan" {
-  api_token = "ad313c5dc3b067f61f73f3a74182f14eb1a81809"
-  api_url = "http://airdrumnext-api-vma-1.mgt.sewan.fr:8081/api/clouddc/vm/"
+  api_token = "e73756264d8a5e7141a6c8ceea60f964a5e84c43"
+  api_url = "https://next.cloud-datacenter.fr/api/clouddc/vm/"
 }
 
 resource "sewan_clouddc_vm" "skeleton-server1" {

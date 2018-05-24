@@ -1,0 +1,43 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{fullpage}
+\usepackage{lscape}
+
+\usepackage{tikz-uml}
+
+\sloppy
+\hyphenpenalty 10000000
+
+\title{Sequence diagram : `terraform init` with sewan provider plugin and sdk}
+\author{Sewan}
+
+\begin{document}
+\begin{landscape}
+
+\maketitle
+
+\begin{center}
+  \begin{tikzpicture}
+    \begin{umlseqdiag}
+
+    \umlactor[class=SysAdmin]{admin}
+    \umlobject[class=Tfstate]{localstate}
+    \umlobject[class=Terraform\&Plugin, x=5]{terraform}
+    \umlobject[class=SewanSDK, x=15]{sdk}
+    
+    \begin{umlcall}[op=1.\ terraform\ init(), type=synchron, return=init\ status]{admin}{terraform}
+      \begin{umlcall}[op=2.\ createSDK(), type=synchron, return=sdk]{terraform}{sdk}
+	\umlcreatecall[class=Tfstate, x=11]{terraform}{localstate}
+      \end{umlcall}
+    \end{umlcall}
+    
+    \end{umlseqdiag}
+  \end{tikzpicture}
+\end{center}
+
+\end{landscape}
+
+\end{document}

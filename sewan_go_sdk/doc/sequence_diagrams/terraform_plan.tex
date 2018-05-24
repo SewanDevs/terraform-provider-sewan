@@ -1,0 +1,50 @@
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{fullpage}
+\usepackage{lscape}
+
+\usepackage{tikz-uml}
+
+\sloppy
+\hyphenpenalty 10000000
+
+\title{Sequence diagram : `terraform plan` with sewan provider plugin and sdk}
+\author{Sewan}
+
+\begin{document}
+\begin{landscape}
+
+\maketitle
+
+\begin{center}
+  \begin{tikzpicture}
+    \begin{umlseqdiag}
+
+    \umlactor[class=SysAdmin, x=-3]{admin}
+    \umlobject[class=Tfstate, x=0.5]{localstate}
+    \umlobject[class=TFplan, x=3.5]{tfplan}
+    \umlobject[class=Terraform\&Plugin, x=8]{terraform}
+    \umlobject[class=SewanSDK, x=13]{sdk}
+    \umlobject[class=AirdrumAPI, x=17]{api}
+
+    \begin{umlcall}[op=1.\ terraform\ refresh(), type=synchron, return=resources\_diff\_list]{admin}{terraform}
+    
+      \begin{umlcall}[op=2.\ refresh(), type=asynchron]{terraform}{terraform}
+      \end{umlcall}
+    
+      \begin{umlfragment}[type=loop, label=resource\_in\_plan, name=loop, inner xsep=15,fill=blue!15]
+	\begin{umlcall}[op=3.\ getDiffWithPlan(), type=synchron, return=diffs,fill=white]{terraform}{tfplan}
+	\end{umlcall}
+     \end{umlfragment}
+    \end{umlcall}
+
+    \end{umlseqdiag}
+  \end{tikzpicture}
+\end{center}
+
+\end{landscape}
+
+\end{document}

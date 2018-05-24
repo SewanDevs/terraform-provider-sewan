@@ -1,7 +1,5 @@
 %
 % Compilation of the examples from the TikZ-UML manual, v. 1.0b (2013-03-01)
-% http://www.ensta-paristech.fr/~kielbasi/tikzuml/index.php?lang=en
-%
 \documentclass[a4paper,12pt]{article}
 
 \usepackage[T1]{fontenc}
@@ -38,16 +36,16 @@
       \begin{umlcall}[op=2.\ plan(), type=asynchron]{terraform}{terraform}
       \end{umlcall}
     
-      \begin{umlfragment}[type=loop, label=resource\_in\_plan, name=loop, inner xsep=15] 
+      \begin{umlfragment}[type=loop, label=resource\_in\_plan, name=loop, inner xsep=15,fill=blue!15]
 
-	\begin{umlfragment}[type=alt, label=resource\_exists, name=if, inner xsep=18]
+	\begin{umlfragment}[type=alt, label=resource\_exists, name=if, inner xsep=18,fill=white]
 	  \begin{umlcall}[op=3.\ resource\_update(), type=synchron, return=resource\_state]{terraform}{sdk}
 	    \begin{umlcall}[op=4.\ HTTP\_PUT(), type=synchron, return=HTTP.resp]{sdk}{api}
 	    \end{umlcall}
 	  \end{umlcall}
 	\end{umlfragment}[name=if]
 
-	\begin{umlfragment}[type=alt, label=resource\_not\_exists, name=else, inner xsep=18] 
+	\begin{umlfragment}[type=alt, label=resource\_not\_exists, name=else, inner xsep=18,fill=white]
 	  \begin{umlcall}[op=3.\ resource\_create(), type=synchron, return=resource\_state]{terraform}{sdk}
 	    \begin{umlcall}[op=4.\ HTTP\_POST(), type=synchron, return=HTTP.resp]{sdk}{api}
 	    \end{umlcall}

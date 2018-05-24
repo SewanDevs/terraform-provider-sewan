@@ -34,9 +34,9 @@
       \begin{umlcall}[op=2.\ plan(), type=asynchron]{terraform}{terraform}
       \end{umlcall}
     
-      \begin{umlfragment}[type=loop, label=resource\_in\_plan, name=loop, inner xsep=15] 
+      \begin{umlfragment}[type=loop, label=resource\_in\_plan, name=loop, inner xsep=15,,fill=blue!15]
 
-	\begin{umlfragment}[type=alt, label=resource\_exists, name=if, inner xsep=18]
+	\begin{umlfragment}[type=alt, label=resource\_exists, name=if, inner xsep=18,fill=white]
 	  \begin{umlcall}[op=3.\ resource\_delete(), type=synchron, return=resource\_state]{terraform}{sdk}
 	    \begin{umlcall}[op=4.\ HTTP\_DELETE(), type=synchron, return=HTTP.resp]{sdk}{api}
 	    \end{umlcall}

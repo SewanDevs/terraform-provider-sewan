@@ -7,3 +7,6 @@
 * Open a .tex file with Kile
 * Short cut : alt-2 -> generate .aux and .dvi files
 * Short cut : alt-2 -> generate a pdf file
+
+## Docs refs
+* Sequence diagrams : https://www.ibm.com/developerworks/rational/library/3101.html

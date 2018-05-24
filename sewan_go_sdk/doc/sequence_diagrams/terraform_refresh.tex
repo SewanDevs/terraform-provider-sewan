@@ -1,7 +1,3 @@
-%
-% Compilation of the examples from the TikZ-UML manual, v. 1.0b (2013-03-01)
-% http://www.ensta-paristech.fr/~kielbasi/tikzuml/index.php?lang=en
-%
 \documentclass[a4paper,12pt]{article}
 
 \usepackage[T1]{fontenc}
@@ -33,21 +29,20 @@
     \umlobject[class=SewanSDK, x=13]{sdk}
     \umlobject[class=AirdrumAPI, x=17]{api}
 
-    \begin{umlcall}[op=3.\ terraform\ refresh(), type=synchron, return=refresh\ status]{admin}{terraform}
+    \begin{umlcall}[op=1.\ terraform\ refresh(), type=synchron, return=refresh\ status]{admin}{terraform}
 
-      \begin{umlcall}[op=4.\ getLocalState(), type=synchron, return=state]{terraform}{localstate}
+      \begin{umlcall}[op=2.\ getLocalState(), type=synchron, return=state]{terraform}{localstate}
       \end{umlcall}
 
-      \begin{umlfragment}[type=alt, label=state\ not\ nul, name=alt, inner xsep=7] 
-	\begin{umlcall}[op=5.\ resources\_read(), type=synchron, return=resources\_state]{terraform}{sdk}
-	  \begin{umlcall}[op=6.\ HTTP\_GET(), type=synchron, return=HTTP.resp]{sdk}{api}
+      \begin{umlfragment}[type=loop, label=resource\_in\_plan, name=loop, inner xsep=10,fill=blue!15]
+	\begin{umlcall}[op=3.\ resource\_read(), type=synchron, return=resource\_state]{terraform}{sdk}
+	  \begin{umlcall}[op=4.\ HTTP\_GET(), type=synchron, return=HTTP.resp]{sdk}{api}
 	  \end{umlcall}
 	\end{umlcall}
-      \begin{umlcall}[op=7.\ update(), type=synchron, return=OK]{terraform}{localstate}
+      \begin{umlcall}[op=5.\ update\_resource(), type=synchron, return=OK]{terraform}{localstate}
       \end{umlcall}
       \end{umlfragment}
 
-      
     \end{umlcall}
 
     \end{umlseqdiag}

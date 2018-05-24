@@ -1,7 +1,3 @@
-%
-% Compilation of the examples from the TikZ-UML manual, v. 1.0b (2013-03-01)
-% http://www.ensta-paristech.fr/~kielbasi/tikzuml/index.php?lang=en
-%
 \documentclass[a4paper,12pt]{article}
 
 \usepackage[T1]{fontenc}
@@ -39,9 +35,10 @@
       \begin{umlcall}[op=2.\ refresh(), type=asynchron]{terraform}{terraform}
       \end{umlcall}
     
-      \begin{umlcall}[op=3.\ getDiffWithPlan(), type=synchron, return=diffs]{terraform}{tfplan}
-      \end{umlcall}
-     
+      \begin{umlfragment}[type=loop, label=resource\_in\_plan, name=loop, inner xsep=15,fill=blue!15]
+	\begin{umlcall}[op=3.\ getDiffWithPlan(), type=synchron, return=diffs,fill=white]{terraform}{tfplan}
+	\end{umlcall}
+     \end{umlfragment}
     \end{umlcall}
 
     \end{umlseqdiag}

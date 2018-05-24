@@ -1,0 +1,59 @@
+%
+% Compilation of the examples from the TikZ-UML manual, v. 1.0b (2013-03-01)
+% http://www.ensta-paristech.fr/~kielbasi/tikzuml/index.php?lang=en
+%
+\documentclass[a4paper,12pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{fullpage}
+\usepackage{lscape}
+
+\usepackage{tikz-uml}
+
+\sloppy
+\hyphenpenalty 10000000
+
+\title{Sequence diagram : `terraform refresh` with sewan provider plugin and sdk}
+\author{Sewan}
+
+\begin{document}
+\begin{landscape}
+
+\maketitle
+
+\begin{center}
+  \begin{tikzpicture}
+    \begin{umlseqdiag}
+
+    \umlactor[class=SysAdmin, x=-3]{admin}
+    \umlobject[class=Tfstate, x=1]{localstate}
+    \umlobject[class=Terraform\&Plugin, x=8]{terraform}
+    \umlobject[class=SewanSDK, x=13]{sdk}
+    \umlobject[class=AirdrumAPI, x=17]{api}
+
+    \begin{umlcall}[op=3.\ terraform\ refresh(), type=synchron, return=refresh\ status]{admin}{terraform}
+
+      \begin{umlcall}[op=4.\ getLocalState(), type=synchron, return=state]{terraform}{localstate}
+      \end{umlcall}
+
+      \begin{umlfragment}[type=alt, label=state\ not\ nul, name=alt, inner xsep=7] 
+	\begin{umlcall}[op=5.\ resources\_read(), type=synchron, return=resources\_state]{terraform}{sdk}
+	  \begin{umlcall}[op=6.\ HTTP\_GET(), type=synchron, return=HTTP.resp]{sdk}{api}
+	  \end{umlcall}
+	\end{umlcall}
+      \begin{umlcall}[op=7.\ update(), type=synchron, return=OK]{terraform}{localstate}
+      \end{umlcall}
+      \end{umlfragment}
+
+      
+    \end{umlcall}
+
+    \end{umlseqdiag}
+  \end{tikzpicture}
+\end{center}
+
+\end{landscape}
+
+\end{document}

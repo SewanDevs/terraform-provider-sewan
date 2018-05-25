@@ -72,55 +72,46 @@ func (sewan API) Create_vm_resource(d *schema.ResourceData) (error, map[string]i
 	var airDrumAPICreationResponse map[string]interface{}
 	logger := loggerCreate("create_vm_" + vmInstance.Vdc + "_" + vmInstance.Name + ".log")
 
-	url_builder := AirdrumURL_Builder{}
-	url := url_builder.Create_and_Validate_API_URL(sewan.URL)
+	vm_json, err_json := json.Marshal(vmInstance)
+	logger.Println("vmInstance =", vmInstance)
+	logger.Println("err_json =", err_json)
+	logger.Println("vm_json =", vm_json)
 
-	if url.Err == nil {
-		vm_json, err_json := json.Marshal(vmInstance)
-		logger.Println("vmInstance =", vmInstance)
-		logger.Println("err_json =", err_json)
-		logger.Println("vm_json =", vm_json)
+	req, _ := http.NewRequest("POST", sewan.Get_vm_creation_url(), bytes.NewBuffer(vm_json))
 
-		req, _ := http.NewRequest("POST", url_builder.Get_vm_creation_url(url), bytes.NewBuffer(vm_json))
+	req.Header.Add("authorization", "Token "+sewan.Token)
+	req.Header.Add("content-type", "application/json")
 
-		req.Header.Add("authorization", "Token "+sewan.Token)
-		req.Header.Add("content-type", "application/json")
+	logger.Println("Creation of ", vmInstance.Name, "request Header = ", req.Header)
+	logger.Println("Creation of ", vmInstance.Name, "request body = ", req.Body)
 
-		logger.Println("Creation of ", vmInstance.Name, "request Header = ", req.Header)
-		logger.Println("Creation of ", vmInstance.Name, "request body = ", req.Body)
+	resp, create_err := sewan.Client.Do(req)
+	defer resp.Body.Close()
+	bodyBytes, create_resp_body_read_err := ioutil.ReadAll(resp.Body)
+	responseBody = string(bodyBytes)
 
-		resp, create_err := sewan.Client.Do(req)
-		defer resp.Body.Close()
-		bodyBytes, create_resp_body_read_err := ioutil.ReadAll(resp.Body)
-		responseBody = string(bodyBytes)
+	if create_err != nil {
+		logger.Println("Creation of ", vmInstance.Name, " response reception error : ", create_err)
+		createError = errors.New("Creation of " + vmInstance.Name + " response reception error : " + create_err.Error())
+	}
 
-		if create_err != nil {
-			logger.Println("Creation of ", vmInstance.Name, " response reception error : ", create_err)
-			createError = errors.New("Creation of " + vmInstance.Name + " response reception error : " + create_err.Error())
-		}
+	if create_resp_body_read_err != nil {
+		logger.Println("Creation of ", vmInstance.Name, " response body read error ", create_resp_body_read_err)
+		createError = errors.New("Creation of " + vmInstance.Name + " response body read error " + create_resp_body_read_err.Error())
+	}
 
-		if create_resp_body_read_err != nil {
-			logger.Println("Creation of ", vmInstance.Name, " response body read error ", create_resp_body_read_err)
-			createError = errors.New("Creation of " + vmInstance.Name + " response body read error " + create_resp_body_read_err.Error())
-		}
+	logger.Println("Creation of ", vmInstance.Name, " response status = ", resp.Status)
+	logger.Println("Creation of ", vmInstance.Name, " response body = ", responseBody)
 
-		logger.Println("Creation of ", vmInstance.Name, " response status = ", resp.Status)
-		logger.Println("Creation of ", vmInstance.Name, " response body = ", responseBody)
-
-		if resp.StatusCode != RESOURCE_CREATE_HTTP_SUCCESS_CODE {
-			logger.Println("Creation of ", vmInstance.Name, " resource failed : ", resp.Status, responseBody)
-			createError = errors.New(resp.Status + responseBody)
-		} else {
-			resp_body_json_err := json.Unmarshal(bodyBytes, &resp_body_reader)
-			if resp_body_json_err != nil {
-				createError = resp_body_json_err
-			}
-			airDrumAPICreationResponse = resp_body_reader.(map[string]interface{})
-		}
+	if resp.StatusCode != RESOURCE_CREATE_HTTP_SUCCESS_CODE {
+		logger.Println("Creation of ", vmInstance.Name, " resource failed : ", resp.Status, responseBody)
+		createError = errors.New(resp.Status + responseBody)
 	} else {
-		logger.Println(url.Err)
-		logger.Println("Creation process not executed.")
-		createError = url.Err
+		resp_body_json_err := json.Unmarshal(bodyBytes, &resp_body_reader)
+		if resp_body_json_err != nil {
+			createError = resp_body_json_err
+		}
+		airDrumAPICreationResponse = resp_body_reader.(map[string]interface{})
 	}
 	return createError, airDrumAPICreationResponse
 }
@@ -136,48 +127,39 @@ func (sewan API) Read_vm_resource(d *schema.ResourceData) (error, map[string]int
 	logger := loggerCreate("read_vm_" + d.Get("name").(string) + ".log")
 	logger.Println("--------------- ", d.Get("name").(string), " ( id= ", d.Id(), ") READ -----------------")
 
-	url_builder := AirdrumURL_Builder{}
-	url := url_builder.Create_and_Validate_API_URL(sewan.URL)
+	req, _ := http.NewRequest("GET", sewan.Get_vm_url(d.Id()), nil)
 
-	if url.Err == nil {
-		req, _ := http.NewRequest("GET", url_builder.Get_vm_url(url, d.Id()), nil)
+	req.Header.Add("authorization", "Token "+sewan.Token)
 
-		req.Header.Add("authorization", "Token "+sewan.Token)
+	resp, read_req_err := sewan.Client.Do(req)
+	defer resp.Body.Close()
 
-		resp, read_req_err := sewan.Client.Do(req)
-		defer resp.Body.Close()
+	bodyBytes, read_resp_body_read_err := ioutil.ReadAll(resp.Body)
+	responseBody = string(bodyBytes)
 
-		bodyBytes, read_resp_body_read_err := ioutil.ReadAll(resp.Body)
-		responseBody = string(bodyBytes)
+	if read_req_err != nil {
+		logger.Println("Read of ", d.Get("name").(string), " state reception error : ", read_req_err)
+		readError = errors.New("Read of " + d.Get("name").(string) + " state reception error : " + read_req_err.Error())
+	}
 
-		if read_req_err != nil {
-			logger.Println("Read of ", d.Get("name").(string), " state reception error : ", read_req_err)
-			readError = errors.New("Read of " + d.Get("name").(string) + " state reception error : " + read_req_err.Error())
-		}
+	if read_resp_body_read_err != nil {
+		logger.Println("Read of ", d.Get("name").(string), " state response body read error ", read_resp_body_read_err)
+		readError = errors.New("Read of " + d.Get("name").(string) + " state response body read error " + read_resp_body_read_err.Error())
+	}
 
-		if read_resp_body_read_err != nil {
-			logger.Println("Read of ", d.Get("name").(string), " state response body read error ", read_resp_body_read_err)
-			readError = errors.New("Read of " + d.Get("name").(string) + " state response body read error " + read_resp_body_read_err.Error())
-		}
-
-		if resp.StatusCode == RESOURCE_GET_HTTP_SUCCESS_CODE {
-			resp_body_json_err := json.Unmarshal(bodyBytes, &resp_body_reader)
-			if resp_body_json_err != nil {
-				readError = resp_body_json_err
-			} else {
-				airDrumAPICreationResponse = resp_body_reader.(map[string]interface{})
-			}
-		} else if resp.StatusCode == RESOURCE_GET_HTTP_NOT_FOUND_CODE {
-			logger.Println(d.Get("name").(string), " not found, The resource may have been deleted by an other Airdrum API client.")
-			resource_exists = false
+	if resp.StatusCode == RESOURCE_GET_HTTP_SUCCESS_CODE {
+		resp_body_json_err := json.Unmarshal(bodyBytes, &resp_body_reader)
+		if resp_body_json_err != nil {
+			readError = resp_body_json_err
 		} else {
-			logger.Println("Unknow error : ")
-			readError = errors.New("Unknow error : " + resp.Status + responseBody)
+			airDrumAPICreationResponse = resp_body_reader.(map[string]interface{})
 		}
+	} else if resp.StatusCode == RESOURCE_GET_HTTP_NOT_FOUND_CODE {
+		logger.Println(d.Get("name").(string), " not found, The resource may have been deleted by an other Airdrum API client.")
+		resource_exists = false
 	} else {
-		logger.Println(url.Err)
-		logger.Println("Read process not executed.")
-		readError = url.Err
+		logger.Println("Unknow error : ")
+		readError = errors.New("Unknow error : " + resp.Status + responseBody)
 	}
 	return readError, airDrumAPICreationResponse, resource_exists
 }
@@ -188,52 +170,42 @@ func (sewan API) Update_vm_resource(d *schema.ResourceData) error {
 	updateError = nil
 	vmInstance := vmInstanceCreate(d)
 	logger := loggerCreate("update_vm_" + d.Get("name").(string) + ".log")
-
 	logger.Println("--------------- ", d.Get("name").(string), " ( id= ", d.Id(), ") UPDATE -----------------")
 
-	url_builder := AirdrumURL_Builder{}
-	url := url_builder.Create_and_Validate_API_URL(sewan.URL)
+	vm_json, err_json := json.Marshal(vmInstance)
+	logger.Println("vmInstance =", vmInstance)
+	logger.Println("err_json =", err_json)
+	logger.Println("vm_json =", vm_json)
 
-	if url.Err == nil {
-		vm_json, err_json := json.Marshal(vmInstance)
-		logger.Println("vmInstance =", vmInstance)
-		logger.Println("err_json =", err_json)
-		logger.Println("vm_json =", vm_json)
+	req, _ := http.NewRequest("PUT", sewan.Get_vm_url(d.Id()), bytes.NewBuffer(vm_json))
 
-		req, _ := http.NewRequest("PUT", url_builder.Get_vm_url(url, d.Id()), bytes.NewBuffer(vm_json))
+	req.Header.Add("authorization", "Token "+sewan.Token)
+	req.Header.Add("content-type", "application/json")
 
-		req.Header.Add("authorization", "Token "+sewan.Token)
-		req.Header.Add("content-type", "application/json")
+	logger.Println("Update of ", d.Get("name").(string), "request Header = ", req.Header)
+	logger.Println("Update of ", d.Get("name").(string), "request body = ", req.Body)
 
-		logger.Println("Update of ", d.Get("name").(string), "request Header = ", req.Header)
-		logger.Println("Update of ", d.Get("name").(string), "request body = ", req.Body)
+	resp, create_err := sewan.Client.Do(req)
+	defer resp.Body.Close()
+	bodyBytes, update_resp_body_read_err := ioutil.ReadAll(resp.Body)
+	responseBody = string(bodyBytes)
 
-		resp, create_err := sewan.Client.Do(req)
-		defer resp.Body.Close()
-		bodyBytes, update_resp_body_read_err := ioutil.ReadAll(resp.Body)
-		responseBody = string(bodyBytes)
+	if create_err != nil {
+		logger.Println("Update of ", d.Get("name").(string), " response reception error : ", create_err)
+		updateError = errors.New("Update of " + d.Get("name").(string) + " response reception error : " + create_err.Error())
+	}
 
-		if create_err != nil {
-			logger.Println("Update of ", d.Get("name").(string), " response reception error : ", create_err)
-			updateError = errors.New("Update of " + d.Get("name").(string) + " response reception error : " + create_err.Error())
-		}
+	if update_resp_body_read_err != nil {
+		logger.Println("Update of ", d.Get("name").(string), " response body read error ", update_resp_body_read_err)
+		updateError = errors.New("Update of " + d.Get("name").(string) + " response body read error " + update_resp_body_read_err.Error())
+	}
 
-		if update_resp_body_read_err != nil {
-			logger.Println("Update of ", d.Get("name").(string), " response body read error ", update_resp_body_read_err)
-			updateError = errors.New("Update of " + d.Get("name").(string) + " response body read error " + update_resp_body_read_err.Error())
-		}
+	logger.Println("Update of ", d.Get("name").(string), " response status = ", resp.Status)
+	logger.Println("Update of ", d.Get("name").(string), " response body = ", responseBody)
 
-		logger.Println("Update of ", d.Get("name").(string), " response status = ", resp.Status)
-		logger.Println("Update of ", d.Get("name").(string), " response body = ", responseBody)
-
-		if resp.StatusCode != RESOURCE_UPDATE_HTTP_SUCCESS_CODE {
-			logger.Println("Update of ", d.Get("name").(string), " resource failed : ", resp.Status, responseBody)
-			updateError = errors.New(resp.Status + responseBody)
-		}
-	} else {
-		logger.Println(url.Err)
-		logger.Println("Update process not executed.")
-		updateError = url.Err
+	if resp.StatusCode != RESOURCE_UPDATE_HTTP_SUCCESS_CODE {
+		logger.Println("Update of ", d.Get("name").(string), " resource failed : ", resp.Status, responseBody)
+		updateError = errors.New(resp.Status + responseBody)
 	}
 
 	return updateError
@@ -244,41 +216,31 @@ func (sewan API) Delete_vm_resource(d *schema.ResourceData) error {
 	var deleteError error
 	deleteError = nil
 	logger := loggerCreate("update_vm_" + d.Get("name").(string) + ".log")
-
 	logger.Println("--------------- ", d.Get("name").(string), " ( id= ", d.Id(), ") DELETE -----------------")
 
-	url_builder := AirdrumURL_Builder{}
-	url := url_builder.Create_and_Validate_API_URL(sewan.URL)
+	req, _ := http.NewRequest("DELETE", sewan.Get_vm_url(d.Id()), nil)
 
-	if url.Err == nil {
-		req, _ := http.NewRequest("DELETE", url_builder.Get_vm_url(url, d.Id()), nil)
+	req.Header.Add("authorization", "Token "+sewan.Token)
 
-		req.Header.Add("authorization", "Token "+sewan.Token)
+	resp, delete_err := sewan.Client.Do(req)
+	defer resp.Body.Close()
 
-		resp, delete_err := sewan.Client.Do(req)
-		defer resp.Body.Close()
+	bodyBytes, delete_resp_body_read_err := ioutil.ReadAll(resp.Body)
+	responseBody = string(bodyBytes)
 
-		bodyBytes, delete_resp_body_read_err := ioutil.ReadAll(resp.Body)
-		responseBody = string(bodyBytes)
+	if delete_err != nil {
+		logger.Println("Deletion of ", d.Get("name").(string), " response reception error : ", delete_err)
+		deleteError = errors.New("Deletion of " + d.Get("name").(string) + " response reception error : " + delete_err.Error())
+	}
 
-		if delete_err != nil {
-			logger.Println("Deletion of ", d.Get("name").(string), " response reception error : ", delete_err)
-			deleteError = errors.New("Deletion of " + d.Get("name").(string) + " response reception error : " + delete_err.Error())
-		}
+	if delete_resp_body_read_err != nil {
+		logger.Println("Deletion of ", d.Get("name").(string), " response body read error ", delete_resp_body_read_err)
+		deleteError = errors.New("Deletion of " + d.Get("name").(string) + " response reception error : " + delete_err.Error())
+	}
 
-		if delete_resp_body_read_err != nil {
-			logger.Println("Deletion of ", d.Get("name").(string), " response body read error ", delete_resp_body_read_err)
-			deleteError = errors.New("Deletion of " + d.Get("name").(string) + " response reception error : " + delete_err.Error())
-		}
-
-		if resp.StatusCode != RESOURCE_DELETE_HTTP_SUCCESS_CODE && responseBody != "{\"detail\":\"Destroying the VM now\"}" {
-			logger.Println("Deletion of ", d.Get("name").(string), " resource failed : ", resp.Status, responseBody)
-			deleteError = errors.New(resp.Status + responseBody)
-		}
-	} else {
-		logger.Println(url.Err)
-		logger.Println("Delete process not executed.")
-		deleteError = url.Err
+	if resp.StatusCode != RESOURCE_DELETE_HTTP_SUCCESS_CODE && responseBody != "{\"detail\":\"Destroying the VM now\"}" {
+		logger.Println("Deletion of ", d.Get("name").(string), " resource failed : ", resp.Status, responseBody)
+		deleteError = errors.New(resp.Status + responseBody)
 	}
 
 	return deleteError

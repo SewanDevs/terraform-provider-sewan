@@ -6,7 +6,8 @@ import (
 )
 
 func TestNew(t *testing.T) {
-
+	New("42","tata")
+	
 }
 
 func TestCreate_and_Validate_API_URL(t *testing.T) {
@@ -39,7 +40,7 @@ func TestCreate_and_Validate_API_URL(t *testing.T) {
 		},
 	}
 	for _, test_case := range pass_test_cases {
-		test_api_url := a.Create_and_Validate_API_URL(test_case.api_url)
+		test_api_url := a.create_and_Validate_API_URL(test_case.api_url)
 		if test_api_url.S_url != test_case.return_url.S_url {
 			t.Errorf("VM url was incorrect, got: %s, want: %s.", test_api_url.S_url, test_case.return_url.S_url)
 		}
@@ -48,7 +49,7 @@ func TestCreate_and_Validate_API_URL(t *testing.T) {
 		}
 	}
 	for _, test_case := range fail_test_cases {
-		test_api_url := a.Create_and_Validate_API_URL(test_case.api_url)
+		test_api_url := a.create_and_Validate_API_URL(test_case.api_url)
 		if test_api_url.S_url != test_case.return_url.S_url {
 			t.Errorf("Returned url should be empty, got: %s, want: %s.", test_api_url.S_url, test_case.return_url.S_url)
 		}

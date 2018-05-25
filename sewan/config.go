@@ -27,11 +27,5 @@ func (c *Config) Client() (*Client, error) {
 		c.Api_token,
 		c.Api_url,
 	)
-	if err != nil {
-		return nil, err
-	}
-
-	// TODO : validate token here
-
-	return &Client{api}, nil
+	return &Client{api}, err
 }

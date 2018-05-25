@@ -1,6 +1,6 @@
 provider "sewan" {
   api_token = "b759e9fa0f40e2017be6dfb30f670022470086ca"
-  api_url = "https://next.cloud-datacenter.fr/api/clouddc/vm/"
+  api_url = "https://next.cloud-datacenter.fr/api/clouddc/"
 }
 
 resource "sewan_clouddc_vm" "skeleton-server1" {

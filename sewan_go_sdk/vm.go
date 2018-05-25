@@ -81,7 +81,7 @@ func (sewan API) Create_vm_resource(d *schema.ResourceData) (error, map[string]i
 		logger.Println("err_json =", err_json)
 		logger.Println("vm_json =", vm_json)
 
-		req, _ := http.NewRequest("POST", url_builder.Get_vm_create_url(url), bytes.NewBuffer(vm_json))
+		req, _ := http.NewRequest("POST", url_builder.Get_vm_creation_url(url), bytes.NewBuffer(vm_json))
 
 		req.Header.Add("authorization", "Token "+sewan.Token)
 		req.Header.Add("content-type", "application/json")

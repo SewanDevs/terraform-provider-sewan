@@ -29,7 +29,7 @@ type URL struct {
 }
 
 type URL_builder interface {
-	Get_vm_create_url(api_url string) string
+	Get_vm_creation_url(api_url string) string
 	Get_vm_url(api_url string, id string) string
 	Create_and_Validate_API_URL(url string) URL
 }
@@ -71,7 +71,7 @@ func (a AirdrumURL_Builder) Create_and_Validate_API_URL(url string) URL {
 	return URL{s_return_url, url_error}
 }
 
-func (a AirdrumURL_Builder) Get_vm_create_url(api_url URL) string {
+func (a AirdrumURL_Builder) Get_vm_creation_url(api_url URL) string {
 	var vm_url strings.Builder
 	s_api_url := api_url.S_url
 	vm_url.WriteString(s_api_url)
@@ -81,7 +81,7 @@ func (a AirdrumURL_Builder) Get_vm_create_url(api_url URL) string {
 
 func (a AirdrumURL_Builder) Get_vm_url(api_url URL, vm_id string) string {
 	var vm_url strings.Builder
-	s_create_url := a.Get_vm_create_url(api_url)
+	s_create_url := a.Get_vm_creation_url(api_url)
 	vm_url.WriteString(s_create_url)
 	vm_url.WriteString(vm_id)
 	vm_url.WriteString("/")

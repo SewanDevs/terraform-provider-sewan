@@ -71,13 +71,16 @@ func (sewan API) Create_vm_resource(d *schema.ResourceData) (error, map[string]i
 	createError = nil
 	var airDrumAPICreationResponse map[string]interface{}
 	logger := loggerCreate("create_vm_" + vmInstance.Vdc + "_" + vmInstance.Name + ".log")
+	api_tools := Tooler{
+		ApiTooler: sewan,
+	}
 
 	vm_json, err_json := json.Marshal(vmInstance)
 	logger.Println("vmInstance =", vmInstance)
 	logger.Println("err_json =", err_json)
 	logger.Println("vm_json =", vm_json)
 
-	req, _ := http.NewRequest("POST", sewan.Get_vm_creation_url(), bytes.NewBuffer(vm_json))
+	req, _ := http.NewRequest("POST", api_tools.ApiTooler.Get_vm_creation_url(), bytes.NewBuffer(vm_json))
 
 	req.Header.Add("authorization", "Token "+sewan.Token)
 	req.Header.Add("content-type", "application/json")
@@ -126,8 +129,11 @@ func (sewan API) Read_vm_resource(d *schema.ResourceData) (error, map[string]int
 	var resp_body_reader interface{}
 	logger := loggerCreate("read_vm_" + d.Get("name").(string) + ".log")
 	logger.Println("--------------- ", d.Get("name").(string), " ( id= ", d.Id(), ") READ -----------------")
+	api_tools := Tooler{
+		ApiTooler: sewan,
+	}
 
-	req, _ := http.NewRequest("GET", sewan.Get_vm_url(d.Id()), nil)
+	req, _ := http.NewRequest("GET", api_tools.ApiTooler.Get_vm_url(d.Id()), nil)
 
 	req.Header.Add("authorization", "Token "+sewan.Token)
 
@@ -171,13 +177,16 @@ func (sewan API) Update_vm_resource(d *schema.ResourceData) error {
 	vmInstance := vmInstanceCreate(d)
 	logger := loggerCreate("update_vm_" + d.Get("name").(string) + ".log")
 	logger.Println("--------------- ", d.Get("name").(string), " ( id= ", d.Id(), ") UPDATE -----------------")
+	api_tools := Tooler{
+		ApiTooler: sewan,
+	}
 
 	vm_json, err_json := json.Marshal(vmInstance)
 	logger.Println("vmInstance =", vmInstance)
 	logger.Println("err_json =", err_json)
 	logger.Println("vm_json =", vm_json)
 
-	req, _ := http.NewRequest("PUT", sewan.Get_vm_url(d.Id()), bytes.NewBuffer(vm_json))
+	req, _ := http.NewRequest("PUT", api_tools.ApiTooler.Get_vm_url(d.Id()), bytes.NewBuffer(vm_json))
 
 	req.Header.Add("authorization", "Token "+sewan.Token)
 	req.Header.Add("content-type", "application/json")
@@ -217,8 +226,11 @@ func (sewan API) Delete_vm_resource(d *schema.ResourceData) error {
 	deleteError = nil
 	logger := loggerCreate("update_vm_" + d.Get("name").(string) + ".log")
 	logger.Println("--------------- ", d.Get("name").(string), " ( id= ", d.Id(), ") DELETE -----------------")
+	api_tools := Tooler{
+		ApiTooler: sewan,
+	}
 
-	req, _ := http.NewRequest("DELETE", sewan.Get_vm_url(d.Id()), nil)
+	req, _ := http.NewRequest("DELETE", api_tools.ApiTooler.Get_vm_url(d.Id()), nil)
 
 	req.Header.Add("authorization", "Token "+sewan.Token)
 

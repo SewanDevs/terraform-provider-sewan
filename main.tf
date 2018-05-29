@@ -1,5 +1,5 @@
 provider "sewan" {
-  api_token = "b9ede87382b298b0b664830b00decc19edfc81e3"
+  api_token = "c2a50ee3fecededf845d1319f9ec6f5c6b324f66"
   api_url = "https://next.cloud-datacenter.fr/api/clouddc/"
 }
 

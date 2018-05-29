@@ -5,7 +5,6 @@ import (
 	sdk "terraform-provider-sewan/sewan_go_sdk"
 )
 
-// Config contains scaleway configuration values
 type Config struct {
 	Api_token string
 	Api_url   string
@@ -17,15 +16,18 @@ type API struct {
 	Client *http.Client
 }
 
-// Client contains scaleway api clients
 type Client struct {
 	sewan *sdk.API
 }
 
 func (c *Config) Client() (*Client, error) {
-	api, err := sdk.New(
+	apiTooler := sdk.APITooler{
+		Api: sdk.AirDrumAPIer{},
+	}
+	api := apiTooler.New(
 		c.Api_token,
 		c.Api_url,
 	)
+	err := apiTooler.CheckStatus(api)
 	return &Client{api}, err
 }

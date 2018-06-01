@@ -17,8 +17,8 @@ type API struct {
 }
 
 type Client struct {
-	sewan *sdk.API
-	sewan_apiTooler *sdk.APITooler
+	sewan              *sdk.API
+	sewan_apiTooler    *sdk.APITooler
 	sewan_clientTooler *sdk.ClientTooler
 }
 
@@ -34,5 +34,5 @@ func (c *Config) Client() (*Client, error) {
 		c.Api_url,
 	)
 	err := apiTooler.CheckStatus(api)
-	return &Client{api,&apiTooler,&clientTooler}, err
+	return &Client{api, &apiTooler, &clientTooler}, err
 }

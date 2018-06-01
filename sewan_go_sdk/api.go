@@ -2,10 +2,10 @@ package sewan_go_sdk
 
 import (
 	"errors"
+	"github.com/hashicorp/terraform/helper/schema"
 	"io/ioutil"
 	"net/http"
 	"strings"
-	"github.com/hashicorp/terraform/helper/schema"
 )
 
 type API struct {
@@ -21,22 +21,22 @@ type APIer interface {
 	Get_vm_url(api *API, id string) string
 	Validate_status(api *API, client ClientTooler) error
 	Create_vm_resource(d *schema.ResourceData, clientTooler *ClientTooler, sewan *API) (error, map[string]interface{})
-	Read_vm_resource(d *schema.ResourceData, clientTooler *ClientTooler, sewan *API) (error, map[string]interface{},bool)
-	Update_vm_resource(d *schema.ResourceData, clientTooler *ClientTooler, sewan *API) (error)
-	Delete_vm_resource(d *schema.ResourceData, clientTooler *ClientTooler, sewan *API) (error)
+	Read_vm_resource(d *schema.ResourceData, clientTooler *ClientTooler, sewan *API) (error, map[string]interface{}, bool)
+	Update_vm_resource(d *schema.ResourceData, clientTooler *ClientTooler, sewan *API) error
+	Delete_vm_resource(d *schema.ResourceData, clientTooler *ClientTooler, sewan *API) error
 }
 type AirDrumAPIer struct{}
 
 type ClientTooler struct {
 	Client Clienter
 }
-type Clienter interface{
-	Do(api *API,req *http.Request) (*http.Response,error)
+type Clienter interface {
+	Do(api *API, req *http.Request) (*http.Response, error)
 }
 type HttpClienter struct{}
 
-func (client HttpClienter) Do(api *API,req *http.Request) (*http.Response,error){
-	resp,err := api.Client.Do(req)
+func (client HttpClienter) Do(api *API, req *http.Request) (*http.Response, error) {
+	resp, err := api.Client.Do(req)
 	return resp, err
 }
 
@@ -62,7 +62,7 @@ func (apier AirDrumAPIer) Get_vm_creation_url(api *API) string {
 	return vm_url.String()
 }
 
-func (apier AirDrumAPIer) Get_vm_url(api *API,vm_id string) string {
+func (apier AirDrumAPIer) Get_vm_url(api *API, vm_id string) string {
 	var vm_url strings.Builder
 	api_tools := APITooler{
 		Api: apier,
@@ -80,15 +80,15 @@ func (apier AirDrumAPIer) Validate_status(api *API, clientTooler ClientTooler) e
 	api_tools := APITooler{
 		Api: apier,
 	}
-	req,_ := http.NewRequest("GET", api_tools.Api.Get_vm_creation_url(api), nil)
+	req, _ := http.NewRequest("GET", api_tools.Api.Get_vm_creation_url(api), nil)
 	req.Header.Add("authorization", "Token "+api.Token)
-	resp, apiErr := clientTooler.Client.Do(api,req)
+	resp, apiErr := clientTooler.Client.Do(api, req)
 
 	if apiErr == nil {
-		if resp.Body!=nil{
+		if resp.Body != nil {
 			bodyBytes, _ := ioutil.ReadAll(resp.Body)
 			responseBody = string(bodyBytes)
-			switch  {
+			switch {
 			case resp.StatusCode == http.StatusUnauthorized:
 				apiErr = errors.New(resp.Status + responseBody)
 			case resp.Header.Get("content-type") != "application/json":

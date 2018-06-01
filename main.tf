@@ -1,14 +1,14 @@
 provider "sewan" {
-  api_token = "c2a50ee3fecededf845d1319f9ec6f5c6b324f66"
+  api_token = "d9d3104d32601d1199293003a1f5d62f150039ba"
   api_url = "https://next.cloud-datacenter.fr/api/clouddc/"
 }
 
 resource "sewan_clouddc_vm" "skeleton-server1" {
   name = "skeleton-server1"
   vdc = "sewan-rd-cloud-beta-dc1-terraf"
-  os = "CentOS"
-  ram  = "2"
-  cpu = "2"
+  os = "Debian 8"
+  ram  = "10"
+  cpu = "5"
   disk_image = ""
   nics=[
   {
@@ -41,7 +41,7 @@ resource "sewan_clouddc_vm" "skeleton-client1" {
   name = "skeleton-client1"
   vdc = "sewan-rd-cloud-beta-dc1-terraf"
   os = "CentOS"
-  ram  = "1"
+  ram  = "2"
   cpu = "1"
   disk_image = ""
   nics=[

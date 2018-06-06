@@ -13,8 +13,8 @@ type VM struct {
 	Name              string        `json:"name"`
 	State             string        `json:"state"`
 	OS                string        `json:"os"`
-	RAM               string        `json:"ram"`
-	CPU               string        `json:"cpu"`
+	RAM               int           `json:"ram"`
+	CPU               int           `json:"cpu"`
 	Disks             []interface{} `json:"disks"`
 	Nics              []interface{} `json:"nics"`
 	Vdc               string        `json:"vdc"`
@@ -37,8 +37,8 @@ func vmInstanceCreate(d *schema.ResourceData) VM {
 		Name:              d.Get("name").(string),
 		State:             d.Get("state").(string),
 		OS:                d.Get("os").(string),
-		RAM:               d.Get("ram").(string),
-		CPU:               d.Get("cpu").(string),
+		RAM:               d.Get("ram").(int),
+		CPU:               d.Get("cpu").(int),
 		Disks:             d.Get("disks").([]interface{}),
 		Nics:              d.Get("nics").([]interface{}),
 		Vdc:               d.Get("vdc").(string),
@@ -315,7 +315,7 @@ func (apier AirDrumAPIer) Delete_vm_resource(d *schema.ResourceData,
 					deleteError = errors.New("Read of \"" + d.Get("name").(string) +
 						"\" failed, response body json error :\n\r\"" +
 						resp_body_json_err.Error())
-				} else if responseBody != "{\"Detail\":\"Destroying the VM now\"}" {
+				} else if responseBody != "{\"detail\":\"Destroying the VM now\"}" {
 					deleteError = errors.New(resp.Status + responseBody)
 				}
 			default:

@@ -19,12 +19,44 @@ const (
 )
 
 var (
-	TEST_VM_MAP = map[string]interface{}{"state": "UP", "cpu": "4", "nics": nil,
-		"vdc": "vdc", "vdc_resource_disk": "vdc_disk", "backup": "backup-no_backup",
-		"dynamic_field": "42", "disk_image": "", "name": "Unit test vm",
-		"ram": "8", "boot": "on disk", "backup_size": "42", "os": "Debian",
-		"disks": nil, "slug": "42", "token": "424242", "platform_name": "42",
-		"comment": "42", "outsourcing": "42"}
+	TEST_VM_MAP = map[string]interface{}{"name": "Unit test vm",
+		"state": "UP",
+		"os":    "Debian",
+		"ram":   "8",
+		"cpu":   "4",
+		"disks": []interface{}{
+			map[string]interface{}{
+				"name":   "disk 1",
+				"size":   "24",
+				"v_disk": "v_disk",
+				"slug":   "slug",
+			},
+		},
+		"nics": []interface{}{
+			map[string]interface{}{
+				"vlan":       "vlan 1 update",
+				"mac_adress": "24",
+				"connected":  "true",
+			},
+			map[string]interface{}{
+				"vlan":       "vlan 2",
+				"mac_adress": "24",
+				"connected":  "true",
+			},
+		},
+		"vdc":               "vdc",
+		"boot":              "on disk",
+		"vdc_resource_disk": "vdc_disk", //"template":"template name",
+		"slug":              "42",
+		"token":             "424242",
+		"backup":            "backup-no_backup",
+		"disk_image":        "",
+		"platform_name":     "42",
+		"backup_size":       "42",
+		"comment":           "42",
+		"outsourcing":       "42",
+		"dynamic_field":     "42",
+	}
 )
 
 func resource_vm() *schema.Resource {
@@ -157,14 +189,18 @@ type Resp_Body struct {
 // Error response *ClientTooler
 type ErrorResponse_HttpClienter struct{}
 
-func (client ErrorResponse_HttpClienter) Do(api *API, req *http.Request) (*http.Response, error) {
+func (client ErrorResponse_HttpClienter) Do(api *API,
+	req *http.Request) (*http.Response, error) {
+
 	return nil, errors.New(REQ_ERR)
 }
 
 // Response body error *ClientTooler
 type BadBodyResponse_StatusCreated_HttpClienter struct{}
 
-func (client BadBodyResponse_StatusCreated_HttpClienter) Do(api *API, req *http.Request) (*http.Response, error) {
+func (client BadBodyResponse_StatusCreated_HttpClienter) Do(api *API,
+	req *http.Request) (*http.Response, error) {
+
 	resp := http.Response{}
 	resp.Header = map[string][]string{"Content-Type": {"application/json"}}
 	resp.Body = ioutil.NopCloser(bytes.NewBufferString("{\"detail\"\"Invalid json string}}.\"}"))
@@ -175,7 +211,9 @@ func (client BadBodyResponse_StatusCreated_HttpClienter) Do(api *API, req *http.
 // Response body error *ClientTooler
 type BadBodyResponse_StatusOK_HttpClienter struct{}
 
-func (client BadBodyResponse_StatusOK_HttpClienter) Do(api *API, req *http.Request) (*http.Response, error) {
+func (client BadBodyResponse_StatusOK_HttpClienter) Do(api *API,
+	req *http.Request) (*http.Response, error) {
+
 	resp := http.Response{}
 	resp.Header = map[string][]string{"Content-Type": {"application/json"}}
 	resp.Body = ioutil.NopCloser(bytes.NewBufferString("{\"detail\"\"Invalid json string}}.\"}"))
@@ -186,7 +224,9 @@ func (client BadBodyResponse_StatusOK_HttpClienter) Do(api *API, req *http.Reque
 // 401 Reponse code error *ClientTooler
 type Error401_HttpClienter struct{}
 
-func (client Error401_HttpClienter) Do(api *API, req *http.Request) (*http.Response, error) {
+func (client Error401_HttpClienter) Do(api *API,
+	req *http.Request) (*http.Response, error) {
+
 	resp := http.Response{}
 	resp.StatusCode = http.StatusUnauthorized
 	resp.Status = "401 Unauthorized"
@@ -199,7 +239,9 @@ func (client Error401_HttpClienter) Do(api *API, req *http.Request) (*http.Respo
 // 404 Reponse code error *ClientTooler
 type Error404_HttpClienter struct{}
 
-func (client Error404_HttpClienter) Do(api *API, req *http.Request) (*http.Response, error) {
+func (client Error404_HttpClienter) Do(api *API,
+	req *http.Request) (*http.Response, error) {
+
 	resp := http.Response{}
 	resp.StatusCode = http.StatusNotFound
 	resp.Status = "404 Not Found"
@@ -212,7 +254,9 @@ func (client Error404_HttpClienter) Do(api *API, req *http.Request) (*http.Respo
 // Creation success *ClientTooler
 type CreationSuccess_HttpClienter struct{}
 
-func (client CreationSuccess_HttpClienter) Do(api *API, req *http.Request) (*http.Response, error) {
+func (client CreationSuccess_HttpClienter) Do(api *API,
+	req *http.Request) (*http.Response, error) {
+
 	resp := http.Response{}
 	resp.Header = map[string][]string{"Content-Type": {"application/json"}}
 	resp.StatusCode = http.StatusCreated
@@ -223,7 +267,9 @@ func (client CreationSuccess_HttpClienter) Do(api *API, req *http.Request) (*htt
 // Read success *ClientTooler
 type ReadSuccess_HttpClienter struct{}
 
-func (client ReadSuccess_HttpClienter) Do(api *API, req *http.Request) (*http.Response, error) {
+func (client ReadSuccess_HttpClienter) Do(api *API,
+	req *http.Request) (*http.Response, error) {
+
 	resp := http.Response{}
 	resp.Header = map[string][]string{"Content-Type": {"application/json"}}
 	resp.StatusCode = http.StatusOK
@@ -235,7 +281,9 @@ func (client ReadSuccess_HttpClienter) Do(api *API, req *http.Request) (*http.Re
 // Update success *ClientTooler
 type UpdateSuccess_HttpClienter struct{}
 
-func (client UpdateSuccess_HttpClienter) Do(api *API, req *http.Request) (*http.Response, error) {
+func (client UpdateSuccess_HttpClienter) Do(api *API,
+	req *http.Request) (*http.Response, error) {
+
 	resp := http.Response{}
 	resp.Header = map[string][]string{"Content-Type": {"application/json"}}
 	resp.StatusCode = http.StatusOK
@@ -246,7 +294,9 @@ func (client UpdateSuccess_HttpClienter) Do(api *API, req *http.Request) (*http.
 
 type DeleteSuccess_HttpClienter struct{}
 
-func (client DeleteSuccess_HttpClienter) Do(api *API, req *http.Request) (*http.Response, error) {
+func (client DeleteSuccess_HttpClienter) Do(api *API,
+	req *http.Request) (*http.Response, error) {
+
 	resp := http.Response{}
 	resp.Header = map[string][]string{"Content-Type": {"application/json"}}
 	resp.StatusCode = http.StatusOK
@@ -258,7 +308,9 @@ func (client DeleteSuccess_HttpClienter) Do(api *API, req *http.Request) (*http.
 
 type DeleteWRONGResponseBody_HttpClienter struct{}
 
-func (client DeleteWRONGResponseBody_HttpClienter) Do(api *API, req *http.Request) (*http.Response, error) {
+func (client DeleteWRONGResponseBody_HttpClienter) Do(api *API,
+	req *http.Request) (*http.Response, error) {
+
 	resp := http.Response{}
 	resp.Header = map[string][]string{"Content-Type": {"application/json"}}
 	resp.StatusCode = http.StatusOK
@@ -271,7 +323,9 @@ func (client DeleteWRONGResponseBody_HttpClienter) Do(api *API, req *http.Reques
 // req failure *ClientTooler
 type CheckRedirectReqFailure_HttpClienter struct{}
 
-func (client CheckRedirectReqFailure_HttpClienter) Do(api *API, req *http.Request) (*http.Response, error) {
+func (client CheckRedirectReqFailure_HttpClienter) Do(api *API,
+	req *http.Request) (*http.Response, error) {
+
 	resp := http.Response{}
 	return &resp, errors.New("CheckRedirectReqFailure")
 }
@@ -295,13 +349,14 @@ func TestCreate_vm_resource(t *testing.T) {
 		{
 			2,
 			BadBodyResponse_StatusCreated_HttpClienter{},
-			errors.New("Creation of \"Unit test vm\" failed, response body json error :\n\r\"invalid character '\"' after object key\""),
+			errors.New("Creation of \"Unit test vm\" failed, response body json " +
+				"error :\n\r\"invalid character '\"' after object key\""),
 			nil,
 		},
 		{
 			3,
 			Error401_HttpClienter{},
-			errors.New("401 Unauthorized{\"Detail\":\"Token non valide.\"}"),
+			errors.New("401 Unauthorized{\"detail\":\"Token non valide.\"}"),
 			nil,
 		},
 		{
@@ -313,7 +368,8 @@ func TestCreate_vm_resource(t *testing.T) {
 		{
 			5,
 			CheckRedirectReqFailure_HttpClienter{},
-			errors.New("Creation of \"Unit test vm\" failed, response reception error : CheckRedirectReqFailure"),
+			errors.New("Creation of \"Unit test vm\" failed, response reception " +
+				"error : CheckRedirectReqFailure"),
 			nil,
 		},
 	}
@@ -333,7 +389,8 @@ func TestCreate_vm_resource(t *testing.T) {
 	for _, test_case := range test_cases {
 		fake_client_tooler.Client = test_case.TC_clienter
 		err, resp_creation_map = Apier.Create_vm_resource(d, &fake_client_tooler, sewan)
-		t.Log("resp_creation_map, test_case.Created_resource", resp_creation_map, test_case.Created_resource)
+		t.Log("resp_creation_map, test_case.Created_resource",
+			resp_creation_map, test_case.Created_resource)
 		switch {
 		case err == nil || test_case.Creation_Err == nil:
 			if !(err == nil && test_case.Creation_Err == nil) {
@@ -371,28 +428,30 @@ func TestRead_vm_resource(t *testing.T) {
 		{
 			2,
 			BadBodyResponse_StatusOK_HttpClienter{},
-			errors.New("Read of \"Unit test vm\" failed, response body json error :\n\r\"invalid character '\"' after object key\""),
+			errors.New("Read of \"Unit test vm\" failed, response body json " +
+				"error :\n\r\"invalid character '\"' after object key\""),
 			nil,
 			true,
 		},
 		{
 			3,
 			Error401_HttpClienter{},
-			errors.New("401 Unauthorized{\"Detail\":\"Token non valide.\"}"),
+			errors.New("401 Unauthorized{\"detail\":\"Token non valide.\"}"),
 			nil,
 			true,
 		},
 		{
 			4,
 			Error404_HttpClienter{},
-			errors.New("404 Not Found{\"Detail\":\"Not found.\"}"),
+			errors.New("404 Not Found{\"detail\":\"Not found.\"}"),
 			nil,
 			false,
 		},
 		{
 			5,
 			CheckRedirectReqFailure_HttpClienter{},
-			errors.New("Read of \"Unit test vm\" state failed, response reception error : CheckRedirectReqFailure"),
+			errors.New("Read of \"Unit test vm\" state failed, response reception " +
+				"error : CheckRedirectReqFailure"),
 			nil,
 			true,
 		},
@@ -458,22 +517,24 @@ func TestUpdate_vm_resource(t *testing.T) {
 		{
 			2,
 			BadBodyResponse_StatusOK_HttpClienter{},
-			errors.New("Read of \"Unit test vm\" failed, response body json error :\n\r\"invalid character '\"' after object key"),
+			errors.New("Read of \"Unit test vm\" failed, response body json " +
+				"error :\n\r\"invalid character '\"' after object key"),
 		},
 		{
 			3,
 			Error401_HttpClienter{},
-			errors.New("401 Unauthorized{\"Detail\":\"Token non valide.\"}"),
+			errors.New("401 Unauthorized{\"detail\":\"Token non valide.\"}"),
 		},
 		{
 			4,
 			Error404_HttpClienter{},
-			errors.New("404 Not Found{\"Detail\":\"Not found.\"}"),
+			errors.New("404 Not Found{\"detail\":\"Not found.\"}"),
 		},
 		{
 			5,
 			CheckRedirectReqFailure_HttpClienter{},
-			errors.New("Update of \"Unit test vm\" state failed, response reception error : CheckRedirectReqFailure"),
+			errors.New("Update of \"Unit test vm\" state failed, response reception " +
+				"error : CheckRedirectReqFailure"),
 		},
 		{
 			6,
@@ -525,22 +586,24 @@ func TestDelete_vm_resource(t *testing.T) {
 		{
 			2,
 			BadBodyResponse_StatusOK_HttpClienter{},
-			errors.New("Read of \"Unit test vm\" failed, response body json error :\n\r\"invalid character '\"' after object key"),
+			errors.New("Read of \"Unit test vm\" failed, response body json " +
+				"error :\n\r\"invalid character '\"' after object key"),
 		},
 		{
 			3,
 			Error401_HttpClienter{},
-			errors.New("401 Unauthorized{\"Detail\":\"Token non valide.\"}"),
+			errors.New("401 Unauthorized{\"detail\":\"Token non valide.\"}"),
 		},
 		{
 			4,
 			Error404_HttpClienter{},
-			errors.New("404 Not Found{\"Detail\":\"Not found.\"}"),
+			errors.New("404 Not Found{\"detail\":\"Not found.\"}"),
 		},
 		{
 			5,
 			CheckRedirectReqFailure_HttpClienter{},
-			errors.New("Deletion of \"Unit test vm\" state failed, response reception error : CheckRedirectReqFailure"),
+			errors.New("Deletion of \"Unit test vm\" state failed, response reception " +
+				"error : CheckRedirectReqFailure"),
 		},
 		{
 			6,
@@ -550,7 +613,7 @@ func TestDelete_vm_resource(t *testing.T) {
 		{
 			7,
 			DeleteWRONGResponseBody_HttpClienter{},
-			errors.New("{\"Detail\":\"Destroying VM wrong message\"}"),
+			errors.New("{\"detail\":\"Destroying VM wrong message\"}"),
 		},
 	}
 	Apier := AirDrumAPIer{}
@@ -568,8 +631,6 @@ func TestDelete_vm_resource(t *testing.T) {
 	for _, test_case := range test_cases {
 		fake_client_tooler.Client = test_case.TC_clienter
 		err = Apier.Delete_vm_resource(d, &fake_client_tooler, sewan)
-		t.Log("--")
-		t.Log("--")
 		switch {
 		case err == nil || test_case.Delete_Err == nil:
 			if !(err == nil && test_case.Delete_Err == nil) {

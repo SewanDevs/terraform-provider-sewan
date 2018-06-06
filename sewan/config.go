@@ -34,5 +34,6 @@ func (c *Config) Client() (*Client, error) {
 		c.Api_url,
 	)
 	err := apiTooler.CheckStatus(api)
+
 	return &Client{api, &apiTooler, &clientTooler}, err
 }

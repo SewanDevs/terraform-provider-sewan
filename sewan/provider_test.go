@@ -1,12 +1,12 @@
 package sewan
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestProvider(t *testing.T) {
-}
-
-func TestProviderSchema(t *testing.T) {
-}
-
-func TestProviderConfigure(t *testing.T) {
+	err := Provider().InternalValidate()
+	if err != nil {
+		t.Fatalf("err: %s", err)
+	}
 }

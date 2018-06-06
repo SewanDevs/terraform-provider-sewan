@@ -20,10 +20,14 @@ type APIer interface {
 	Get_vm_creation_url(api *API) string
 	Get_vm_url(api *API, id string) string
 	Validate_status(api *API, client ClientTooler) error
-	Create_vm_resource(d *schema.ResourceData, clientTooler *ClientTooler, sewan *API) (error, map[string]interface{})
-	Read_vm_resource(d *schema.ResourceData, clientTooler *ClientTooler, sewan *API) (error, map[string]interface{}, bool)
-	Update_vm_resource(d *schema.ResourceData, clientTooler *ClientTooler, sewan *API) error
-	Delete_vm_resource(d *schema.ResourceData, clientTooler *ClientTooler, sewan *API) error
+	Create_vm_resource(d *schema.ResourceData,
+		clientTooler *ClientTooler, sewan *API) (error, map[string]interface{})
+	Read_vm_resource(d *schema.ResourceData,
+		clientTooler *ClientTooler, sewan *API) (error, map[string]interface{}, bool)
+	Update_vm_resource(d *schema.ResourceData,
+		clientTooler *ClientTooler, sewan *API) error
+	Delete_vm_resource(d *schema.ResourceData,
+		clientTooler *ClientTooler, sewan *API) error
 }
 type AirDrumAPIer struct{}
 

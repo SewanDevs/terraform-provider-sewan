@@ -24,11 +24,11 @@ func resource_vm() *schema.Resource {
 				Required: true,
 			},
 			"ram": &schema.Schema{
-				Type:     schema.TypeString,
+				Type:     schema.TypeInt,
 				Required: true,
 			},
 			"cpu": &schema.Schema{
-				Type:     schema.TypeString,
+				Type:     schema.TypeInt,
 				Required: true,
 			},
 			"disks": &schema.Schema{
@@ -41,7 +41,7 @@ func resource_vm() *schema.Resource {
 							Required: true,
 						},
 						"size": &schema.Schema{
-							Type:     schema.TypeString,
+							Type:     schema.TypeInt,
 							Required: true,
 						},
 						"v_disk": &schema.Schema{

@@ -57,6 +57,10 @@ func vmInstanceCreate(d *schema.ResourceData) VM {
 	}
 }
 
+const (
+	VM_DESTROY_FAILURE = "{\"detail\":\"Destroying the VM now\"}"
+)
+
 //------------------------------------------------------------------------------
 func (apier AirDrumAPIer) Create_vm_resource(d *schema.ResourceData,
 	clientTooler *ClientTooler,
@@ -315,7 +319,7 @@ func (apier AirDrumAPIer) Delete_vm_resource(d *schema.ResourceData,
 					deleteError = errors.New("Read of \"" + d.Get("name").(string) +
 						"\" failed, response body json error :\n\r\"" +
 						resp_body_json_err.Error())
-				} else if responseBody != "{\"detail\":\"Destroying the VM now\"}" {
+				} else if responseBody != VM_DESTROY_FAILURE {
 					deleteError = errors.New(resp.Status + responseBody)
 				}
 			default:

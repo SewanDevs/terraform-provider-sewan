@@ -16,6 +16,13 @@ import (
 //------------------------------------------------------------------------------
 const (
 	REQ_ERR = "Creation request response error."
+	NOT_FOUND_STATUS = "404 Not Found"
+	NOT_FOUND_MSG = "404 Not Found{\"detail\":\"Not found.\"}"
+	UNAUTHORIZED_STATUS = "401 Unauthorized"
+	UNAUTHORIZED_MSG = "401 Unauthorized{\"detail\":\"Token non valide.\"}"
+	DESTROY_WRONG_MSG = "{\"detail\":\"Destroying VM wrong body message\"}"
+	DESTROY_MSG = "Destroying the VM now"
+	CHECK_REDIRECT_FAILURE = "CheckRedirectReqFailure"
 )
 
 var (
@@ -75,11 +82,11 @@ func resource_vm() *schema.Resource {
 				Required: true,
 			},
 			"ram": &schema.Schema{
-				Type:     schema.TypeString,
+				Type:     schema.TypeInt,
 				Required: true,
 			},
 			"cpu": &schema.Schema{
-				Type:     schema.TypeString,
+				Type:     schema.TypeInt,
 				Required: true,
 			},
 			"disks": &schema.Schema{
@@ -92,7 +99,7 @@ func resource_vm() *schema.Resource {
 							Required: true,
 						},
 						"size": &schema.Schema{
-							Type:     schema.TypeString,
+							Type:     schema.TypeInt,
 							Required: true,
 						},
 						"v_disk": &schema.Schema{
@@ -183,7 +190,7 @@ func resource_vm() *schema.Resource {
 }
 
 type Resp_Body struct {
-	Detail string `json:detail`
+	Detail string `json:"detail"`
 }
 
 // Error response *ClientTooler
@@ -229,7 +236,7 @@ func (client Error401_HttpClienter) Do(api *API,
 
 	resp := http.Response{}
 	resp.StatusCode = http.StatusUnauthorized
-	resp.Status = "401 Unauthorized"
+	resp.Status = UNAUTHORIZED_STATUS
 	body := Resp_Body{"Token non valide."}
 	js, _ := json.Marshal(body)
 	resp.Body = ioutil.NopCloser(bytes.NewBuffer(js))
@@ -244,7 +251,7 @@ func (client Error404_HttpClienter) Do(api *API,
 
 	resp := http.Response{}
 	resp.StatusCode = http.StatusNotFound
-	resp.Status = "404 Not Found"
+	resp.Status = NOT_FOUND_STATUS
 	body := Resp_Body{"Not found."}
 	js, _ := json.Marshal(body)
 	resp.Body = ioutil.NopCloser(bytes.NewBuffer(js))
@@ -300,7 +307,7 @@ func (client DeleteSuccess_HttpClienter) Do(api *API,
 	resp := http.Response{}
 	resp.Header = map[string][]string{"Content-Type": {"application/json"}}
 	resp.StatusCode = http.StatusOK
-	body := Resp_Body{"Destroying the VM now"}
+	body := Resp_Body{DESTROY_MSG}
 	js, _ := json.Marshal(body)
 	resp.Body = ioutil.NopCloser(bytes.NewBuffer(js))
 	return &resp, nil
@@ -314,9 +321,7 @@ func (client DeleteWRONGResponseBody_HttpClienter) Do(api *API,
 	resp := http.Response{}
 	resp.Header = map[string][]string{"Content-Type": {"application/json"}}
 	resp.StatusCode = http.StatusOK
-	body := Resp_Body{"Destroying VM wrong message"}
-	js, _ := json.Marshal(body)
-	resp.Body = ioutil.NopCloser(bytes.NewBuffer(js))
+	resp.Body = ioutil.NopCloser(bytes.NewBufferString(DESTROY_WRONG_MSG))
 	return &resp, nil
 }
 
@@ -327,7 +332,7 @@ func (client CheckRedirectReqFailure_HttpClienter) Do(api *API,
 	req *http.Request) (*http.Response, error) {
 
 	resp := http.Response{}
-	return &resp, errors.New("CheckRedirectReqFailure")
+	return &resp, errors.New(CHECK_REDIRECT_FAILURE)
 }
 
 //------------------------------------------------------------------------------
@@ -356,7 +361,7 @@ func TestCreate_vm_resource(t *testing.T) {
 		{
 			3,
 			Error401_HttpClienter{},
-			errors.New("401 Unauthorized{\"detail\":\"Token non valide.\"}"),
+			errors.New(UNAUTHORIZED_MSG),
 			nil,
 		},
 		{
@@ -436,14 +441,14 @@ func TestRead_vm_resource(t *testing.T) {
 		{
 			3,
 			Error401_HttpClienter{},
-			errors.New("401 Unauthorized{\"detail\":\"Token non valide.\"}"),
+			errors.New(UNAUTHORIZED_MSG),
 			nil,
 			true,
 		},
 		{
 			4,
 			Error404_HttpClienter{},
-			errors.New("404 Not Found{\"detail\":\"Not found.\"}"),
+			errors.New(NOT_FOUND_MSG),
 			nil,
 			false,
 		},
@@ -523,12 +528,12 @@ func TestUpdate_vm_resource(t *testing.T) {
 		{
 			3,
 			Error401_HttpClienter{},
-			errors.New("401 Unauthorized{\"detail\":\"Token non valide.\"}"),
+			errors.New(UNAUTHORIZED_MSG),
 		},
 		{
 			4,
 			Error404_HttpClienter{},
-			errors.New("404 Not Found{\"detail\":\"Not found.\"}"),
+			errors.New(NOT_FOUND_MSG),
 		},
 		{
 			5,
@@ -592,12 +597,12 @@ func TestDelete_vm_resource(t *testing.T) {
 		{
 			3,
 			Error401_HttpClienter{},
-			errors.New("401 Unauthorized{\"detail\":\"Token non valide.\"}"),
+			errors.New(UNAUTHORIZED_MSG),
 		},
 		{
 			4,
 			Error404_HttpClienter{},
-			errors.New("404 Not Found{\"detail\":\"Not found.\"}"),
+			errors.New(NOT_FOUND_MSG),
 		},
 		{
 			5,
@@ -613,7 +618,7 @@ func TestDelete_vm_resource(t *testing.T) {
 		{
 			7,
 			DeleteWRONGResponseBody_HttpClienter{},
-			errors.New("{\"detail\":\"Destroying VM wrong message\"}"),
+			errors.New(DESTROY_WRONG_MSG),
 		},
 	}
 	Apier := AirDrumAPIer{}

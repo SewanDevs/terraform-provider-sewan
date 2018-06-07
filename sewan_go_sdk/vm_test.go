@@ -15,13 +15,13 @@ import (
 //--Structures init, interface implementation fakes, various test items etc.----
 //------------------------------------------------------------------------------
 const (
-	REQ_ERR = "Creation request response error."
-	NOT_FOUND_STATUS = "404 Not Found"
-	NOT_FOUND_MSG = "404 Not Found{\"detail\":\"Not found.\"}"
-	UNAUTHORIZED_STATUS = "401 Unauthorized"
-	UNAUTHORIZED_MSG = "401 Unauthorized{\"detail\":\"Token non valide.\"}"
-	DESTROY_WRONG_MSG = "{\"detail\":\"Destroying VM wrong body message\"}"
-	DESTROY_MSG = "Destroying the VM now"
+	REQ_ERR                = "Creation request response error."
+	NOT_FOUND_STATUS       = "404 Not Found"
+	NOT_FOUND_MSG          = "404 Not Found{\"detail\":\"Not found.\"}"
+	UNAUTHORIZED_STATUS    = "401 Unauthorized"
+	UNAUTHORIZED_MSG       = "401 Unauthorized{\"detail\":\"Token non valide.\"}"
+	DESTROY_WRONG_MSG      = "{\"detail\":\"Destroying VM wrong body message\"}"
+	DESTROY_MSG            = "Destroying the VM now"
 	CHECK_REDIRECT_FAILURE = "CheckRedirectReqFailure"
 )
 

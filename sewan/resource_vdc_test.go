@@ -1,11 +1,27 @@
 package sewan
 
-import "testing"
+import (
+	"errors"
+	"github.com/hashicorp/terraform/helper/schema"
+	sdk "terraform-provider-sewan/sewan_go_sdk"
+	"testing"
+)
 
-func TestResource_vdc(t *testing.T) {
-}
+//------------------------------------------------------------------------------
+//--Structures init, interface implementation fakes, various test items etc.----
+//------------------------------------------------------------------------------
+var (
+	TEST_VDC_MAP = map[string]interface{}{
+		"name": "Unit test vm",
+	}
+)
+
+//------------------------------------------------------------------------------
+//-------------Units tests------------------------------------------------------
+//------------------------------------------------------------------------------
 
 func TestResource_vdc_create(t *testing.T) {
+
 }
 
 func TestResource_vdc_read(t *testing.T) {

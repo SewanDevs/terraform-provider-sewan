@@ -1,5 +1,5 @@
 provider "sewan" {
-  api_token = "b759e9fa0f40e2017be6dfb30f670022470086ca"
+  api_token = "d9d3104d32601d1199293003a1f5d62f150039ba"
   api_url = "https://next.cloud-datacenter.fr/api/clouddc/"
 }
 
@@ -7,13 +7,13 @@ resource "sewan_clouddc_vm" "skeleton-server1" {
   name = "skeleton-server1"
   vdc = "sewan-rd-cloud-beta-dc1-terraf"
   os = "CentOS"
-  ram  = "2"
-  cpu = "2"
+  ram  = 4
+  cpu = 2
   disk_image = ""
   nics=[
   {
     vlan="internal-2412"
-    connected=true
+    connected=false
   },
   {
     vlan="internal-2410"
@@ -23,7 +23,7 @@ resource "sewan_clouddc_vm" "skeleton-server1" {
   disks=[
     {
       name="disk-centos7-rd-DC1-1"
-      size=20
+      size=40
       v_disk="sewan-rd-cloud-beta-dc1-terraf-sewan-rd-cloud-beta-mono-storage_enterprise"
     },
     {
@@ -40,9 +40,9 @@ resource "sewan_clouddc_vm" "skeleton-server1" {
 resource "sewan_clouddc_vm" "skeleton-client1" {
   name = "skeleton-client1"
   vdc = "sewan-rd-cloud-beta-dc1-terraf"
-  os = "CentOS"
-  ram  = "1"
-  cpu = "1"
+  os = "Debian"
+  ram  = 2
+  cpu = 1
   disk_image = ""
   nics=[
   {
@@ -66,8 +66,8 @@ resource "sewan_clouddc_vm" "skeleton-client2" {
   name = "skeleton-client2"
   vdc = "sewan-rd-cloud-beta-dc1-terraf"
   os = "CentOS"
-  ram  = "1"
-  cpu = "1"
+  ram  = 1
+  cpu = 1
   disk_image = ""
   nics=[
   {

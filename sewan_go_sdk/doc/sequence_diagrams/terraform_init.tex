@@ -26,12 +26,12 @@
     \umlactor[class=SysAdmin]{admin}
     \umlobject[class=Tfstate]{localstate}
     \umlobject[class=Terraform\&Plugin, x=5]{terraform}
-    \umlobject[class=SewanSDK, x=15]{sdk}
-    
-    \begin{umlcall}[op=1.\ terraform\ init(), type=synchron, return=init\ status]{admin}{terraform}
-      \begin{umlcall}[op=2.\ createSDK(), type=synchron, return=sdk]{terraform}{sdk}
-	\umlcreatecall[class=Tfstate, x=11]{terraform}{localstate}
+
+
+    \begin{umlcall}[op=1.\ terraform\ init(), type=synchron return=init\ status]{admin}{terraform}
+      \begin{umlcall}[op=2.\ getProvidersPlugins(), type=asynchron]{terraform}{terraform}
       \end{umlcall}
+      \umlcreatecall[class=Tfstate, x=11]{terraform}{localstate}
     \end{umlcall}
     
     \end{umlseqdiag}

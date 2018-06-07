@@ -2,88 +2,108 @@ package sewan_go_sdk
 
 import (
 	"errors"
+	"github.com/hashicorp/terraform/helper/schema"
+	"io/ioutil"
 	"net/http"
 	"strings"
 )
 
-// API is the interface used to communicate with the  API
 type API struct {
 	Token  string
 	URL    string
 	Client *http.Client
 }
+type APITooler struct {
+	Api APIer
+}
+type APIer interface {
+	Get_vm_creation_url(api *API) string
+	Get_vm_url(api *API, id string) string
+	Validate_status(api *API, client ClientTooler) error
+	Create_vm_resource(d *schema.ResourceData,
+		clientTooler *ClientTooler, sewan *API) (error, map[string]interface{})
+	Read_vm_resource(d *schema.ResourceData,
+		clientTooler *ClientTooler, sewan *API) (error, map[string]interface{}, bool)
+	Update_vm_resource(d *schema.ResourceData,
+		clientTooler *ClientTooler, sewan *API) error
+	Delete_vm_resource(d *schema.ResourceData,
+		clientTooler *ClientTooler, sewan *API) error
+}
+type AirDrumAPIer struct{}
 
-// New creates a ready-to-use SDK client
-func New(token string, url string) (*API, error) {
-	api := &API{
+type ClientTooler struct {
+	Client Clienter
+}
+type Clienter interface {
+	Do(api *API, req *http.Request) (*http.Response, error)
+}
+type HttpClienter struct{}
+
+func (client HttpClienter) Do(api *API, req *http.Request) (*http.Response, error) {
+	resp, err := api.Client.Do(req)
+	return resp, err
+}
+
+func (api_tools *APITooler) New(token string, url string) *API {
+	return &API{
 		Token:  token,
 		URL:    url,
 		Client: &http.Client{},
 	}
-	return api, nil
 }
 
-type URL struct {
-	S_url string
-	Err   error
+func (api_tools *APITooler) CheckStatus(api *API) error {
+	var apiClientErr error
+	clientTooler := ClientTooler{Client: HttpClienter{}}
+	apiClientErr = api_tools.Api.Validate_status(api, clientTooler)
+	return apiClientErr
 }
 
-type URL_builder interface {
-	Get_vm_creation_url(api_url string) string
-	Get_vm_url(api_url string, id string) string
-	Create_and_Validate_API_URL(url string) URL
-}
-
-type AirdrumURL_Builder struct{}
-
-func (a AirdrumURL_Builder) Create_and_Validate_API_URL(url string) URL {
-	valid_urls_slice := []string{
-		"https://next.cloud-datacenter.fr/api/clouddc/",
-	}
-	var valid_urls_list strings.Builder
-
-	var s_return_url string
-	s_return_url = ""
-
-	var url_valid bool
-	url_valid = false
-
-	var url_error error
-	url_error = nil
-
-	for _, valid_url := range valid_urls_slice {
-		valid_urls_list.WriteString(valid_url)
-		valid_urls_list.WriteString(", ")
-		if url == valid_url {
-			url_valid = true
-		}
-	}
-
-	if url_valid == true {
-		s_return_url = url
-	} else {
-		var error strings.Builder
-		error.WriteString("Sewan's Airdrum API's URL is wrong, accepted urls : ")
-		error.WriteString(valid_urls_list.String())
-		url_error = errors.New(error.String())
-	}
-
-	return URL{s_return_url, url_error}
-}
-
-func (a AirdrumURL_Builder) Get_vm_creation_url(api_url URL) string {
+func (apier AirDrumAPIer) Get_vm_creation_url(api *API) string {
 	var vm_url strings.Builder
-	s_api_url := api_url.S_url
-	vm_url.WriteString(s_api_url)
+	vm_url.WriteString(api.URL)
 	vm_url.WriteString("vm/")
 	return vm_url.String()
 }
 
-func (a AirdrumURL_Builder) Get_vm_url(api_url URL, vm_id string) string {
+func (apier AirDrumAPIer) Get_vm_url(api *API, vm_id string) string {
 	var vm_url strings.Builder
-	s_create_url := a.Get_vm_creation_url(api_url)
+	api_tools := APITooler{
+		Api: apier,
+	}
+	s_create_url := api_tools.Api.Get_vm_creation_url(api)
 	vm_url.WriteString(s_create_url)
 	vm_url.WriteString(vm_id)
 	vm_url.WriteString("/")
 	return vm_url.String()
+}
+
+func (apier AirDrumAPIer) Validate_status(api *API, clientTooler ClientTooler) error {
+	var apiErr error
+	var responseBody string
+	api_tools := APITooler{
+		Api: apier,
+	}
+	req, _ := http.NewRequest("GET", api_tools.Api.Get_vm_creation_url(api), nil)
+	req.Header.Add("authorization", "Token "+api.Token)
+	resp, apiErr := clientTooler.Client.Do(api, req)
+
+	if apiErr == nil {
+		if resp.Body != nil {
+			bodyBytes, _ := ioutil.ReadAll(resp.Body)
+			responseBody = string(bodyBytes)
+			switch {
+			case resp.StatusCode == http.StatusUnauthorized:
+				apiErr = errors.New(resp.Status + responseBody)
+			case resp.Header.Get("content-type") != "application/json":
+				apiErr = errors.New("Could not get a proper json response from \"" + api.URL + "\", the api is down or this url is wrong.")
+			}
+		} else {
+			apiErr = errors.New("Could not get a response body from \"" + api.URL + "\", the api is down or this url is wrong.")
+		}
+	} else {
+		apiErr = errors.New("Could not get a response from \"" + api.URL + "\", the api is down or this url is wrong.")
+	}
+
+	return apiErr
 }

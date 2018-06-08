@@ -259,22 +259,23 @@ func (client Error404_HttpClienter) Do(api *API,
 }
 
 // Creation success *ClientTooler
-type CreationSuccess_HttpClienter struct{}
+type VM_CreationSuccess_HttpClienter struct{}
 
-func (client CreationSuccess_HttpClienter) Do(api *API,
+func (client VM_CreationSuccess_HttpClienter) Do(api *API,
 	req *http.Request) (*http.Response, error) {
 
 	resp := http.Response{}
 	resp.Header = map[string][]string{"Content-Type": {"application/json"}}
 	resp.StatusCode = http.StatusCreated
-	resp.Body = req.Body
+	js, _ := json.Marshal(TEST_VM_MAP)
+	resp.Body = ioutil.NopCloser(bytes.NewBuffer(js))
 	return &resp, nil
 }
 
 // Read success *ClientTooler
-type ReadSuccess_HttpClienter struct{}
+type VM_ReadSuccess_HttpClienter struct{}
 
-func (client ReadSuccess_HttpClienter) Do(api *API,
+func (client VM_ReadSuccess_HttpClienter) Do(api *API,
 	req *http.Request) (*http.Response, error) {
 
 	resp := http.Response{}
@@ -286,9 +287,9 @@ func (client ReadSuccess_HttpClienter) Do(api *API,
 }
 
 // Update success *ClientTooler
-type UpdateSuccess_HttpClienter struct{}
+type VM_UpdateSuccess_HttpClienter struct{}
 
-func (client UpdateSuccess_HttpClienter) Do(api *API,
+func (client VM_UpdateSuccess_HttpClienter) Do(api *API,
 	req *http.Request) (*http.Response, error) {
 
 	resp := http.Response{}
@@ -299,9 +300,9 @@ func (client UpdateSuccess_HttpClienter) Do(api *API,
 	return &resp, nil
 }
 
-type DeleteSuccess_HttpClienter struct{}
+type VM_DeleteSuccess_HttpClienter struct{}
 
-func (client DeleteSuccess_HttpClienter) Do(api *API,
+func (client VM_DeleteSuccess_HttpClienter) Do(api *API,
 	req *http.Request) (*http.Response, error) {
 
 	resp := http.Response{}
@@ -366,7 +367,7 @@ func TestCreate_vm_resource(t *testing.T) {
 		},
 		{
 			4,
-			CreationSuccess_HttpClienter{},
+			VM_CreationSuccess_HttpClienter{},
 			nil,
 			TEST_VM_MAP,
 		},
@@ -394,13 +395,25 @@ func TestCreate_vm_resource(t *testing.T) {
 	for _, test_case := range test_cases {
 		fake_client_tooler.Client = test_case.TC_clienter
 		err, resp_creation_map = Apier.Create_vm_resource(d, &fake_client_tooler, sewan)
-		t.Log("resp_creation_map, test_case.Created_resource",
-			resp_creation_map, test_case.Created_resource)
 		switch {
 		case err == nil || test_case.Creation_Err == nil:
 			if !(err == nil && test_case.Creation_Err == nil) {
 				t.Errorf("TC %d : VM creation error was incorrect,"+
 					"\n\rgot: \"%s\"\n\rwant: \"%s\"", test_case.Id, err, test_case.Creation_Err)
+			} else {
+				switch {
+				case !reflect.DeepEqual(test_case.Created_resource, resp_creation_map):
+					t.Errorf("TC %d : Wrong created resource map,"+
+						"\n\rgot: \"%s\"\n\rwant: \"%s\"",
+						test_case.Id, resp_creation_map, test_case.Created_resource)
+				}
+			}
+		case err != nil && test_case.Creation_Err != nil:
+			if resp_creation_map != nil {
+				t.Errorf("TC %d : Wrong created resource map,"+
+					" it should be nil as error is not nil,"+
+					"\n\rgot map: \n\r\"%s\"\n\rwant map: \n\r\"%s\"\n\r",
+					test_case.Id, resp_creation_map, test_case.Created_resource)
 			}
 		case err.Error() != test_case.Creation_Err.Error():
 			t.Errorf("TC %d : VM creation error was incorrect,"+
@@ -448,7 +461,7 @@ func TestRead_vm_resource(t *testing.T) {
 		{
 			4,
 			Error404_HttpClienter{},
-			errors.New(NOT_FOUND_MSG),
+			nil,
 			nil,
 			false,
 		},
@@ -462,7 +475,7 @@ func TestRead_vm_resource(t *testing.T) {
 		},
 		{
 			6,
-			ReadSuccess_HttpClienter{},
+			VM_ReadSuccess_HttpClienter{},
 			nil,
 			TEST_VM_MAP,
 			true,
@@ -490,6 +503,24 @@ func TestRead_vm_resource(t *testing.T) {
 			if !(err == nil && test_case.Read_Err == nil) {
 				t.Errorf("TC %d : VM read error was incorrect,"+
 					"\n\rgot: \"%s\"\n\rwant: \"%s\"", test_case.Id, err, test_case.Read_Err)
+			} else {
+				switch {
+				case res_exists != test_case.Resource_exists:
+					t.Errorf("TC %d : Wrong read vm exists value"+
+						"\n\rgot: \"%v\"\n\rwant: \"%v\"",
+						test_case.Id, res_exists, test_case.Resource_exists)
+				case !reflect.DeepEqual(test_case.Read_resource, resp_creation_map):
+					t.Errorf("TC %d : Wrong vm read resource map,"+
+						"\n\rgot: \"%s\"\n\rwant: \"%s\"",
+						test_case.Id, resp_creation_map, test_case.Read_resource)
+				}
+			}
+		case err != nil && test_case.Read_Err != nil:
+			if resp_creation_map != nil {
+				t.Errorf("TC %d : Wrong created resource map,"+
+					" it should be nil as error is not nil,"+
+					"\n\rgot map: \n\r\"%s\"\n\rwant map: \n\r\"%s\"\n\r",
+					test_case.Id, resp_creation_map, test_case.Read_resource)
 			}
 		case err.Error() != test_case.Read_Err.Error():
 			t.Errorf("TC %d : VM read error was incorrect,"+
@@ -543,7 +574,7 @@ func TestUpdate_vm_resource(t *testing.T) {
 		},
 		{
 			6,
-			UpdateSuccess_HttpClienter{},
+			VM_UpdateSuccess_HttpClienter{},
 			nil,
 		},
 	}
@@ -612,7 +643,7 @@ func TestDelete_vm_resource(t *testing.T) {
 		},
 		{
 			6,
-			DeleteSuccess_HttpClienter{},
+			VM_DeleteSuccess_HttpClienter{},
 			nil,
 		},
 		{

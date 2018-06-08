@@ -150,11 +150,11 @@ func resource_vm_read(d *schema.ResourceData, m interface{}) error {
 	var apiCreationResponse map[string]interface{}
 	sewan := m.(*Client).sewan
 	readError, apiCreationResponse, resource_exists = m.(*Client).sewan_apiTooler.Api.Read_vm_resource(d, m.(*Client).sewan_clientTooler, sewan)
-	if readError == nil {
-		if resource_exists == true {
+	if resource_exists == false {
+		Delete_resource(d)
+	} else {
+		if readError == nil {
 			readError = Update_local_resource_state(apiCreationResponse, d)
-		} else {
-			Delete_resource(d)
 		}
 	}
 	return readError

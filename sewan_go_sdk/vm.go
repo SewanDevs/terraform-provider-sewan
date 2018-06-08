@@ -82,6 +82,7 @@ func (apier AirDrumAPIer) Create_vm_resource(d *schema.ResourceData,
 	createError = nil
 	create_req_err = nil
 	create_resp_body_err = nil
+	airDrumAPICreationResponse = nil
 	logger := loggerCreate("create_vm_" + vmInstance.Vdc + "_\"" +
 		vmInstance.Name + "\".log")
 	api_tools := APITooler{
@@ -114,8 +115,15 @@ func (apier AirDrumAPIer) Create_vm_resource(d *schema.ResourceData,
 				createError = errors.New("Read of " + vmInstance.Name +
 					" response body error " + create_resp_body_err.Error())
 			case resp_body_json_err != nil:
-				createError = errors.New("Creation of \"" + vmInstance.Name + "\" failed, " +
-					"response body json error :\n\r\"" + resp_body_json_err.Error() + "\"")
+				logger.Println("resp_body_json_err != nil\nresp.Body = ", resp.Body,
+					"\nresp.StatusCode = ", resp.StatusCode,
+					"\nresp.Status =", resp.Status,
+					"\nresp.Header =", resp.Header,
+					"\nresponseBody = ", responseBody)
+				createError = errors.New("Creation of \"" + vmInstance.Name +
+					"\" failed, " +
+					"the response body is not a properly formated json :\n\r\"" +
+					resp_body_json_err.Error() + "\"")
 			default:
 				if resp.StatusCode != http.StatusCreated {
 					createError = errors.New(resp.Status + responseBody)
@@ -150,6 +158,7 @@ func (apier AirDrumAPIer) Read_vm_resource(d *schema.ResourceData,
 	resp := &http.Response{}
 	readError = nil
 	read_req_err = nil
+	airDrumAPICreationResponse = nil
 	resource_exists = true
 	logger := loggerCreate("read_vm_" + d.Get("name").(string) + ".log")
 	logger.Println("--------------- ", d.Get("name").(string),
@@ -187,7 +196,6 @@ func (apier AirDrumAPIer) Read_vm_resource(d *schema.ResourceData,
 					airDrumAPICreationResponse = resp_body_reader.(map[string]interface{})
 				}
 			case resp.StatusCode == http.StatusNotFound:
-				readError = errors.New(resp.Status + responseBody)
 				resource_exists = false
 			default:
 				readError = errors.New(resp.Status + responseBody)

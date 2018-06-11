@@ -13,7 +13,7 @@ Provides a clouddc virtual machine in a specific virtual data center (VDC).
 ## Example Usage
 
 ```hcl
-resource "sewan_clouddc_vm" "vm_resource_name" {
+resource "sewan_clouddc_vm" "VM_RESOURCE_TYPE" {
   name = "<vm_name>"
   vdc = "<vm's vdc name>"
   os = "Debian"

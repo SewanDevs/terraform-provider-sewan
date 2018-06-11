@@ -136,7 +136,11 @@ func resource_vm_create(d *schema.ResourceData, m interface{}) error {
 	creationError = nil
 	var apiCreationResponse map[string]interface{}
 	sewan := m.(*Client).sewan
-	creationError, apiCreationResponse = m.(*Client).sewan_apiTooler.Api.Create_vm_resource(d, m.(*Client).sewan_clientTooler, sewan)
+	creationError, apiCreationResponse = m.(*Client).sewan_apiTooler.Api.Create_resource(d,
+		m.(*Client).sewan_clientTooler,
+		VM_RESOURCE_TYPE,
+		sewan)
+
 	if creationError == nil {
 		creationError = Update_local_resource_state(apiCreationResponse, d)
 	}
@@ -149,7 +153,11 @@ func resource_vm_read(d *schema.ResourceData, m interface{}) error {
 	var resource_exists bool
 	var apiCreationResponse map[string]interface{}
 	sewan := m.(*Client).sewan
-	readError, apiCreationResponse, resource_exists = m.(*Client).sewan_apiTooler.Api.Read_vm_resource(d, m.(*Client).sewan_clientTooler, sewan)
+	readError, apiCreationResponse, resource_exists = m.(*Client).sewan_apiTooler.Api.Read_resource(d,
+		m.(*Client).sewan_clientTooler,
+		VM_RESOURCE_TYPE,
+		sewan)
+
 	if resource_exists == false {
 		Delete_resource(d)
 	} else {
@@ -164,7 +172,10 @@ func resource_vm_update(d *schema.ResourceData, m interface{}) error {
 	var updateError error
 	updateError = nil
 	sewan := m.(*Client).sewan
-	updateError = m.(*Client).sewan_apiTooler.Api.Update_vm_resource(d, m.(*Client).sewan_clientTooler, sewan)
+	updateError = m.(*Client).sewan_apiTooler.Api.Update_resource(d,
+		m.(*Client).sewan_clientTooler,
+		VM_RESOURCE_TYPE,
+		sewan)
 	return updateError
 }
 
@@ -172,7 +183,10 @@ func resource_vm_delete(d *schema.ResourceData, m interface{}) error {
 	var deleteError error
 	deleteError = nil
 	sewan := m.(*Client).sewan
-	deleteError = m.(*Client).sewan_apiTooler.Api.Delete_vm_resource(d, m.(*Client).sewan_clientTooler, sewan)
+	deleteError = m.(*Client).sewan_apiTooler.Api.Delete_resource(d,
+		m.(*Client).sewan_clientTooler,
+		VM_RESOURCE_TYPE,
+		sewan)
 	if deleteError == nil {
 		Delete_resource(d)
 	}

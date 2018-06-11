@@ -57,7 +57,19 @@ func resource_vdc() *schema.Resource {
 }
 
 func resource_vdc_create(d *schema.ResourceData, m interface{}) error {
-	return nil
+	var creationError error
+	creationError = nil
+	var apiCreationResponse map[string]interface{}
+	sewan := m.(*Client).sewan
+	creationError, apiCreationResponse = m.(*Client).sewan_apiTooler.Api.Create_resource(d,
+		m.(*Client).sewan_clientTooler,
+		VDC_RESOURCE_TYPE,
+		sewan)
+
+	if creationError == nil {
+		creationError = Update_local_resource_state(apiCreationResponse, d)
+	}
+	return creationError
 }
 
 func resource_vdc_read(d *schema.ResourceData, m interface{}) error {

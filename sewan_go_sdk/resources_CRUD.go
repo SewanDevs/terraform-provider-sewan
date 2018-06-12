@@ -139,15 +139,10 @@ func (apier AirDrumResources_Apier) Create_resource(d *schema.ResourceData,
 	create_req_err = nil
 	create_resp_body_err = nil
 	airDrumAPICreationResponse = nil
-	logger := loggerCreate("create_resource__\"")// +
-		//instanceName + "\".log")
+	logger := loggerCreate("create_resource__" + instanceName + ".log")
 	api_tools := APITooler{
 		Api: apier,
 	}
-	logger.Println("d =",d)
-	logger.Println("clientTooler =",clientTooler)
-	logger.Println("resourceType =",resourceType)
-	logger.Println("sewanAPI =",sewan)
 
 	if resourceTypeErr == nil {
 

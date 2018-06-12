@@ -60,43 +60,50 @@ const (
 
 type VM_successfull_CRUD_operations_AirDrumAPIer struct{}
 
-func (apier VM_successfull_CRUD_operations_AirDrumAPIer) Create_vm_resource(d *schema.ResourceData,
+func (apier VM_successfull_CRUD_operations_AirDrumAPIer) Create_resource(d *schema.ResourceData,
 	clientTooler *sdk.ClientTooler,
+	resourceType string,
 	sewan *sdk.API) (error, map[string]interface{}) {
 
 	return nil, TEST_VM_MAP
 }
 
-func (apier VM_successfull_CRUD_operations_AirDrumAPIer) Read_vm_resource(d *schema.ResourceData,
+func (apier VM_successfull_CRUD_operations_AirDrumAPIer) Read_resource(d *schema.ResourceData,
 	clientTooler *sdk.ClientTooler,
+	resourceType string,
 	sewan *sdk.API) (error, map[string]interface{}, bool) {
 
 	return nil, TEST_VM_MAP, true
 }
 
-func (apier VM_successfull_CRUD_operations_AirDrumAPIer) Update_vm_resource(d *schema.ResourceData,
+func (apier VM_successfull_CRUD_operations_AirDrumAPIer) Update_resource(d *schema.ResourceData,
 	clientTooler *sdk.ClientTooler,
+	resourceType string,
 	sewan *sdk.API) error {
 
 	return nil
 }
 
-func (apier VM_successfull_CRUD_operations_AirDrumAPIer) Delete_vm_resource(d *schema.ResourceData,
+func (apier VM_successfull_CRUD_operations_AirDrumAPIer) Delete_resource(d *schema.ResourceData,
 	clientTooler *sdk.ClientTooler,
+	resourceType string,
 	sewan *sdk.API) error {
 
 	return nil
 }
 
-func (apier VM_successfull_CRUD_operations_AirDrumAPIer) Get_vm_creation_url(api *sdk.API) string {
+func (apier VM_successfull_CRUD_operations_AirDrumAPIer) Get_resource_creation_url(api *sdk.API,
+	resourceType string) string {
 	return ""
 }
-func (apier VM_successfull_CRUD_operations_AirDrumAPIer) Get_vm_url(api *sdk.API,
+func (apier VM_successfull_CRUD_operations_AirDrumAPIer) Get_resource_url(api *sdk.API,
+	resourceType string,
 	id string) string {
 
 	return ""
 }
 func (apier VM_successfull_CRUD_operations_AirDrumAPIer) Validate_status(api *sdk.API,
+	resourceType string,
 	client sdk.ClientTooler) error {
 
 	return nil
@@ -104,43 +111,50 @@ func (apier VM_successfull_CRUD_operations_AirDrumAPIer) Validate_status(api *sd
 
 type VM_failure_CRUD_operations_AirDrumAPIer struct{}
 
-func (apier VM_failure_CRUD_operations_AirDrumAPIer) Create_vm_resource(d *schema.ResourceData,
+func (apier VM_failure_CRUD_operations_AirDrumAPIer) Create_resource(d *schema.ResourceData,
 	clientTooler *sdk.ClientTooler,
+	resourceType string,
 	sewan *sdk.API) (error, map[string]interface{}) {
 
 	return errors.New(VM_CREATION_FAILURE), nil
 }
 
-func (apier VM_failure_CRUD_operations_AirDrumAPIer) Read_vm_resource(d *schema.ResourceData,
+func (apier VM_failure_CRUD_operations_AirDrumAPIer) Read_resource(d *schema.ResourceData,
 	clientTooler *sdk.ClientTooler,
+	resourceType string,
 	sewan *sdk.API) (error, map[string]interface{}, bool) {
 
 	return nil, nil, false
 }
 
-func (apier VM_failure_CRUD_operations_AirDrumAPIer) Update_vm_resource(d *schema.ResourceData,
+func (apier VM_failure_CRUD_operations_AirDrumAPIer) Update_resource(d *schema.ResourceData,
 	clientTooler *sdk.ClientTooler,
+	resourceType string,
 	sewan *sdk.API) error {
 
 	return errors.New(VM_UPDATE_FAILURE)
 }
 
-func (apier VM_failure_CRUD_operations_AirDrumAPIer) Delete_vm_resource(d *schema.ResourceData,
+func (apier VM_failure_CRUD_operations_AirDrumAPIer) Delete_resource(d *schema.ResourceData,
 	clientTooler *sdk.ClientTooler,
+	resourceType string,
 	sewan *sdk.API) error {
 
 	return errors.New(VM_DELETION_FAILURE)
 }
 
-func (apier VM_failure_CRUD_operations_AirDrumAPIer) Get_vm_creation_url(api *sdk.API) string {
+func (apier VM_failure_CRUD_operations_AirDrumAPIer) Get_resource_creation_url(api *sdk.API,
+	resourceType string) string {
 	return ""
 }
-func (apier VM_failure_CRUD_operations_AirDrumAPIer) Get_vm_url(api *sdk.API,
+func (apier VM_failure_CRUD_operations_AirDrumAPIer) Get_resource_url(api *sdk.API,
+	resourceType string,
 	id string) string {
 
 	return ""
 }
 func (apier VM_failure_CRUD_operations_AirDrumAPIer) Validate_status(api *sdk.API,
+	resourceType string,
 	client sdk.ClientTooler) error {
 
 	return nil
@@ -148,41 +162,48 @@ func (apier VM_failure_CRUD_operations_AirDrumAPIer) Validate_status(api *sdk.AP
 
 type VM_readfailure_CRUD_operations_AirDrumAPIer struct{}
 
-func (apier VM_readfailure_CRUD_operations_AirDrumAPIer) Create_vm_resource(d *schema.ResourceData,
+func (apier VM_readfailure_CRUD_operations_AirDrumAPIer) Create_resource(d *schema.ResourceData,
 	clientTooler *sdk.ClientTooler,
+	resourceType string,
 	sewan *sdk.API) (error, map[string]interface{}) {
 
 	return nil, nil
 }
 
-func (apier VM_readfailure_CRUD_operations_AirDrumAPIer) Read_vm_resource(d *schema.ResourceData,
+func (apier VM_readfailure_CRUD_operations_AirDrumAPIer) Read_resource(d *schema.ResourceData,
 	clientTooler *sdk.ClientTooler,
+	resourceType string,
 	sewan *sdk.API) (error, map[string]interface{}, bool) {
 
 	return errors.New(VM_READ_FAILURE), nil, true
 }
 
-func (apier VM_readfailure_CRUD_operations_AirDrumAPIer) Update_vm_resource(d *schema.ResourceData,
+func (apier VM_readfailure_CRUD_operations_AirDrumAPIer) Update_resource(d *schema.ResourceData,
 	clientTooler *sdk.ClientTooler,
+	resourceType string,
 	sewan *sdk.API) error {
 
 	return nil
 }
-func (apier VM_readfailure_CRUD_operations_AirDrumAPIer) Delete_vm_resource(d *schema.ResourceData,
+func (apier VM_readfailure_CRUD_operations_AirDrumAPIer) Delete_resource(d *schema.ResourceData,
 	clientTooler *sdk.ClientTooler,
+	resourceType string,
 	sewan *sdk.API) error {
 
 	return nil
 }
-func (apier VM_readfailure_CRUD_operations_AirDrumAPIer) Get_vm_creation_url(api *sdk.API) string {
+func (apier VM_readfailure_CRUD_operations_AirDrumAPIer) Get_resource_creation_url(api *sdk.API,
+	resourceType string,) string {
 	return ""
 }
-func (apier VM_readfailure_CRUD_operations_AirDrumAPIer) Get_vm_url(api *sdk.API,
+func (apier VM_readfailure_CRUD_operations_AirDrumAPIer) Get_resource_url(api *sdk.API,
+	resourceType string,
 	id string) string {
 
 	return ""
 }
 func (apier VM_readfailure_CRUD_operations_AirDrumAPIer) Validate_status(api *sdk.API,
+	resourceType string,
 	client sdk.ClientTooler) error {
 
 	return nil

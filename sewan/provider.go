@@ -2,6 +2,7 @@ package sewan
 
 import (
 	"github.com/hashicorp/terraform/helper/schema"
+	sdk "terraform-provider-sewan/sewan_go_sdk"
 )
 
 func Provider() *schema.Provider {
@@ -31,6 +32,9 @@ func providerSchema() map[string]*schema.Schema {
 }
 
 func providerConfigure(d *schema.ResourceData) (interface{}, error) {
+	logger := sdk.LoggerCreate("providerConfigure.log")
+
+	logger.Println("d = ", d)
 	config := Config{
 		Api_token: d.Get("api_token").(string),
 		Api_url:   d.Get("api_url").(string),

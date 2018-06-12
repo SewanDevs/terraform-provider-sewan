@@ -32,6 +32,7 @@ resource "sewan_clouddc_vdc" "terraform-built-vdc1" {
 }
 
 resource "sewan_clouddc_vm" "server1" {
+  depends_on = ["sewan_clouddc_vdc.terraform-built-vdc1"]
   name = "server1"
   vdc = "sewan-rd-cloud-beta-dc1-terraf"
   os = "CentOS"
@@ -66,6 +67,7 @@ resource "sewan_clouddc_vm" "server1" {
 }
 
 resource "sewan_clouddc_vm" "client1" {
+  depends_on = ["sewan_clouddc_vdc.terraform-built-vdc1"]
   name = "client1"
   vdc = "sewan-rd-cloud-beta-dc1-terraf"
   os = "Debian"

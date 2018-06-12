@@ -2,7 +2,6 @@ package sewan
 
 import (
 	"github.com/hashicorp/terraform/helper/schema"
-	//"terraform-provider-sewan/sewan_go_sdk"
 )
 
 func resource_vdc() *schema.Resource {

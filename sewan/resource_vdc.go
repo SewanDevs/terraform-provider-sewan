@@ -108,21 +108,16 @@ func resource_vdc_update(d *schema.ResourceData, m interface{}) error {
 }
 
 func resource_vdc_delete(d *schema.ResourceData, m interface{}) error {
-	// Delete vdc in cloud not implemented for security reasons :
-	// nulify the risk of deleting the wrong vdc during tests
-	//
-	//
-	//var deleteError error
-	//deleteError = nil
-	//sewan := m.(*Client).sewan
-	//deleteError = m.(*Client).sewan_apiTooler.Api.Delete_resource(d,
-	//	m.(*Client).sewan_clientTooler,
-	//	VDC_RESOURCE_TYPE,
-	//	sewan)
-	//if deleteError == nil {
-	//	Delete_resource(d)
-	//}
-	//return deleteError
-	Delete_resource(d)
-	return nil
+
+	var deleteError error
+	deleteError = nil
+	sewan := m.(*Client).sewan
+	deleteError = m.(*Client).sewan_apiTooler.Api.Delete_resource(d,
+		m.(*Client).sewan_clientTooler,
+		VDC_RESOURCE_TYPE,
+		sewan)
+	if deleteError == nil {
+		Delete_resource(d)
+	}
+	return deleteError
 }

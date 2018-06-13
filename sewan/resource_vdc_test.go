@@ -375,56 +375,52 @@ func TestResource_vdc_update(t *testing.T) {
 }
 
 func TestResource_vdc_delete(t *testing.T) {
-	// Delete vdc in cloud not implemented for security reasons :
-	// nulify the risk of deleting the wrong vdc during tests
-	//
-	//
-	//test_cases := []struct {
-	//	Id         int
-	//	TC_apier   sdk.APIer
-	//	Delete_Err error
-	//}{
-	//	{
-	//		1,
-	//		VDC_successfull_CRUD_operations_AirDrumAPIer{},
-	//		nil,
-	//	},
-	//	{
-	//		2,
-	//		VDC_failure_CRUD_operations_AirDrumAPIer{},
-	//		errors.New(VDC_DELETION_FAILURE),
-	//	},
-	//}
-	//vdc_res := resource_vdc()
-	//d := vdc_res.TestResourceData()
-	//config := Config{
-	//	Api_token: "4242",
-	//	Api_url:   "https://42.org",
-	//}
-	//apiTooler := sdk.APITooler{}
-	//clientTooler := sdk.ClientTooler{
-	//	Client: sdk.HttpClienter{},
-	//}
-	//api := apiTooler.New(
-	//	config.Api_token,
-	//	config.Api_url,
-	//)
-	//m_struct := &Client{api, &apiTooler, &clientTooler}
-	//var err error
+	test_cases := []struct {
+		Id         int
+		TC_apier   sdk.APIer
+		Delete_Err error
+	}{
+		{
+			1,
+			VDC_successfull_CRUD_operations_AirDrumAPIer{},
+			nil,
+		},
+		{
+			2,
+			VDC_failure_CRUD_operations_AirDrumAPIer{},
+			errors.New(VDC_DELETION_FAILURE),
+		},
+	}
+	vdc_res := resource_vdc()
+	d := vdc_res.TestResourceData()
+	config := Config{
+		Api_token: "4242",
+		Api_url:   "https://42.org",
+	}
+	apiTooler := sdk.APITooler{}
+	clientTooler := sdk.ClientTooler{
+		Client: sdk.HttpClienter{},
+	}
+	api := apiTooler.New(
+		config.Api_token,
+		config.Api_url,
+	)
+	m_struct := &Client{api, &apiTooler, &clientTooler}
+	var err error
 
-	//for _, test_case := range test_cases {
-	//	apiTooler.Api = test_case.TC_apier
-	//	err = resource_vdc_delete(d, m_struct)
-	//	switch {
-	//	case err == nil || test_case.Delete_Err == nil:
-	//		if !(err == nil && test_case.Delete_Err == nil) {
-	//			t.Errorf("TC %d : VDC deletion error was incorrect,"+
-	//				"\n\rgot: \"%s\"\n\rwant: \"%s\"", test_case.Id, err, test_case.Delete_Err)
-	//		}
-	//	case err.Error() != test_case.Delete_Err.Error():
-	//		t.Errorf("TC %d : VDC deletion error was incorrect,"+
-	//			"\n\rgot: \"%s\"\n\rwant: \"%s\"",
-	//			test_case.Id, err.Error(), test_case.Delete_Err.Error())
-	//	}
-	//}
+	for _, test_case := range test_cases {
+		apiTooler.Api = test_case.TC_apier
+		err = resource_vdc_delete(d, m_struct)
+		switch {
+		case err == nil || test_case.Delete_Err == nil:
+			if !(err == nil && test_case.Delete_Err == nil) {
+				t.Errorf("TC %d : VDC deletion error was incorrect,"+
+					"\n\rgot: \"%s\"\n\rwant: \"%s\"", test_case.Id, err, test_case.Delete_Err)
+			}
+		case err.Error() != test_case.Delete_Err.Error():
+			t.Errorf("TC %d : VDC deletion error was incorrect,"+
+				"\n\rgot: \"%s\"\n\rwant: \"%s\"",
+				test_case.Id, err.Error(), test_case.Delete_Err.Error())
+		}
+	}
 }

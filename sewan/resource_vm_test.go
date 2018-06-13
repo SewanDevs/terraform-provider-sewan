@@ -193,7 +193,7 @@ func (apier VM_readfailure_CRUD_operations_AirDrumAPIer) Delete_resource(d *sche
 	return nil
 }
 func (apier VM_readfailure_CRUD_operations_AirDrumAPIer) Get_resource_creation_url(api *sdk.API,
-	resourceType string,) string {
+	resourceType string) string {
 	return ""
 }
 func (apier VM_readfailure_CRUD_operations_AirDrumAPIer) Get_resource_url(api *sdk.API,

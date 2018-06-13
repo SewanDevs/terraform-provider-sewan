@@ -83,28 +83,39 @@ func resourceInstanceCreate(d *schema.ResourceData,
 	var (
 		resourceInstance interface{}
 		instanceName     string
-		err              error
 	)
 
 	switch resourceType {
 	case "vdc":
 		resourceInstance = vdcInstanceCreate(d)
 		instanceName = d.Get("name").(string)
-		err = nil
 	case "vm":
 		resourceInstance = vmInstanceCreate(d)
 		instanceName = d.Get("name").(string)
-		err = nil
 	default:
 		resourceInstance = nil
 		instanceName = ""
+	}
+
+	return resourceInstance, instanceName, validateResourceType(resourceType)
+}
+
+func validateResourceType(resourceType string) error {
+	var err error
+
+	switch resourceType {
+	case "vdc":
+		err = nil
+	case "vm":
+		err = nil
+	default:
 		err = errors.New("Resource of type \"" + resourceType + "\" not supported," +
 			"list of accepted resource types :\n\r" +
-			"- \"vdc\"" +
+			"- \"vdc\"\n\r" +
 			"- \"vm\"")
 	}
 
-	return resourceInstance, instanceName, err
+	return err
 }
 
 const (
@@ -139,7 +150,7 @@ func (apier AirDrumResources_Apier) Create_resource(d *schema.ResourceData,
 	create_req_err = nil
 	create_resp_body_err = nil
 	airDrumAPICreationResponse = nil
-	logger := loggerCreate("create_resource__" + instanceName + ".log")
+	logger := loggerCreate("create_resource_" + instanceName + ".log")
 	api_tools := APITooler{
 		Api: apier,
 	}
@@ -166,27 +177,32 @@ func (apier AirDrumResources_Apier) Create_resource(d *schema.ResourceData,
 				defer resp.Body.Close()
 				bodyBytes, create_resp_body_err = ioutil.ReadAll(resp.Body)
 				responseBody = string(bodyBytes)
-				resp_body_json_err := json.Unmarshal(bodyBytes, &resp_body_reader)
-				switch {
-				case create_resp_body_err != nil:
-					createError = errors.New("Read of " + instanceName +
-						" response body error " + create_resp_body_err.Error())
-				case resp_body_json_err != nil:
-					logger.Println("resp_body_json_err != nil\nresp.Body = ", resp.Body,
-						"\nresp.StatusCode = ", resp.StatusCode,
-						"\nresp.Status =", resp.Status,
-						"\nresp.Header =", resp.Header,
-						"\nresponseBody = ", responseBody)
-					createError = errors.New("Creation of \"" + instanceName +
-						"\" failed, " +
-						"the response body is not a properly formated json :\n\r\"" +
-						resp_body_json_err.Error() + "\"")
-				default:
-					if resp.StatusCode != http.StatusCreated {
-						createError = errors.New(resp.Status + responseBody)
-					} else {
-						airDrumAPICreationResponse = resp_body_reader.(map[string]interface{})
+
+				switch resp.Header.Get("Content-Type") {
+				case "application/json":
+					resp_body_json_err := json.Unmarshal(bodyBytes, &resp_body_reader)
+					switch {
+					case create_resp_body_err != nil:
+						createError = errors.New("Read of " + instanceName +
+							" response body error " + create_resp_body_err.Error())
+					case resp_body_json_err != nil:
+						createError = errors.New("Creation of \"" + instanceName +
+							"\" failed, " +
+							"the response body is not a properly formated json :\n\r\"" +
+							resp_body_json_err.Error() + "\"")
+					default:
+						if resp.StatusCode != http.StatusCreated {
+							createError = errors.New(resp.Status + responseBody)
+						} else {
+							airDrumAPICreationResponse = resp_body_reader.(map[string]interface{})
+						}
 					}
+				case "text/html":
+					createError = errors.New(resp.Status + responseBody)
+				default:
+					createError = errors.New("Unhandled api response type : " +
+						resp.Header.Get("Content-Type") +
+						"\nPlease validate the configuration api url.")
 				}
 			}
 		} else {
@@ -211,6 +227,7 @@ func (apier AirDrumResources_Apier) Read_resource(d *schema.ResourceData,
 	var (
 		readError                  error
 		read_req_err               error
+		resourceTypeErr            error
 		airDrumAPICreationResponse map[string]interface{}
 		responseBody               string
 		resp_body_reader           interface{}
@@ -228,44 +245,60 @@ func (apier AirDrumResources_Apier) Read_resource(d *schema.ResourceData,
 	api_tools := APITooler{
 		Api: apier,
 	}
+	resourceTypeErr = validateResourceType(resourceType)
 
-	req, read_req_err = http.NewRequest("GET",
-		api_tools.Api.Get_resource_url(sewan, resourceType, d.Id()), nil)
-	if read_req_err == nil {
-		req.Header.Add("authorization", "Token "+sewan.Token)
-		resp, read_req_err = clientTooler.Client.Do(sewan, req)
-	}
+	if resourceTypeErr == nil {
+		req, read_req_err = http.NewRequest("GET",
+			api_tools.Api.Get_resource_url(sewan, resourceType, d.Id()), nil)
+		if read_req_err == nil {
+			req.Header.Add("authorization", "Token "+sewan.Token)
+			resp, read_req_err = clientTooler.Client.Do(sewan, req)
+		}
 
-	if resp != nil {
-		if read_req_err != nil {
-			readError = errors.New("Read of \"" + d.Get("name").(string) +
-				"\" state failed, response reception error : " + read_req_err.Error())
-		} else {
-			defer resp.Body.Close()
-			bodyBytes, read_resp_body_err := ioutil.ReadAll(resp.Body)
-			responseBody = string(bodyBytes)
-			switch {
-			case read_resp_body_err != nil:
-				readError = errors.New("Read of " + d.Get("name").(string) +
-					" state response body read error " + read_resp_body_err.Error())
-			case resp.StatusCode == http.StatusOK:
-				resp_body_json_err := json.Unmarshal(bodyBytes, &resp_body_reader)
-				if resp_body_json_err != nil {
-					readError = errors.New("Read of \"" + d.Get("name").(string) +
-						"\" failed, response body json error :\n\r\"" +
-						resp_body_json_err.Error() + "\"")
-				} else {
-					airDrumAPICreationResponse = resp_body_reader.(map[string]interface{})
+		if resp != nil {
+			if read_req_err != nil {
+				readError = errors.New("Read of \"" + d.Get("name").(string) +
+					"\" state failed, response reception error : " + read_req_err.Error())
+			} else {
+				defer resp.Body.Close()
+				bodyBytes, read_resp_body_err := ioutil.ReadAll(resp.Body)
+				responseBody = string(bodyBytes)
+
+				switch resp.Header.Get("Content-Type") {
+				case "application/json":
+					switch {
+					case read_resp_body_err != nil:
+						readError = errors.New("Read of " + d.Get("name").(string) +
+							" state response body read error " + read_resp_body_err.Error())
+					case resp.StatusCode == http.StatusOK:
+						resp_body_json_err := json.Unmarshal(bodyBytes, &resp_body_reader)
+						if resp_body_json_err != nil {
+							readError = errors.New("Read of \"" + d.Get("name").(string) +
+								"\" failed, response body json error :\n\r\"" +
+								resp_body_json_err.Error() + "\"")
+						} else {
+							airDrumAPICreationResponse = resp_body_reader.(map[string]interface{})
+						}
+					case resp.StatusCode == http.StatusNotFound:
+						resource_exists = false
+					default:
+						readError = errors.New(resp.Status + responseBody)
+					}
+				case "text/html":
+					readError = errors.New(resp.Status + responseBody)
+				default:
+					readError = errors.New("Unhandled api response type : " +
+						resp.Header.Get("Content-Type") +
+						"\nPlease validate the configuration api url.")
 				}
-			case resp.StatusCode == http.StatusNotFound:
-				resource_exists = false
-			default:
-				readError = errors.New(resp.Status + responseBody)
 			}
+		} else {
+			readError = read_req_err
 		}
 	} else {
-		readError = read_req_err
+		readError = resourceTypeErr
 	}
+
 	logger.Println("readError =", readError,
 		"\nairDrumAPICreationResponse =", airDrumAPICreationResponse,
 		"\nresource_exists =", resource_exists)
@@ -326,21 +359,29 @@ func (apier AirDrumResources_Apier) Update_resource(d *schema.ResourceData,
 				defer resp.Body.Close()
 				bodyBytes, update_resp_body_err = ioutil.ReadAll(resp.Body)
 				responseBody = string(bodyBytes)
-				switch {
-				case update_resp_body_err != nil:
-					updateError = errors.New("Read of \"" + d.Get("name").(string) +
-						"\" state response body read error " + update_resp_body_err.Error())
-				case resp.StatusCode == http.StatusOK:
-					resp_body_json_err := json.Unmarshal(bodyBytes, &resp_body_reader)
-					if resp_body_json_err != nil {
+
+				switch resp.Header.Get("Content-Type") {
+				case "application/json":
+					switch {
+					case update_resp_body_err != nil:
 						updateError = errors.New("Read of \"" + d.Get("name").(string) +
-							"\" failed, response body json error :\n\r\"" +
-							resp_body_json_err.Error())
+							"\" state response body read error " + update_resp_body_err.Error())
+					case resp.StatusCode == http.StatusOK:
+						resp_body_json_err := json.Unmarshal(bodyBytes, &resp_body_reader)
+						if resp_body_json_err != nil {
+							updateError = errors.New("Read of \"" + d.Get("name").(string) +
+								"\" failed, response body json error :\n\r\"" +
+								resp_body_json_err.Error())
+						}
+					default:
+						updateError = errors.New(resp.Status + responseBody)
 					}
-				case resp.StatusCode != http.StatusOK:
-					updateError = errors.New("" + resp.Status + responseBody)
-				default:
+				case "text/html":
 					updateError = errors.New(resp.Status + responseBody)
+				default:
+					updateError = errors.New("Unhandled api response type : " +
+						resp.Header.Get("Content-Type") +
+						"\nPlease validate the configuration api url.")
 				}
 			}
 		} else {
@@ -374,18 +415,12 @@ func (apier AirDrumResources_Apier) Delete_resource(d *schema.ResourceData,
 	switch resourceType {
 	case "vdc":
 		resource_destroy_failure = VDC_DESTROY_FAILURE
-		resourceTypeErr = nil
 	case "vm":
 		resource_destroy_failure = VM_DESTROY_FAILURE
-		resourceTypeErr = nil
 	default:
 		resource_destroy_failure = ""
-		resourceTypeErr = errors.New("Resource of type \"" + resourceType +
-			"\" not supported," +
-			"list of accepted resource types :\n\r" +
-			"- \"vdc\"" +
-			"- \"vm\"")
 	}
+	resourceTypeErr = validateResourceType(resourceType)
 	req := &http.Request{}
 	resp := &http.Response{}
 	deleteError = nil
@@ -414,22 +449,32 @@ func (apier AirDrumResources_Apier) Delete_resource(d *schema.ResourceData,
 				defer resp.Body.Close()
 				bodyBytes, delete_resp_body_err = ioutil.ReadAll(resp.Body)
 				responseBody = string(bodyBytes)
-				switch {
-				case delete_resp_body_err != nil:
-					deleteError = errors.New("Deletion of " + d.Get("name").(string) +
-						" response reception error : " + delete_resp_body_err.Error())
-				case resp.StatusCode == http.StatusOK:
-					resp_body_json_err := json.Unmarshal(bodyBytes, &resp_body_reader)
-					if resp_body_json_err != nil {
-						deleteError = errors.New("Read of \"" + d.Get("name").(string) +
-							"\" failed, response body json error :\n\r\"" +
-							resp_body_json_err.Error())
-					} else if responseBody != resource_destroy_failure {
-						logger.Println("resource_destroy_failure", resource_destroy_failure)
+
+				switch resp.Header.Get("Content-Type") {
+				case "application/json":
+					switch {
+					case delete_resp_body_err != nil:
+						deleteError = errors.New("Deletion of " + d.Get("name").(string) +
+							" response reception error : " + delete_resp_body_err.Error())
+					case resp.StatusCode == http.StatusOK:
+						resp_body_json_err := json.Unmarshal(bodyBytes, &resp_body_reader)
+						if resp_body_json_err != nil {
+							deleteError = errors.New("Read of \"" + d.Get("name").(string) +
+								"\" failed, response body json error :\n\r\"" +
+								resp_body_json_err.Error())
+						} else if responseBody != resource_destroy_failure {
+							logger.Println("resource_destroy_failure", resource_destroy_failure)
+							deleteError = errors.New(resp.Status + responseBody)
+						}
+					default:
 						deleteError = errors.New(resp.Status + responseBody)
 					}
-				default:
+				case "text/html":
 					deleteError = errors.New(resp.Status + responseBody)
+				default:
+					deleteError = errors.New("Unhandled api response type : " +
+						resp.Header.Get("Content-Type") +
+						"\nPlease validate the configuration api url.")
 				}
 			}
 		} else {

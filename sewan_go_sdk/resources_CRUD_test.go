@@ -33,8 +33,9 @@ func TestCreate_resource(t *testing.T) {
 			2,
 			BadBodyResponse_StatusCreated_HttpClienter{},
 			VDC_RESOURCE_TYPE,
-			errors.New("Creation of \"Unit test resource\" failed, response body json " +
-				"error :\n\r\"invalid character '\"' after object key\""),
+			errors.New("Creation of \"Unit test resource\" failed, " +
+				"the response body is not a properly formated json :" +
+				"\n\r\"invalid character '\"' after object key\""),
 			nil,
 		},
 		{
@@ -64,6 +65,38 @@ func TestCreate_resource(t *testing.T) {
 			VM_RESOURCE_TYPE,
 			errors.New("Creation of \"Unit test resource\" failed, response reception " +
 				"error : CheckRedirectReqFailure"),
+			nil,
+		},
+		{
+			7,
+			BadBodyResponseContentType_HttpClienter{},
+			VM_RESOURCE_TYPE,
+			errors.New("Unhandled api response type : image" +
+				"\nPlease validate the configuration api url."),
+			nil,
+		},
+		{
+			8,
+			StatusInternalServerError_HttpClienter{},
+			VDC_RESOURCE_TYPE,
+			errors.New("<h1>Server Error (500)</h1>"),
+			nil,
+		},
+		{
+			8,
+			StatusInternalServerError_HttpClienter{},
+			VDC_RESOURCE_TYPE,
+			errors.New("<h1>Server Error (500)</h1>"),
+			nil,
+		},
+		{
+			9,
+			VM_CreationSuccess_HttpClienter{},
+			WRONG_RESOURCE_TYPE,
+			errors.New("Resource of type \"a_non_supported_resource_type\"" +
+				" not supported,list of accepted resource types :\n\r" +
+				"- \"vdc\"\n\r" +
+				"- \"vm\""),
 			nil,
 		},
 	}
@@ -110,10 +143,11 @@ func TestCreate_resource(t *testing.T) {
 					"\n\rgot map: \n\r\"%s\"\n\rwant map: \n\r\"%s\"\n\r",
 					test_case.Id, resp_creation_map, test_case.Created_resource)
 			}
-		case err.Error() != test_case.Creation_Err.Error():
-			t.Errorf("TC %d : resource creation error was incorrect,"+
-				"\n\rgot: \"%s\"\n\rwant: \"%s\"",
-				test_case.Id, err.Error(), test_case.Creation_Err.Error())
+			if err.Error() != test_case.Creation_Err.Error() {
+				t.Errorf("TC %d : resource creation error was incorrect,"+
+					"\n\rgot: \"%s\"\n\rwant: \"%s\"",
+					test_case.Id, err.Error(), test_case.Creation_Err.Error())
+			}
 		case !reflect.DeepEqual(test_case.Created_resource, resp_creation_map):
 			t.Errorf("TC %d : Wrong created resource map,"+
 				"\n\rgot: \"%s\"\n\rwant: \"%s\"",
@@ -190,6 +224,34 @@ func TestRead_resource(t *testing.T) {
 			TEST_VM_MAP,
 			true,
 		},
+		{
+			8,
+			BadBodyResponseContentType_HttpClienter{},
+			VM_RESOURCE_TYPE,
+			errors.New("Unhandled api response type : image" +
+				"\nPlease validate the configuration api url."),
+			nil,
+			true,
+		},
+		{
+			9,
+			StatusInternalServerError_HttpClienter{},
+			VM_RESOURCE_TYPE,
+			errors.New("<h1>Server Error (500)</h1>"),
+			nil,
+			true,
+		},
+		{
+			10,
+			VDC_ReadSuccess_HttpClienter{},
+			WRONG_RESOURCE_TYPE,
+			errors.New("Resource of type \"a_non_supported_resource_type\"" +
+				" not supported,list of accepted resource types :\n\r" +
+				"- \"vdc\"\n\r" +
+				"- \"vm\""),
+			nil,
+			true,
+		},
 	}
 	var (
 		sewan             *API
@@ -216,7 +278,7 @@ func TestRead_resource(t *testing.T) {
 
 		switch {
 		case err == nil || test_case.Read_Err == nil:
-			if !(err == nil && test_case.Read_Err == nil) {
+			if !((err == nil) && (test_case.Read_Err == nil)) {
 				t.Errorf("TC %d : resource read error was incorrect,"+
 					"\n\rgot: \"%s\"\n\rwant: \"%s\"", test_case.Id, err, test_case.Read_Err)
 			} else {
@@ -238,10 +300,11 @@ func TestRead_resource(t *testing.T) {
 					"\n\rgot map: \n\r\"%s\"\n\rwant map: \n\r\"%s\"\n\r",
 					test_case.Id, resp_creation_map, test_case.Read_resource)
 			}
-		case err.Error() != test_case.Read_Err.Error():
-			t.Errorf("TC %d : resource read error was incorrect,"+
-				"\n\rgot: \"%s\"\n\rwant: \"%s\"",
-				test_case.Id, err.Error(), test_case.Read_Err.Error())
+			if err.Error() != test_case.Read_Err.Error() {
+				t.Errorf("TC %d : resource read error was incorrect,"+
+					"\n\rgot: \"%s\"\n\rwant: \"%s\"",
+					test_case.Id, err.Error(), test_case.Read_Err.Error())
+			}
 		case res_exists != test_case.Resource_exists:
 			t.Errorf("TC %d : Wrong read resource exists value"+
 				"\n\rgot: \"%v\"\n\rwant: \"%v\"",
@@ -305,6 +368,28 @@ func TestUpdate_resource(t *testing.T) {
 			VM_UpdateSuccess_HttpClienter{},
 			VM_RESOURCE_TYPE,
 			nil,
+		},
+		{
+			8,
+			BadBodyResponseContentType_HttpClienter{},
+			VM_RESOURCE_TYPE,
+			errors.New("Unhandled api response type : image" +
+				"\nPlease validate the configuration api url."),
+		},
+		{
+			9,
+			StatusInternalServerError_HttpClienter{},
+			VM_RESOURCE_TYPE,
+			errors.New("<h1>Server Error (500)</h1>"),
+		},
+		{
+			10,
+			VDC_UpdateSuccess_HttpClienter{},
+			WRONG_RESOURCE_TYPE,
+			errors.New("Resource of type \"a_non_supported_resource_type\"" +
+				" not supported,list of accepted resource types :\n\r" +
+				"- \"vdc\"\n\r" +
+				"- \"vm\""),
 		},
 	}
 	Apier := AirDrumResources_Apier{}
@@ -399,6 +484,28 @@ func TestDelete_resource(t *testing.T) {
 			DeleteWRONGResponseBody_HttpClienter{},
 			VDC_RESOURCE_TYPE,
 			errors.New(DESTROY_WRONG_MSG),
+		},
+		{
+			9,
+			BadBodyResponseContentType_HttpClienter{},
+			VM_RESOURCE_TYPE,
+			errors.New("Unhandled api response type : image" +
+				"\nPlease validate the configuration api url."),
+		},
+		{
+			10,
+			StatusInternalServerError_HttpClienter{},
+			VM_RESOURCE_TYPE,
+			errors.New("<h1>Server Error (500)</h1>"),
+		},
+		{
+			7,
+			VM_DeleteSuccess_HttpClienter{},
+			WRONG_RESOURCE_TYPE,
+			errors.New("Resource of type \"a_non_supported_resource_type\"" +
+				" not supported,list of accepted resource types :\n\r" +
+				"- \"vdc\"\n\r" +
+				"- \"vm\""),
 		},
 	}
 	var (
@@ -538,6 +645,7 @@ const (
 	VM_DESTROY_FAILURE_MSG  = "Destroying the VM now"
 	VM_RESOURCE_TYPE        = "vm"
 	VDC_RESOURCE_TYPE       = "vdc"
+	WRONG_RESOURCE_TYPE     = "a_non_supported_resource_type"
 )
 
 var (
@@ -829,6 +937,16 @@ func resource(resourceType string) *schema.Resource {
 		resource = resource_vdc() //resource_vm() *schema.Resource
 	case "vm":
 		resource = resource_vm()
+	default:
+		//return a false resource
+		resource = &schema.Resource{
+			Schema: map[string]*schema.Schema{
+				"name": &schema.Schema{
+					Type:     schema.TypeString,
+					Required: true,
+				},
+			},
+		}
 	}
 	return resource
 }
@@ -847,13 +965,42 @@ func (client ErrorResponse_HttpClienter) Do(api *API,
 }
 
 // Response body error *ClientTooler
+type BadBodyResponseContentType_HttpClienter struct{}
+
+func (client BadBodyResponseContentType_HttpClienter) Do(api *API,
+	req *http.Request) (*http.Response, error) {
+
+	resp := http.Response{}
+	resp.Header = map[string][]string{}
+	resp.Header.Add("Content-Type", "image")
+	resp.Body = ioutil.NopCloser(bytes.NewBufferString("Internal Server Error"))
+	resp.StatusCode = http.StatusInternalServerError
+	return &resp, nil
+}
+
+// Response body error *ClientTooler
+type StatusInternalServerError_HttpClienter struct{}
+
+func (client StatusInternalServerError_HttpClienter) Do(api *API,
+	req *http.Request) (*http.Response, error) {
+
+	resp := http.Response{}
+	resp.Header = map[string][]string{}
+	resp.Header.Add("Content-Type", "text/html")
+	resp.Body = ioutil.NopCloser(bytes.NewBufferString("<h1>Server Error (500)</h1>"))
+	resp.StatusCode = http.StatusInternalServerError
+	return &resp, nil
+}
+
+// Response body error *ClientTooler
 type BadBodyResponse_StatusCreated_HttpClienter struct{}
 
 func (client BadBodyResponse_StatusCreated_HttpClienter) Do(api *API,
 	req *http.Request) (*http.Response, error) {
 
 	resp := http.Response{}
-	resp.Header = map[string][]string{"Content-Type": {"application/json"}}
+	resp.Header = map[string][]string{}
+	resp.Header.Add("Content-Type", "application/json")
 	resp.Body = ioutil.NopCloser(bytes.NewBufferString("{\"detail\"\"Invalid json string}}.\"}"))
 	resp.StatusCode = http.StatusCreated
 	return &resp, nil
@@ -866,7 +1013,8 @@ func (client BadBodyResponse_StatusOK_HttpClienter) Do(api *API,
 	req *http.Request) (*http.Response, error) {
 
 	resp := http.Response{}
-	resp.Header = map[string][]string{"Content-Type": {"application/json"}}
+	resp.Header = map[string][]string{}
+	resp.Header.Add("Content-Type", "application/json")
 	resp.Body = ioutil.NopCloser(bytes.NewBufferString("{\"detail\"\"Invalid json string}}.\"}"))
 	resp.StatusCode = http.StatusOK
 	return &resp, nil
@@ -879,6 +1027,8 @@ func (client Error401_HttpClienter) Do(api *API,
 	req *http.Request) (*http.Response, error) {
 
 	resp := http.Response{}
+	resp.Header = map[string][]string{}
+	resp.Header.Add("Content-Type", "application/json")
 	resp.StatusCode = http.StatusUnauthorized
 	resp.Status = UNAUTHORIZED_STATUS
 	body := Resp_Body{"Token non valide."}
@@ -894,6 +1044,8 @@ func (client Error404_HttpClienter) Do(api *API,
 	req *http.Request) (*http.Response, error) {
 
 	resp := http.Response{}
+	resp.Header = map[string][]string{}
+	resp.Header.Add("Content-Type", "application/json")
 	resp.StatusCode = http.StatusNotFound
 	resp.Status = NOT_FOUND_STATUS
 	body := Resp_Body{"Not found."}
@@ -909,7 +1061,8 @@ func (client VDC_CreationSuccess_HttpClienter) Do(api *API,
 	req *http.Request) (*http.Response, error) {
 
 	resp := http.Response{}
-	resp.Header = map[string][]string{"Content-Type": {"application/json"}}
+	resp.Header = map[string][]string{}
+	resp.Header.Add("Content-Type", "application/json")
 	resp.StatusCode = http.StatusCreated
 	js, _ := json.Marshal(TEST_VDC_READ_RESPONSE_MAP)
 	resp.Body = ioutil.NopCloser(bytes.NewBuffer(js))
@@ -923,7 +1076,8 @@ func (client VDC_ReadSuccess_HttpClienter) Do(api *API,
 	req *http.Request) (*http.Response, error) {
 
 	resp := http.Response{}
-	resp.Header = map[string][]string{"Content-Type": {"application/json"}}
+	resp.Header = map[string][]string{}
+	resp.Header.Add("Content-Type", "application/json")
 	resp.StatusCode = http.StatusOK
 	js, _ := json.Marshal(TEST_VDC_READ_RESPONSE_MAP)
 	resp.Body = ioutil.NopCloser(bytes.NewBuffer(js))
@@ -937,7 +1091,8 @@ func (client VDC_UpdateSuccess_HttpClienter) Do(api *API,
 	req *http.Request) (*http.Response, error) {
 
 	resp := http.Response{}
-	resp.Header = map[string][]string{"Content-Type": {"application/json"}}
+	resp.Header = map[string][]string{}
+	resp.Header.Add("Content-Type", "application/json")
 	resp.StatusCode = http.StatusOK
 	js, _ := json.Marshal(TEST_VDC_CREATION_MAP)
 	resp.Body = ioutil.NopCloser(bytes.NewBuffer(js))
@@ -950,7 +1105,8 @@ func (client VDC_DeleteSuccess_HttpClienter) Do(api *API,
 	req *http.Request) (*http.Response, error) {
 
 	resp := http.Response{}
-	resp.Header = map[string][]string{"Content-Type": {"application/json"}}
+	resp.Header = map[string][]string{}
+	resp.Header.Add("Content-Type", "application/json")
 	resp.StatusCode = http.StatusOK
 	body := Resp_Body{VDC_DESTROY_FAILURE_MSG}
 	js, _ := json.Marshal(body)
@@ -965,7 +1121,8 @@ func (client VM_CreationSuccess_HttpClienter) Do(api *API,
 	req *http.Request) (*http.Response, error) {
 
 	resp := http.Response{}
-	resp.Header = map[string][]string{"Content-Type": {"application/json"}}
+	resp.Header = map[string][]string{}
+	resp.Header.Add("Content-Type", "application/json")
 	resp.StatusCode = http.StatusCreated
 	js, _ := json.Marshal(TEST_VM_MAP)
 	resp.Body = ioutil.NopCloser(bytes.NewBuffer(js))
@@ -979,7 +1136,8 @@ func (client VM_ReadSuccess_HttpClienter) Do(api *API,
 	req *http.Request) (*http.Response, error) {
 
 	resp := http.Response{}
-	resp.Header = map[string][]string{"Content-Type": {"application/json"}}
+	resp.Header = map[string][]string{}
+	resp.Header.Add("Content-Type", "application/json")
 	resp.StatusCode = http.StatusOK
 	js, _ := json.Marshal(TEST_VM_MAP)
 	resp.Body = ioutil.NopCloser(bytes.NewBuffer(js))
@@ -993,7 +1151,8 @@ func (client VM_UpdateSuccess_HttpClienter) Do(api *API,
 	req *http.Request) (*http.Response, error) {
 
 	resp := http.Response{}
-	resp.Header = map[string][]string{"Content-Type": {"application/json"}}
+	resp.Header = map[string][]string{}
+	resp.Header.Add("Content-Type", "application/json")
 	resp.StatusCode = http.StatusOK
 	js, _ := json.Marshal(TEST_VM_MAP)
 	resp.Body = ioutil.NopCloser(bytes.NewBuffer(js))
@@ -1006,7 +1165,8 @@ func (client VM_DeleteSuccess_HttpClienter) Do(api *API,
 	req *http.Request) (*http.Response, error) {
 
 	resp := http.Response{}
-	resp.Header = map[string][]string{"Content-Type": {"application/json"}}
+	resp.Header = map[string][]string{}
+	resp.Header.Add("Content-Type", "application/json")
 	resp.StatusCode = http.StatusOK
 	body := Resp_Body{VM_DESTROY_FAILURE_MSG}
 	js, _ := json.Marshal(body)
@@ -1020,7 +1180,8 @@ func (client DeleteWRONGResponseBody_HttpClienter) Do(api *API,
 	req *http.Request) (*http.Response, error) {
 
 	resp := http.Response{}
-	resp.Header = map[string][]string{"Content-Type": {"application/json"}}
+	resp.Header = map[string][]string{}
+	resp.Header.Add("Content-Type", "application/json")
 	resp.StatusCode = http.StatusOK
 	resp.Body = ioutil.NopCloser(bytes.NewBufferString(DESTROY_WRONG_MSG))
 	return &resp, nil

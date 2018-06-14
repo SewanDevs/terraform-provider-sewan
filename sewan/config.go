@@ -5,6 +5,11 @@ import (
 	sdk "terraform-provider-sewan/sewan_go_sdk"
 )
 
+const (
+	VM_RESOURCE_TYPE  = "vm"
+	VDC_RESOURCE_TYPE = "vdc"
+)
+
 type Config struct {
 	Api_token string
 	Api_url   string
@@ -24,7 +29,7 @@ type Client struct {
 
 func (c *Config) Client() (*Client, error) {
 	apiTooler := sdk.APITooler{
-		Api: sdk.AirDrumAPIer{},
+		Api: sdk.AirDrumResources_Apier{},
 	}
 	clientTooler := sdk.ClientTooler{
 		Client: sdk.HttpClienter{},

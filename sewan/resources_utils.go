@@ -6,7 +6,7 @@ import (
 	"log"
 	"reflect"
 	"strconv"
-	"terraform-provider-sewan/sewan_go_sdk"
+	sdk "terraform-provider-sewan/sewan_go_sdk"
 )
 
 func Delete_resource(d *schema.ResourceData) {
@@ -19,8 +19,8 @@ func Update_local_resource_state(body map[string]interface{},
 	var updateError, err error
 	updateError = nil
 	var read_value interface{}
-	logger := sewan_go_sdk.LoggerCreate("update_local_resource_state_" +
-		d.Get("vdc").(string) + "_" + d.Get("name").(string) + ".log")
+	logger := sdk.LoggerCreate("update_local_resource_state_" +
+		d.Get("name").(string) + ".log")
 	for key, value := range body {
 		read_value, err = read_element(key, value, logger)
 		logger.Println("Set \"", key, "\" to \"", read_value, "\"")
@@ -79,10 +79,6 @@ func read_element(key interface{}, value interface{},
 		}
 		read_value = read_map_value
 	case []interface{}:
-		logger.Println(key, " is a is a list ([]interface{}) of type:",
-			reflect.TypeOf(value))
-		logger.Println("value :", value)
-		logger.Println("value_type :", value_type)
 		var read_list_value []interface{}
 		var list_item interface{}
 		for list_key, list_value := range value_type {

@@ -1,5 +1,5 @@
 provider "sewan" {
-  api_token = "2fe8f62cfc506e87ece81ba41f0e9cd5528d009f"
+  api_token = "c2cedf689ec00fbff5cef5b880344d95d60d6cb5"
   api_url = "https://next.cloud-datacenter.fr/api/clouddc/"
 }
 
@@ -53,38 +53,49 @@ resource "sewan_clouddc_vm" "server" {
   depends_on = ["sewan_clouddc_vdc.terraform-vdc"]
   count = 1
   name = "server${count.index}"
-  vdc = "${sewan_clouddc_vdc.terraform-vdc.slug}"
-  os = "CentOS"
-  ram  = 1
+  ram=1
   cpu = 1
+  os="CentOS"
+  vdc = "${sewan_clouddc_vdc.terraform-vdc.slug}"
+  vdc_resource_disk = "${sewan_clouddc_vdc.terraform-vdc.slug}-sewan-rd-cloud-beta-mono-storage_enterprise"
   disk_image = ""
-  nics=[
-  {
-    vlan="internal-2412"
-    connected=false
-  },
-  {
-    vlan="internal-2410"
-    connected=true
-  },
-  ]
   disks=[
     {
       name="disk-centos7-rd-DC1-1"
       size=1
       v_disk="${sewan_clouddc_vdc.terraform-vdc.slug}-sewan-rd-cloud-beta-mono-storage_enterprise"
     },
-    {
-      name="disk-centos7-rd-DC1-2"
-      size=1
-      v_disk="${sewan_clouddc_vdc.terraform-vdc.slug}-sewan-rd-cloud-beta-mono-storage_enterprise"
-    },
+  ]
+  nics=[
+  {
+    vlan="internal-2412"
+    connected=false
+  },
   ]
   boot = "on disk"
-  vdc_resource_disk = "${sewan_clouddc_vdc.terraform-vdc.slug}-sewan-rd-cloud-beta-mono-storage_enterprise"
   backup = "backup-no-backup"
 }
 
+//resource "sewan_clouddc_vm" "server" {
+//  depends_on = ["sewan_clouddc_vdc.terraform-vdc"]
+//  count = 1
+//  name = "server${count.index}"
+//  template = "centos7-rd-DC1"
+//  //os=""
+//  os="CentOS"
+//  vdc = "${sewan_clouddc_vdc.terraform-vdc.slug}"
+//  vdc_resource_disk = "${sewan_clouddc_vdc.terraform-vdc.slug}-sewan-rd-cloud-beta-mono-storage_enterprise"
+//  disk_image = ""
+//  nics=[
+//  {
+//    vlan="internal-2412"
+//    connected=false
+//  },
+//  ]
+//  boot = "on disk"
+//  backup = "backup-no-backup"
+//}
+//
 //
 //resource "sewan_clouddc_vdc" "terraform-built-vdc-bis" {
 //  name = "terraform-built-vdc-bis"

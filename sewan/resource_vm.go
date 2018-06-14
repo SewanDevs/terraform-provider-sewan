@@ -15,25 +15,29 @@ func resource_vm() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
+			"template": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+			},
 			"state": &schema.Schema{
 				Type:     schema.TypeString,
 				Computed: true,
 			},
 			"os": &schema.Schema{
 				Type:     schema.TypeString,
-				Required: true,
+				Optional: true,
 			},
 			"ram": &schema.Schema{
 				Type:     schema.TypeInt,
-				Required: true,
+				Optional: true,
 			},
 			"cpu": &schema.Schema{
 				Type:     schema.TypeInt,
-				Required: true,
+				Optional: true,
 			},
 			"disks": &schema.Schema{
 				Type:     schema.TypeList,
-				Required: true,
+				Optional: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": &schema.Schema{
@@ -85,12 +89,8 @@ func resource_vm() *schema.Resource {
 			},
 			"vdc_resource_disk": &schema.Schema{
 				Type:     schema.TypeString,
-				Required: true,
+				Optional: true,
 			},
-			//"template": &schema.Schema{
-			//  Type:     schema.TypeString,
-			//  Optional: true,
-			//},
 			"slug": &schema.Schema{
 				Type:     schema.TypeString,
 				Computed: true,

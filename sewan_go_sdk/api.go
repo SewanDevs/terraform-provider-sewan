@@ -23,17 +23,25 @@ type APIer interface {
 	Get_resource_url(api *API,
 		resourceType string,
 		id string) string
+	ValidateResourceType(resourceType string) error
 	Validate_status(api *API,
 		resourceType string,
 		client ClientTooler) error
+	ResourceInstanceCreate(d *schema.ResourceData,
+		resourceType string) (error,
+		interface{},
+		string)
 	Create_resource(d *schema.ResourceData,
 		clientTooler *ClientTooler,
 		resourceType string,
-		sewan *API) (error, map[string]interface{})
+		sewan *API) (error,
+		map[string]interface{})
 	Read_resource(d *schema.ResourceData,
 		clientTooler *ClientTooler,
 		resourceType string,
-		sewan *API) (error, map[string]interface{}, bool)
+		sewan *API) (error,
+		map[string]interface{},
+		bool)
 	Update_resource(d *schema.ResourceData,
 		clientTooler *ClientTooler,
 		resourceType string,

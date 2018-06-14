@@ -9,115 +9,6 @@ import (
 	"net/http"
 )
 
-type VDC struct {
-	Name          string        `json:"name"`
-	Enterprise    string        `json:"enterprise"`
-	Datacenter    string        `json:"datacenter"`
-	Vdc_resources []interface{} `json:"vdc_resources"`
-	Slug          string        `json:"slug"`
-	Dynamic_field string        `json:"dynamic_field"`
-}
-
-type VM struct {
-	Name              string        `json:"name"`
-	State             string        `json:"state"`
-	OS                string        `json:"os"`
-	RAM               int           `json:"ram"`
-	CPU               int           `json:"cpu"`
-	Disks             []interface{} `json:"disks"`
-	Nics              []interface{} `json:"nics"`
-	Vdc               string        `json:"vdc"`
-	Boot              string        `json:"boot"`
-	Vdc_resource_disk string        `json:"vdc_resource_disk"`
-	//Template string `json:"template"`
-	Slug          string `json:"slug"`
-	Token         string `json:"token"`
-	Backup        string `json:"backup"`
-	Disk_image    string `json:"disk_image"`
-	Platform_name string `json:"platform_name"`
-	Backup_size   string `json:"backup_size"`
-	Comment       string `json:"comment"`
-	Outsourcing   string `json:"outsourcing"`
-	Dynamic_field string `json:"dynamic_field"`
-}
-
-func vdcInstanceCreate(d *schema.ResourceData) VDC {
-	return VDC{
-		Name:          d.Get("name").(string),
-		Enterprise:    d.Get("enterprise").(string),
-		Datacenter:    d.Get("datacenter").(string),
-		Vdc_resources: d.Get("vdc_resources").([]interface{}),
-		Slug:          d.Get("slug").(string),
-		Dynamic_field: d.Get("dynamic_field").(string),
-	}
-}
-
-func vmInstanceCreate(d *schema.ResourceData) VM {
-	return VM{
-		Name:              d.Get("name").(string),
-		State:             d.Get("state").(string),
-		OS:                d.Get("os").(string),
-		RAM:               d.Get("ram").(int),
-		CPU:               d.Get("cpu").(int),
-		Disks:             d.Get("disks").([]interface{}),
-		Nics:              d.Get("nics").([]interface{}),
-		Vdc:               d.Get("vdc").(string),
-		Boot:              d.Get("boot").(string),
-		Vdc_resource_disk: d.Get("vdc_resource_disk").(string),
-		//Template:  d.Get("template").(string),
-		Slug:          d.Get("slug").(string),
-		Token:         d.Get("token").(string),
-		Backup:        d.Get("backup").(string),
-		Disk_image:    d.Get("disk_image").(string),
-		Platform_name: d.Get("platform_name").(string),
-		Backup_size:   d.Get("backup_size").(string),
-		Comment:       d.Get("comment").(string),
-		Outsourcing:   d.Get("outsourcing").(string),
-		Dynamic_field: d.Get("dynamic_field").(string),
-	}
-}
-
-func resourceInstanceCreate(d *schema.ResourceData,
-	resourceType string) (interface{}, string, error) {
-
-	var (
-		resourceInstance interface{}
-		instanceName     string
-	)
-
-	switch resourceType {
-	case "vdc":
-		resourceInstance = vdcInstanceCreate(d)
-		instanceName = d.Get("name").(string)
-	case "vm":
-		resourceInstance = vmInstanceCreate(d)
-		instanceName = d.Get("name").(string)
-	default:
-		resourceInstance = nil
-		instanceName = ""
-	}
-
-	return resourceInstance, instanceName, validateResourceType(resourceType)
-}
-
-func validateResourceType(resourceType string) error {
-	var err error
-
-	switch resourceType {
-	case "vdc":
-		err = nil
-	case "vm":
-		err = nil
-	default:
-		err = errors.New("Resource of type \"" + resourceType + "\" not supported," +
-			"list of accepted resource types :\n\r" +
-			"- \"vdc\"\n\r" +
-			"- \"vm\"")
-	}
-
-	return err
-}
-
 const (
 	VM_DESTROY_FAILURE  = "{\"detail\":\"Destroying the VM now\"}"
 	VDC_DESTROY_FAILURE = "{\"detail\":\"Destroying the VDC now\"}"
@@ -142,18 +33,19 @@ func (apier AirDrumResources_Apier) Create_resource(d *schema.ResourceData,
 		resp_body_reader           interface{}
 		bodyBytes                  []byte
 	)
+	api_tools := APITooler{
+		Api: apier,
+	}
 	req := &http.Request{}
 	resp := &http.Response{}
-	resourceInstance, instanceName, resourceTypeErr = resourceInstanceCreate(d,
-		resourceType)
+	resourceTypeErr,
+		resourceInstance,
+		instanceName = api_tools.Api.ResourceInstanceCreate(d, resourceType)
 	createError = nil
 	create_req_err = nil
 	create_resp_body_err = nil
 	airDrumAPICreationResponse = nil
 	logger := loggerCreate("create_resource_" + instanceName + ".log")
-	api_tools := APITooler{
-		Api: apier,
-	}
 
 	if resourceTypeErr == nil {
 
@@ -245,7 +137,7 @@ func (apier AirDrumResources_Apier) Read_resource(d *schema.ResourceData,
 	api_tools := APITooler{
 		Api: apier,
 	}
-	resourceTypeErr = validateResourceType(resourceType)
+	resourceTypeErr = api_tools.Api.ValidateResourceType(resourceType)
 
 	if resourceTypeErr == nil {
 		req, read_req_err = http.NewRequest("GET",
@@ -325,17 +217,18 @@ func (apier AirDrumResources_Apier) Update_resource(d *schema.ResourceData,
 	)
 	req := &http.Request{}
 	resp := &http.Response{}
-	resourceInstance, instanceName, resourceTypeErr = resourceInstanceCreate(d,
-		resourceType)
+	api_tools := APITooler{
+		Api: apier,
+	}
+	resourceTypeErr,
+		resourceInstance,
+		instanceName = api_tools.Api.ResourceInstanceCreate(d, resourceType)
 	updateError = nil
 	update_req_err = nil
 	update_resp_body_err = nil
 	logger := loggerCreate("update_resource_" + d.Get("name").(string) + ".log")
 	logger.Println("--------------- ", d.Get("name").(string), " ( id= ",
 		d.Id(), ") UPDATE -----------------")
-	api_tools := APITooler{
-		Api: apier,
-	}
 
 	if resourceTypeErr == nil {
 
@@ -420,7 +313,10 @@ func (apier AirDrumResources_Apier) Delete_resource(d *schema.ResourceData,
 	default:
 		resource_destroy_failure = ""
 	}
-	resourceTypeErr = validateResourceType(resourceType)
+	api_tools := APITooler{
+		Api: apier,
+	}
+	resourceTypeErr = api_tools.Api.ValidateResourceType(resourceType)
 	req := &http.Request{}
 	resp := &http.Response{}
 	deleteError = nil
@@ -428,9 +324,6 @@ func (apier AirDrumResources_Apier) Delete_resource(d *schema.ResourceData,
 	logger := loggerCreate("delete_resource_" + d.Get("name").(string) + ".log")
 	logger.Println("--------------- ", d.Get("name").(string), " ( id= ", d.Id(),
 		") DELETE -----------------")
-	api_tools := APITooler{
-		Api: apier,
-	}
 
 	if resourceTypeErr == nil {
 

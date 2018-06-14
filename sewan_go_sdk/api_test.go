@@ -44,6 +44,16 @@ func (apier FakeAirDrumResource_APIer) Validate_status(api *API,
 	return err
 }
 
+func (apier FakeAirDrumResource_APIer) ValidateResourceType(resourceType string) error {
+	return nil
+}
+
+func (apier FakeAirDrumResource_APIer) ResourceInstanceCreate(d *schema.ResourceData,
+	resourceType string) (error, interface{}, string) {
+
+	return nil, nil, ""
+}
+
 func (apier FakeAirDrumResource_APIer) Get_resource_creation_url(api *API,
 	resourceType string) string {
 

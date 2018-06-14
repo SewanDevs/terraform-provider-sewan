@@ -7,132 +7,153 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 	"io/ioutil"
 	"net/http"
+	"reflect"
 	"testing"
 )
 
 //------------------------------------------------------------------------------
-const (
-	RIGHT_API_URL             = "https://next.cloud-datacenter.fr/api/clouddc/"
-	RIGHT_VM_CREATION_API_URL = "https://next.cloud-datacenter.fr/api/clouddc/vm/"
-	RIGHT_VM_URL_PATATE       = "https://next.cloud-datacenter.fr/api/clouddc/vm/PATATE/"
-	RIGHT_VM_URL_42           = "https://next.cloud-datacenter.fr/api/clouddc/vm/42/"
-	WRONG_API_URL             = "a wrong url"
-	WRONG_API_URL_ERROR       = "Wrong api url msg"
-	NO_RESP_API_URL           = "https://NO_RESP_API_URL.fr"
-	NO_RESP_BODY_API_URL      = "https://NO_BODY_API_URL.org"
-	NOT_JSON_RESP_API_URL     = "https://next.cloud-datacenter.fr"
-	RIGHT_API_TOKEN           = "42424242424242424242424242424242"
-	WRONG_API_TOKEN           = "a wrong token"
-	WRONG_TOKEN_ERROR         = "Wrong api token msg"
-)
-
-type FakeAirDrumResource_APIer struct{}
-
-func (apier FakeAirDrumResource_APIer) Validate_status(api *API,
-	resourceType string,
-	client ClientTooler) error {
-
-	var err error
-	switch {
-	case api.URL != RIGHT_API_URL:
-		err = errors.New(WRONG_API_URL_ERROR)
-	case api.Token != RIGHT_API_TOKEN:
-		err = errors.New(WRONG_TOKEN_ERROR)
-	default:
-		err = nil
-	}
-	return err
-}
-
-func (apier FakeAirDrumResource_APIer) ValidateResourceType(resourceType string) error {
-	return nil
-}
-
-func (apier FakeAirDrumResource_APIer) ResourceInstanceCreate(d *schema.ResourceData,
-	resourceType string) (error, interface{}, string) {
-
-	return nil, nil, ""
-}
-
-func (apier FakeAirDrumResource_APIer) Get_resource_creation_url(api *API,
-	resourceType string) string {
-
-	return ""
-}
-
-func (apier FakeAirDrumResource_APIer) Get_resource_url(api *API,
-	resourceType string,
-	id string) string {
-
-	return ""
-}
-
-func (apier FakeAirDrumResource_APIer) Create_resource(d *schema.ResourceData,
-	clientTooler *ClientTooler,
-	resourceType string,
-	sewan *API) (error, map[string]interface{}) {
-
-	return nil, nil
-}
-func (apier FakeAirDrumResource_APIer) Read_resource(d *schema.ResourceData,
-	clientTooler *ClientTooler,
-	resourceType string,
-	sewan *API) (error, map[string]interface{}, bool) {
-
-	return nil, nil, true
-}
-func (apier FakeAirDrumResource_APIer) Update_resource(d *schema.ResourceData,
-	clientTooler *ClientTooler,
-	resourceType string,
-	sewan *API) error {
-
-	return nil
-}
-func (apier FakeAirDrumResource_APIer) Delete_resource(d *schema.ResourceData,
-	clientTooler *ClientTooler,
-	resourceType string,
-	sewan *API) error {
-
-	return nil
-}
-
-type FakeHttpClienter struct{}
-
-func (client FakeHttpClienter) Do(api *API, req *http.Request) (*http.Response, error) {
-	var err error
-	err = nil
-	type body struct {
-		detail string `json:"detail"`
-	}
-	resp := http.Response{}
-
-	if api.URL != NO_RESP_API_URL {
-		resp.Status = "200 OK"
-		resp.StatusCode = http.StatusOK
-		switch {
-		case api.URL == WRONG_API_URL || api.URL == NOT_JSON_RESP_API_URL:
-			resp.Header = map[string][]string{"Content-Type": {"text/plain; charset=utf-8"}}
-			resp.Body = ioutil.NopCloser(bytes.NewBufferString("A plain text."))
-		case api.URL == RIGHT_API_URL:
-			if api.Token != RIGHT_API_TOKEN {
-				resp.Status = "401 Unauthorized"
-				resp.StatusCode = http.StatusUnauthorized
-				resp.Body = ioutil.NopCloser(bytes.NewBufferString("{\"detail\":\"Invalid token.\"}"))
-			} else {
-				resp.Header = map[string][]string{"Content-Type": {"application/json"}}
-				body_json, _ := json.Marshal(body{detail: ""})
-				resp.Body = ioutil.NopCloser(bytes.NewBuffer(body_json))
-			}
-		}
-	} else {
-		err = errors.New("No response error.")
-	}
-	return &resp, err
-}
-
+//-------------Units tests------------------------------------------------------
 //------------------------------------------------------------------------------
 func TestDo(t *testing.T) {
 	//Not tested, ref=TD-35489-UT-35737-1
+}
+
+//------------------------------------------------------------------------------
+func TestGetTemplatesList(t *testing.T) {
+	//test_cases := []struct {
+	//	Id                 int
+	//	Response           *http.Response
+	//	ExpectedCode       int
+	//	ExpectedBodyFormat string
+	//	ResponseBody       interface{}
+	//	Error              error
+	//}{
+	//	{
+	//	},
+	//}
+
+	//for _, test_case := range test_cases {
+	//	responseBody, err = clienter.GetTemplatesList(test_case.Response,
+	//		test_case.ExpectedCode, test_case.ExpectedBodyFormat)
+
+	//	switch {
+	//	case err == nil || test_case.Error == nil:
+	//		if !(err == nil && test_case.Error == nil) {
+	//			t.Errorf("TC %d : HandleResponse() error was incorrect,"+
+	//				"\n\rgot: \"%s\"\n\rwant: \"%s\"", test_case.Id, err, test_case.Error)
+	//		} else {
+	//			switch {
+	//			case !reflect.DeepEqual(test_case.ResponseBody, responseBody):
+	//				t.Errorf("TC %d : Wrong response read element,"+
+	//					"\n\rgot: \"%s\"\n\rwant: \"%s\"",
+	//					test_case.Id, responseBody, test_case.ResponseBody)
+	//			}
+	//		}
+	//	case err != nil && test_case.Error != nil:
+	//		if responseBody != nil {
+	//			t.Errorf("TC %d : Wrong response read element,"+
+	//				" it should be nil as error is not nil,"+
+	//				"\n\rgot map: \n\r\"%s\"\n\rwant map: \n\r\"%s\"\n\r",
+	//				test_case.Id, responseBody, test_case.ResponseBody)
+	//		}
+	//		if err.Error() != test_case.Error.Error() {
+	//			t.Errorf("TC %d : Wrong response handle error,"+
+	//				"\n\rgot: \"%s\"\n\rwant: \"%s\"",
+	//				test_case.Id, err.Error(), test_case.Error.Error())
+	//		}
+	//	}
+	//}
+}
+
+//------------------------------------------------------------------------------
+func TestHandleResponse(t *testing.T) {
+	test_cases := []struct {
+		Id                 int
+		Response           *http.Response
+		ExpectedCode       int
+		ExpectedBodyFormat string
+		ResponseBody       interface{}
+		Error              error
+	}{
+		{
+			1,
+			HttpResponseFake_OK_json(),
+			http.StatusOK,
+			"encoding/json",
+			JsonStub(),
+			nil,
+		},
+		{
+			2,
+			HttpResponseFake_500_texthtml(),
+			http.StatusInternalServerError,
+			"text/html",
+			"<h1>Server Error (500)</h1>",
+			nil,
+		},
+		{
+			3,
+			HttpResponseFake_500_json(),
+			http.StatusInternalServerError,
+			"text/html",
+			nil,
+			errors.New("wrong body content"),
+		},
+		{
+			4,
+			HttpResponseFake_OK_json(),
+			http.StatusInternalServerError,
+			"text/html",
+			nil,
+			errors.New("wrong StatusCode"),
+		},
+		{
+			5,
+			HttpResponseFake_OK_json(), //with StatusOK StatusCode + "text/html"
+			http.StatusInternalServerError,
+			"text/html",
+			nil,
+			errors.New("wrong StatusCode"),
+		},
+	}
+
+	var (
+		responseBody interface{}
+		err          error
+	)
+	clienter := HttpClienter{}
+
+	for _, test_case := range test_cases {
+		responseBody, err = clienter.HandleResponse(test_case.Response,
+			test_case.ExpectedCode, test_case.ExpectedBodyFormat)
+
+		switch {
+		case err == nil || test_case.Error == nil:
+			if !(err == nil && test_case.Error == nil) {
+				t.Errorf("TC %d : HandleResponse() error was incorrect,"+
+					"\n\rgot: \"%s\"\n\rwant: \"%s\"", test_case.Id, err, test_case.Error)
+			} else {
+				switch {
+				case !reflect.DeepEqual(test_case.ResponseBody, responseBody):
+					t.Errorf("TC %d : Wrong response read element,"+
+						"\n\rgot: \"%s\"\n\rwant: \"%s\"",
+						test_case.Id, responseBody, test_case.ResponseBody)
+				}
+			}
+		case err != nil && test_case.Error != nil:
+			if responseBody != nil {
+				t.Errorf("TC %d : Wrong response read element,"+
+					" it should be nil as error is not nil,"+
+					"\n\rgot map: \n\r\"%s\"\n\rwant map: \n\r\"%s\"\n\r",
+					test_case.Id, responseBody, test_case.ResponseBody)
+			}
+			if err.Error() != test_case.Error.Error() {
+				t.Errorf("TC %d : Wrong response handle error,"+
+					"\n\rgot: \"%s\"\n\rwant: \"%s\"",
+					test_case.Id, err.Error(), test_case.Error.Error())
+			}
+		}
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -249,4 +270,140 @@ func TestCheckStatus(t *testing.T) {
 				test_case.Id, err.Error(), test_case.Err.Error())
 		}
 	}
+}
+
+//------------------------------------------------------------------------------
+//--Structures init, interface implementation fakes, various test items etc.----
+//------------------------------------------------------------------------------
+const (
+	RIGHT_API_URL             = "https://next.cloud-datacenter.fr/api/clouddc/"
+	RIGHT_VM_CREATION_API_URL = "https://next.cloud-datacenter.fr/api/clouddc/vm/"
+	RIGHT_VM_URL_PATATE       = "https://next.cloud-datacenter.fr/api/clouddc/vm/PATATE/"
+	RIGHT_VM_URL_42           = "https://next.cloud-datacenter.fr/api/clouddc/vm/42/"
+	WRONG_API_URL             = "a wrong url"
+	WRONG_API_URL_ERROR       = "Wrong api url msg"
+	NO_RESP_API_URL           = "https://NO_RESP_API_URL.fr"
+	NO_RESP_BODY_API_URL      = "https://NO_BODY_API_URL.org"
+	NOT_JSON_RESP_API_URL     = "https://next.cloud-datacenter.fr"
+	RIGHT_API_TOKEN           = "42424242424242424242424242424242"
+	WRONG_API_TOKEN           = "a wrong token"
+	WRONG_TOKEN_ERROR         = "Wrong api token msg"
+)
+
+type FakeAirDrumResource_APIer struct{}
+
+func (apier FakeAirDrumResource_APIer) Validate_status(api *API,
+	resourceType string,
+	client ClientTooler) error {
+
+	var err error
+	switch {
+	case api.URL != RIGHT_API_URL:
+		err = errors.New(WRONG_API_URL_ERROR)
+	case api.Token != RIGHT_API_TOKEN:
+		err = errors.New(WRONG_TOKEN_ERROR)
+	default:
+		err = nil
+	}
+	return err
+}
+
+func (apier FakeAirDrumResource_APIer) ValidateResourceType(resourceType string) error {
+	return nil
+}
+
+func (apier FakeAirDrumResource_APIer) ResourceInstanceCreate(d *schema.ResourceData,
+	clientTooler *ClientTooler,
+	resourceType string,
+	api *API) (error, interface{}, string) {
+
+	return nil, "", ""
+}
+
+func (apier FakeAirDrumResource_APIer) Get_resource_creation_url(api *API,
+	resourceType string) string {
+
+	return ""
+}
+
+func (apier FakeAirDrumResource_APIer) Get_resource_url(api *API,
+	resourceType string,
+	id string) string {
+
+	return ""
+}
+
+func (apier FakeAirDrumResource_APIer) Create_resource(d *schema.ResourceData,
+	clientTooler *ClientTooler,
+	resourceType string,
+	sewan *API) (error, map[string]interface{}) {
+
+	return nil, nil
+}
+func (apier FakeAirDrumResource_APIer) Read_resource(d *schema.ResourceData,
+	clientTooler *ClientTooler,
+	resourceType string,
+	sewan *API) (error, map[string]interface{}, bool) {
+
+	return nil, nil, true
+}
+func (apier FakeAirDrumResource_APIer) Update_resource(d *schema.ResourceData,
+	clientTooler *ClientTooler,
+	resourceType string,
+	sewan *API) error {
+
+	return nil
+}
+func (apier FakeAirDrumResource_APIer) Delete_resource(d *schema.ResourceData,
+	clientTooler *ClientTooler,
+	resourceType string,
+	sewan *API) error {
+
+	return nil
+}
+
+type FakeHttpClienter struct{}
+
+func (client FakeHttpClienter) Do(api *API, req *http.Request) (*http.Response, error) {
+	var err error
+	err = nil
+	type body struct {
+		detail string `json:"detail"`
+	}
+	resp := http.Response{}
+
+	if api.URL != NO_RESP_API_URL {
+		resp.Status = "200 OK"
+		resp.StatusCode = http.StatusOK
+		switch {
+		case api.URL == WRONG_API_URL || api.URL == NOT_JSON_RESP_API_URL:
+			resp.Header = map[string][]string{"Content-Type": {"text/plain; charset=utf-8"}}
+			resp.Body = ioutil.NopCloser(bytes.NewBufferString("A plain text."))
+		case api.URL == RIGHT_API_URL:
+			if api.Token != RIGHT_API_TOKEN {
+				resp.Status = "401 Unauthorized"
+				resp.StatusCode = http.StatusUnauthorized
+				resp.Body = ioutil.NopCloser(bytes.NewBufferString("{\"detail\":\"Invalid token.\"}"))
+			} else {
+				resp.Header = map[string][]string{"Content-Type": {"application/json"}}
+				body_json, _ := json.Marshal(body{detail: ""})
+				resp.Body = ioutil.NopCloser(bytes.NewBuffer(body_json))
+			}
+		}
+	} else {
+		err = errors.New("No response error.")
+	}
+	return &resp, err
+}
+
+func (client FakeHttpClienter) GetTemplatesList(enterprise_slug string) ([]map[string]interface{}, error) {
+
+	return nil, nil
+}
+
+func (client FakeHttpClienter) HandleResponse(resp *http.Response,
+	expectedCode int,
+	expectedBodyFormat string) (interface{}, error) {
+
+	return nil, nil
 }

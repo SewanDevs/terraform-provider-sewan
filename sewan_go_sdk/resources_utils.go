@@ -40,7 +40,9 @@ type VM struct {
 	Dynamic_field     string        `json:"dynamic_field"`
 }
 
-func vdcInstanceCreate(d *schema.ResourceData) VDC {
+func vdcInstanceCreate(d *schema.ResourceData,
+	clientTooler *ClientTooler,
+	api *API) (VDC, error) {
 	return VDC{
 		Name:          d.Get("name").(string),
 		Enterprise:    d.Get("enterprise").(string),
@@ -48,14 +50,33 @@ func vdcInstanceCreate(d *schema.ResourceData) VDC {
 		Vdc_resources: d.Get("vdc_resources").([]interface{}),
 		Slug:          d.Get("slug").(string),
 		Dynamic_field: d.Get("dynamic_field").(string),
-	}
+	}, nil
 }
 
-func vmInstanceCreate(d *schema.ResourceData) VM {
-	var vm VM
+func vmInstanceCreate(d *schema.ResourceData,
+	clientTooler *ClientTooler,
+	api *API) (VM, error) {
+
+	var (
+		vm               VM
+		getTemplateError error
+		enterprise_slug  string
+	)
+	getTemplateError = nil
+
+	logger := loggerCreate("vmInstanceCreate.log")
+
 	if d.Get("template") != nil {
+		var templateList []map[string]interface{}
 
 		//1 get template list
+		// i : get enterprise from VDC field :
+		//	enterprise_slug = d.Get("depends_on").enterprise
+		// ii : get enterprise from a new vm field :
+		//	enterprise_slug = d.Get("enterprise")
+		enterprise_slug = "sewan-rd-cloud-beta"
+		templateList, getTemplateError = clientTooler.Client.GetTemplatesList(enterprise_slug)
+		logger.Println("templateList =", templateList)
 
 		//2 validate option template is in the list
 
@@ -89,30 +110,34 @@ func vmInstanceCreate(d *schema.ResourceData) VM {
 			Dynamic_field:     d.Get("dynamic_field").(string),
 		}
 	}
-	return vm
+	return vm, getTemplateError
 }
 
 func (apier AirDrumResources_Apier) ResourceInstanceCreate(d *schema.ResourceData,
-	resourceType string) (error, interface{}, string) {
+	clientTooler *ClientTooler,
+	resourceType string,
+	api *API) (error, interface{}, string) {
 
 	var (
 		resourceInstance interface{}
 		instanceName     string
+		instanceError    error
 	)
 
 	switch resourceType {
 	case "vdc":
-		resourceInstance = vdcInstanceCreate(d)
+		resourceInstance, instanceError = vdcInstanceCreate(d, clientTooler, api)
 		instanceName = d.Get("name").(string)
 	case "vm":
-		resourceInstance = vmInstanceCreate(d)
+		resourceInstance, instanceError = vmInstanceCreate(d, clientTooler, api)
 		instanceName = d.Get("name").(string)
 	default:
 		resourceInstance = nil
 		instanceName = ""
+		instanceError = apier.ValidateResourceType(resourceType)
 	}
 
-	return apier.ValidateResourceType(resourceType), resourceInstance, instanceName
+	return instanceError, resourceInstance, instanceName
 }
 
 func (apier AirDrumResources_Apier) ValidateResourceType(resourceType string) error {

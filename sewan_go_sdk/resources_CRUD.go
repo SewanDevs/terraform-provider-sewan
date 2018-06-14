@@ -40,7 +40,10 @@ func (apier AirDrumResources_Apier) Create_resource(d *schema.ResourceData,
 	resp := &http.Response{}
 	resourceTypeErr,
 		resourceInstance,
-		instanceName = api_tools.Api.ResourceInstanceCreate(d, resourceType)
+		instanceName = api_tools.Api.ResourceInstanceCreate(d,
+		clientTooler,
+		resourceType,
+		sewan)
 	createError = nil
 	create_req_err = nil
 	create_resp_body_err = nil
@@ -222,7 +225,10 @@ func (apier AirDrumResources_Apier) Update_resource(d *schema.ResourceData,
 	}
 	resourceTypeErr,
 		resourceInstance,
-		instanceName = api_tools.Api.ResourceInstanceCreate(d, resourceType)
+		instanceName = api_tools.Api.ResourceInstanceCreate(d,
+		clientTooler,
+		resourceType,
+		sewan)
 	updateError = nil
 	update_req_err = nil
 	update_resp_body_err = nil

@@ -28,7 +28,9 @@ type APIer interface {
 		resourceType string,
 		client ClientTooler) error
 	ResourceInstanceCreate(d *schema.ResourceData,
-		resourceType string) (error,
+		clientTooler *ClientTooler,
+		resourceType string,
+		api *API) (error,
 		interface{},
 		string)
 	Create_resource(d *schema.ResourceData,
@@ -58,12 +60,47 @@ type ClientTooler struct {
 }
 type Clienter interface {
 	Do(api *API, req *http.Request) (*http.Response, error)
+	GetTemplatesList(enterprise_slug string) ([]map[string]interface{},
+		error)
+	HandleResponse(resp *http.Response,
+		expectedCode int,
+		expectedBodyFormat string) (interface{}, error)
 }
 type HttpClienter struct{}
 
 func (client HttpClienter) Do(api *API, req *http.Request) (*http.Response, error) {
 	resp, err := api.Client.Do(req)
 	return resp, err
+}
+
+func (client HttpClienter) GetTemplatesList(enterprise_slug string) ([]map[string]interface{},
+	error) {
+
+	//i Create GET req
+
+	// ii Exec req
+	// resp, err := client.Do(req)
+
+	// iii handle resp, param : resp + wanted return code + wanted resp type
+	// templateList,err := api.Client.HandleResp(resp,200,[]map[string]interface{})
+
+	return []map[string]interface{}{}, nil
+}
+
+func (client HttpClienter) HandleResponse(resp *http.Response,
+	expectedCode int,
+	expectedBodyFormat string) (interface{}, error) {
+
+	//var (
+	//
+	//)
+
+	//if resp.StatusCode == expectedCode{
+	//
+	//} else {
+	//
+	//}
+	return "", nil
 }
 
 func (api_tools *APITooler) New(token string, url string) *API {

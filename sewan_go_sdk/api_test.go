@@ -26,9 +26,12 @@ const (
 	WRONG_TOKEN_ERROR         = "Wrong api token msg"
 )
 
-type FakeAirDrumAPIer struct{}
+type FakeAirDrumResource_APIer struct{}
 
-func (apier FakeAirDrumAPIer) Validate_status(api *API, client ClientTooler) error {
+func (apier FakeAirDrumResource_APIer) Validate_status(api *API,
+	resourceType string,
+	client ClientTooler) error {
+
 	var err error
 	switch {
 	case api.URL != RIGHT_API_URL:
@@ -41,24 +44,45 @@ func (apier FakeAirDrumAPIer) Validate_status(api *API, client ClientTooler) err
 	return err
 }
 
-func (apier FakeAirDrumAPIer) Get_vm_creation_url(api *API) string {
+func (apier FakeAirDrumResource_APIer) Get_resource_creation_url(api *API,
+	resourceType string) string {
+
 	return ""
 }
 
-func (apier FakeAirDrumAPIer) Get_vm_url(api *API, id string) string {
+func (apier FakeAirDrumResource_APIer) Get_resource_url(api *API,
+	resourceType string,
+	id string) string {
+
 	return ""
 }
 
-func (apier FakeAirDrumAPIer) Create_vm_resource(d *schema.ResourceData, clientTooler *ClientTooler, sewan *API) (error, map[string]interface{}) {
+func (apier FakeAirDrumResource_APIer) Create_resource(d *schema.ResourceData,
+	clientTooler *ClientTooler,
+	resourceType string,
+	sewan *API) (error, map[string]interface{}) {
+
 	return nil, nil
 }
-func (apier FakeAirDrumAPIer) Read_vm_resource(d *schema.ResourceData, clientTooler *ClientTooler, sewan *API) (error, map[string]interface{}, bool) {
+func (apier FakeAirDrumResource_APIer) Read_resource(d *schema.ResourceData,
+	clientTooler *ClientTooler,
+	resourceType string,
+	sewan *API) (error, map[string]interface{}, bool) {
+
 	return nil, nil, true
 }
-func (apier FakeAirDrumAPIer) Update_vm_resource(d *schema.ResourceData, clientTooler *ClientTooler, sewan *API) error {
+func (apier FakeAirDrumResource_APIer) Update_resource(d *schema.ResourceData,
+	clientTooler *ClientTooler,
+	resourceType string,
+	sewan *API) error {
+
 	return nil
 }
-func (apier FakeAirDrumAPIer) Delete_vm_resource(d *schema.ResourceData, clientTooler *ClientTooler, sewan *API) error {
+func (apier FakeAirDrumResource_APIer) Delete_resource(d *schema.ResourceData,
+	clientTooler *ClientTooler,
+	resourceType string,
+	sewan *API) error {
+
 	return nil
 }
 
@@ -133,7 +157,7 @@ func TestNew(t *testing.T) {
 	}
 
 	fake_api_tools := APITooler{
-		Api: FakeAirDrumAPIer{},
+		Api: FakeAirDrumResource_APIer{},
 	}
 
 	for _, test_case := range test_cases {
@@ -200,7 +224,7 @@ func TestCheckStatus(t *testing.T) {
 	fake_api_tools := APITooler{}
 
 	for _, test_case := range test_cases {
-		fake_api_tools.Api = FakeAirDrumAPIer{}
+		fake_api_tools.Api = FakeAirDrumResource_APIer{}
 		err := fake_api_tools.CheckStatus(test_case.Input_api)
 		switch {
 		case err == nil || test_case.Err == nil:
@@ -213,166 +237,6 @@ func TestCheckStatus(t *testing.T) {
 			t.Errorf("TC %d : Check API error was incorrect,"+
 				"\n\rgot: \"%s\"\n\rwant: \"%s\"",
 				test_case.Id, err.Error(), test_case.Err.Error())
-		}
-	}
-}
-
-//------------------------------------------------------------------------------
-func TestGet_vm_creation_url(t *testing.T) {
-	test_cases := []struct {
-		Id              int
-		api             API
-		vm_creation_url string
-	}{
-		{1,
-			API{
-				RIGHT_API_TOKEN,
-				RIGHT_API_URL,
-				&http.Client{},
-			},
-			RIGHT_VM_CREATION_API_URL,
-		},
-	}
-
-	api_tools := APITooler{
-		Api: AirDrumAPIer{},
-	}
-
-	for _, test_case := range test_cases {
-		s_vm_creation_url := api_tools.Api.Get_vm_creation_url(&test_case.api)
-		switch {
-		case s_vm_creation_url != test_case.vm_creation_url:
-			t.Errorf("VM api creation url was incorrect,"+
-				"\n\rgot: \"%s\"\n\rwant: \"%s\"",
-				s_vm_creation_url, test_case.vm_creation_url)
-		}
-	}
-}
-
-//------------------------------------------------------------------------------
-func TestGet_vm_url(t *testing.T) {
-	test_cases := []struct {
-		Id     int
-		api    API
-		vm_id  string
-		vm_url string
-	}{
-		{1,
-			API{
-				RIGHT_API_TOKEN,
-				RIGHT_API_URL,
-				&http.Client{},
-			},
-			"42",
-			RIGHT_VM_URL_42,
-		},
-		{2,
-			API{
-				RIGHT_API_TOKEN,
-				RIGHT_API_URL,
-				&http.Client{},
-			},
-			"PATATE",
-			RIGHT_VM_URL_PATATE,
-		},
-	}
-
-	api_tools := APITooler{
-		Api: AirDrumAPIer{},
-	}
-
-	for _, test_case := range test_cases {
-		s_vm_url := api_tools.Api.Get_vm_url(&test_case.api, test_case.vm_id)
-		switch {
-		case s_vm_url != test_case.vm_url:
-			t.Errorf("VM url was incorrect,\n\rgot: \"%s\"\n\rwant: \"%s\"",
-				s_vm_url, test_case.vm_url)
-		}
-	}
-}
-
-//------------------------------------------------------------------------------
-func TestValidate_status(t *testing.T) {
-	test_cases := []struct {
-		Id  int
-		Api API
-		Err error
-	}{
-		{1,
-			API{
-				RIGHT_API_TOKEN,
-				RIGHT_API_URL,
-				&http.Client{},
-			},
-			nil,
-		},
-		{2,
-			API{
-				WRONG_API_TOKEN,
-				RIGHT_API_URL,
-				&http.Client{},
-			},
-			errors.New("401 Unauthorized{\"detail\":\"Invalid token.\"}"),
-		},
-		{3,
-			API{
-				RIGHT_API_TOKEN,
-				WRONG_API_URL,
-				&http.Client{},
-			},
-			errors.New("Could not get a proper json response from \"" +
-				WRONG_API_URL + "\", the api is down or this url is wrong."),
-		},
-		{4,
-			API{
-				WRONG_API_TOKEN,
-				WRONG_API_URL,
-				&http.Client{},
-			},
-			errors.New("Could not get a proper json response from \"" +
-				WRONG_API_URL + "\", the api is down or this url is wrong."),
-		},
-		{5,
-			API{
-				RIGHT_API_TOKEN,
-				NO_RESP_BODY_API_URL,
-				&http.Client{},
-			},
-			errors.New("Could not get a response body from \"" +
-				NO_RESP_BODY_API_URL + "\", the api is down or this url is wrong."),
-		},
-		{6,
-			API{
-				RIGHT_API_TOKEN,
-				NO_RESP_API_URL,
-				&http.Client{},
-			},
-			errors.New("Could not get a response from \"" +
-				NO_RESP_API_URL + "\", the api is down or this url is wrong."),
-		},
-	}
-
-	apiTooler := APITooler{
-		Api: AirDrumAPIer{},
-	}
-	clientTooler := ClientTooler{
-		Client: FakeHttpClienter{},
-	}
-	var apiClientErr error
-
-	for _, test_case := range test_cases {
-		apiClientErr = apiTooler.Api.Validate_status(&test_case.Api, clientTooler)
-		switch {
-		case apiClientErr == nil || test_case.Err == nil:
-			if !(apiClientErr == nil && test_case.Err == nil) {
-				t.Errorf("TC %d : Validate_status() error was incorrect,"+
-					"\n\rgot: \"%s\"\n\rwant: \"%s\"",
-					test_case.Id, apiClientErr, test_case.Err)
-			}
-		case apiClientErr.Error() != test_case.Err.Error():
-			t.Errorf("TC %d : Validate_status() error was incorrect,"+
-				"\n\rgot: \"%s\"\n\rwant: \"%s\"",
-				test_case.Id, apiClientErr.Error(), test_case.Err.Error())
 		}
 	}
 }

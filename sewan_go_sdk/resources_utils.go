@@ -75,7 +75,12 @@ func vmInstanceCreate(d *schema.ResourceData,
 		// ii : get enterprise from a new vm field :
 		//	enterprise_slug = d.Get("enterprise")
 		enterprise_slug = "sewan-rd-cloud-beta"
-		templateList, getTemplateError = clientTooler.Client.GetTemplatesList(enterprise_slug)
+		//clientToolerB := ClientTooler{
+		//	Client: HttpClienter{},
+		//}
+		templateList,
+		getTemplateError = clientTooler.Client.GetTemplatesList(clientTooler,
+			enterprise_slug)
 		logger.Println("templateList =", templateList)
 
 		//2 validate option template is in the list

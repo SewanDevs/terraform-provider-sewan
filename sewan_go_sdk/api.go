@@ -3,6 +3,10 @@ package sewan_go_sdk
 import (
 	"github.com/hashicorp/terraform/helper/schema"
 	"net/http"
+	"strconv"
+	"errors"
+	"io/ioutil"
+	"encoding/json"
 )
 
 const (
@@ -60,8 +64,8 @@ type ClientTooler struct {
 }
 type Clienter interface {
 	Do(api *API, req *http.Request) (*http.Response, error)
-	GetTemplatesList(enterprise_slug string) ([]map[string]interface{},
-		error)
+	GetTemplatesList(clientTooler *ClientTooler,
+		enterprise_slug string) ([]map[string]interface{},error)
 	HandleResponse(resp *http.Response,
 		expectedCode int,
 		expectedBodyFormat string) (interface{}, error)
@@ -73,8 +77,8 @@ func (client HttpClienter) Do(api *API, req *http.Request) (*http.Response, erro
 	return resp, err
 }
 
-func (client HttpClienter) GetTemplatesList(enterprise_slug string) ([]map[string]interface{},
-	error) {
+func (client HttpClienter) GetTemplatesList(clientTooler *ClientTooler,
+	enterprise_slug string) ([]map[string]interface{},error) {
 
 	//i Create GET req
 
@@ -91,16 +95,55 @@ func (client HttpClienter) HandleResponse(resp *http.Response,
 	expectedCode int,
 	expectedBodyFormat string) (interface{}, error) {
 
-	//var (
-	//
-	//)
+	var (
+		resp_err error
+		responseBody interface{}
+		contentType string
+		bodyBytes                  []byte
+		resp_body_reader           interface{}
+		read_body_err error
+		read_json_err error
+	)
+	responseBody = nil
+	resp_err = nil
 
-	//if resp.StatusCode == expectedCode{
-	//
-	//} else {
-	//
-	//}
-	return "", nil
+	if resp.StatusCode == expectedCode{
+		contentType = resp.Header.Get("Content-Type")
+
+		if contentType == expectedBodyFormat{
+			switch contentType {
+			case "application/json":
+				bodyBytes, read_body_err = ioutil.ReadAll(resp.Body)
+				read_json_err = json.Unmarshal(bodyBytes, &resp_body_reader)
+				switch {
+				case read_body_err != nil:
+					resp_err = errors.New("Read of response body error " +
+						read_body_err.Error())
+				case read_json_err != nil:
+					resp_err = errors.New("Response body is not a properly formated json :"+
+						read_json_err.Error())
+				default:
+					responseBody = resp_body_reader.(map[string]interface{})
+				}
+			case "text/html":
+				bodyBytes, read_body_err = ioutil.ReadAll(resp.Body)
+				responseBody = string(bodyBytes)
+			case "":
+				responseBody = nil
+			default:
+				resp_err = errors.New("Unhandled api response type : " +
+					resp.Header.Get("Content-Type") +
+					"\nPlease validate the configuration api url.")
+			}
+		} else {
+			resp_err = errors.New("Wrong content type, \n\r expected :"+
+			expectedBodyFormat+"\n\r got :"+contentType)
+		}
+	} else {
+		resp_err = errors.New("Wrong response status code, \n\r expected :"+
+		strconv.Itoa(expectedCode)+"\n\r got :"+strconv.Itoa(resp.StatusCode))
+	}
+	return responseBody, resp_err
 }
 
 func (api_tools *APITooler) New(token string, url string) *API {

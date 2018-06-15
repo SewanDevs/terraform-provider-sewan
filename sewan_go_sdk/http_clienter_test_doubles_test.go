@@ -18,7 +18,8 @@ func (client ErrorResponse_HttpClienterFake) Do(api *API,
 	return nil, errors.New(REQ_ERR)
 }
 
-func (client ErrorResponse_HttpClienterFake) GetTemplatesList(enterprise_slug string) ([]map[string]interface{}, error) {
+func (client ErrorResponse_HttpClienterFake) GetTemplatesList(clientTooler *ClientTooler,
+	enterprise_slug string) ([]map[string]interface{}, error) {
 
 	return nil, nil
 }
@@ -45,7 +46,8 @@ func (client BadBodyResponseContentType_HttpClienterFake) Do(api *API,
 	return &resp, nil
 }
 
-func (client BadBodyResponseContentType_HttpClienterFake) GetTemplatesList(enterprise_slug string) ([]map[string]interface{}, error) {
+func (client BadBodyResponseContentType_HttpClienterFake) GetTemplatesList(clientTooler *ClientTooler,
+	enterprise_slug string) ([]map[string]interface{}, error) {
 
 	return nil, nil
 }
@@ -72,7 +74,8 @@ func (client StatusInternalServerError_HttpClienterFake) Do(api *API,
 	return &resp, nil
 }
 
-func (client StatusInternalServerError_HttpClienterFake) GetTemplatesList(enterprise_slug string) ([]map[string]interface{}, error) {
+func (client StatusInternalServerError_HttpClienterFake) GetTemplatesList(clientTooler *ClientTooler,
+	enterprise_slug string) ([]map[string]interface{}, error) {
 
 	return nil, nil
 }
@@ -99,7 +102,8 @@ func (client BadBodyResponse_StatusCreated_HttpClienterFake) Do(api *API,
 	return &resp, nil
 }
 
-func (client BadBodyResponse_StatusCreated_HttpClienterFake) GetTemplatesList(enterprise_slug string) ([]map[string]interface{}, error) {
+func (client BadBodyResponse_StatusCreated_HttpClienterFake) GetTemplatesList(clientTooler *ClientTooler,
+	enterprise_slug string) ([]map[string]interface{}, error) {
 
 	return nil, nil
 }
@@ -126,7 +130,8 @@ func (client BadBodyResponse_StatusOK_HttpClienterFake) Do(api *API,
 	return &resp, nil
 }
 
-func (client BadBodyResponse_StatusOK_HttpClienterFake) GetTemplatesList(enterprise_slug string) ([]map[string]interface{}, error) {
+func (client BadBodyResponse_StatusOK_HttpClienterFake) GetTemplatesList(clientTooler *ClientTooler,
+	enterprise_slug string) ([]map[string]interface{}, error) {
 
 	return nil, nil
 }
@@ -156,7 +161,8 @@ func (client Error401_HttpClienterFake) Do(api *API,
 	return &resp, nil
 }
 
-func (client Error401_HttpClienterFake) GetTemplatesList(enterprise_slug string) ([]map[string]interface{}, error) {
+func (client Error401_HttpClienterFake) GetTemplatesList(clientTooler *ClientTooler,
+	enterprise_slug string) ([]map[string]interface{}, error) {
 
 	return nil, nil
 }
@@ -186,7 +192,8 @@ func (client Error404_HttpClienterFake) Do(api *API,
 	return &resp, nil
 }
 
-func (client Error404_HttpClienterFake) GetTemplatesList(enterprise_slug string) ([]map[string]interface{}, error) {
+func (client Error404_HttpClienterFake) GetTemplatesList(clientTooler *ClientTooler,
+	enterprise_slug string) ([]map[string]interface{}, error) {
 
 	return nil, nil
 }
@@ -214,7 +221,8 @@ func (client VDC_CreationSuccess_HttpClienterFake) Do(api *API,
 	return &resp, nil
 }
 
-func (client VDC_CreationSuccess_HttpClienterFake) GetTemplatesList(enterprise_slug string) ([]map[string]interface{}, error) {
+func (client VDC_CreationSuccess_HttpClienterFake) GetTemplatesList(clientTooler *ClientTooler,
+	enterprise_slug string) ([]map[string]interface{}, error) {
 
 	return nil, nil
 }
@@ -242,7 +250,8 @@ func (client VDC_ReadSuccess_HttpClienterFake) Do(api *API,
 	return &resp, nil
 }
 
-func (client VDC_ReadSuccess_HttpClienterFake) GetTemplatesList(enterprise_slug string) ([]map[string]interface{}, error) {
+func (client VDC_ReadSuccess_HttpClienterFake) GetTemplatesList(clientTooler *ClientTooler,
+	enterprise_slug string) ([]map[string]interface{}, error) {
 
 	return nil, nil
 }
@@ -270,7 +279,8 @@ func (client VDC_UpdateSuccess_HttpClienterFake) Do(api *API,
 	return &resp, nil
 }
 
-func (client VDC_UpdateSuccess_HttpClienterFake) GetTemplatesList(enterprise_slug string) ([]map[string]interface{}, error) {
+func (client VDC_UpdateSuccess_HttpClienterFake) GetTemplatesList(clientTooler *ClientTooler,
+	enterprise_slug string) ([]map[string]interface{}, error) {
 
 	return nil, nil
 }
@@ -298,7 +308,8 @@ func (client VDC_DeleteSuccess_HttpClienterFake) Do(api *API,
 	return &resp, nil
 }
 
-func (client VDC_DeleteSuccess_HttpClienterFake) GetTemplatesList(enterprise_slug string) ([]map[string]interface{}, error) {
+func (client VDC_DeleteSuccess_HttpClienterFake) GetTemplatesList(clientTooler *ClientTooler,
+	enterprise_slug string) ([]map[string]interface{}, error) {
 
 	return nil, nil
 }
@@ -326,7 +337,8 @@ func (client VM_CreationSuccess_HttpClienterFake) Do(api *API,
 	return &resp, nil
 }
 
-func (client VM_CreationSuccess_HttpClienterFake) GetTemplatesList(enterprise_slug string) ([]map[string]interface{}, error) {
+func (client VM_CreationSuccess_HttpClienterFake) GetTemplatesList(clientTooler *ClientTooler,
+	enterprise_slug string) ([]map[string]interface{}, error) {
 
 	return nil, nil
 }
@@ -354,7 +366,8 @@ func (client VM_ReadSuccess_HttpClienterFake) Do(api *API,
 	return &resp, nil
 }
 
-func (client VM_ReadSuccess_HttpClienterFake) GetTemplatesList(enterprise_slug string) ([]map[string]interface{}, error) {
+func (client VM_ReadSuccess_HttpClienterFake) GetTemplatesList(clientTooler *ClientTooler,
+	enterprise_slug string) ([]map[string]interface{}, error) {
 
 	return nil, nil
 }
@@ -382,7 +395,8 @@ func (client VM_UpdateSuccess_HttpClienterFake) Do(api *API,
 	return &resp, nil
 }
 
-func (client VM_UpdateSuccess_HttpClienterFake) GetTemplatesList(enterprise_slug string) ([]map[string]interface{}, error) {
+func (client VM_UpdateSuccess_HttpClienterFake) GetTemplatesList(clientTooler *ClientTooler,
+	enterprise_slug string) ([]map[string]interface{}, error) {
 
 	return nil, nil
 }
@@ -410,7 +424,8 @@ func (client VM_DeleteSuccess_HttpClienterFake) Do(api *API,
 	return &resp, nil
 }
 
-func (client VM_DeleteSuccess_HttpClienterFake) GetTemplatesList(enterprise_slug string) ([]map[string]interface{}, error) {
+func (client VM_DeleteSuccess_HttpClienterFake) GetTemplatesList(clientTooler *ClientTooler,
+	enterprise_slug string) ([]map[string]interface{}, error) {
 
 	return nil, nil
 }
@@ -436,7 +451,8 @@ func (client DeleteWRONGResponseBody_HttpClienterFake) Do(api *API,
 	return &resp, nil
 }
 
-func (client DeleteWRONGResponseBody_HttpClienterFake) GetTemplatesList(enterprise_slug string) ([]map[string]interface{}, error) {
+func (client DeleteWRONGResponseBody_HttpClienterFake) GetTemplatesList(clientTooler *ClientTooler,
+	enterprise_slug string) ([]map[string]interface{}, error) {
 
 	return nil, nil
 }
@@ -459,12 +475,62 @@ func (client CheckRedirectReqFailure_HttpClienterFake) Do(api *API,
 	return &resp, errors.New(CHECK_REDIRECT_FAILURE)
 }
 
-func (client CheckRedirectReqFailure_HttpClienterFake) GetTemplatesList(enterprise_slug string) ([]map[string]interface{}, error) {
+func (client CheckRedirectReqFailure_HttpClienterFake) GetTemplatesList(clientTooler *ClientTooler,
+	enterprise_slug string) ([]map[string]interface{}, error) {
 
 	return nil, nil
 }
 
 func (client CheckRedirectReqFailure_HttpClienterFake) HandleResponse(resp *http.Response,
+	expectedCode int,
+	expectedBodyFormat string) (interface{}, error) {
+
+	return nil, nil
+}
+
+//------------------------------------------------------------------------------
+// Fake for api_test.go
+type FakeHttpClienter struct{}
+
+func (client FakeHttpClienter) Do(api *API, req *http.Request) (*http.Response, error) {
+	var err error
+	err = nil
+	type body struct {
+		detail string `json:"detail"`
+	}
+	resp := http.Response{}
+
+	if api.URL != NO_RESP_API_URL {
+		resp.Status = "200 OK"
+		resp.StatusCode = http.StatusOK
+		switch {
+		case api.URL == WRONG_API_URL || api.URL == NOT_JSON_RESP_API_URL:
+			resp.Header = map[string][]string{"Content-Type": {"text/plain; charset=utf-8"}}
+			resp.Body = ioutil.NopCloser(bytes.NewBufferString("A plain text."))
+		case api.URL == RIGHT_API_URL:
+			if api.Token != RIGHT_API_TOKEN {
+				resp.Status = "401 Unauthorized"
+				resp.StatusCode = http.StatusUnauthorized
+				resp.Body = ioutil.NopCloser(bytes.NewBufferString("{\"detail\":\"Invalid token.\"}"))
+			} else {
+				resp.Header = map[string][]string{"Content-Type": {"application/json"}}
+				body_json, _ := json.Marshal(body{detail: ""})
+				resp.Body = ioutil.NopCloser(bytes.NewBuffer(body_json))
+			}
+		}
+	} else {
+		err = errors.New("No response error.")
+	}
+	return &resp, err
+}
+
+func (client FakeHttpClienter) GetTemplatesList(clientTooler *ClientTooler,
+	enterprise_slug string) ([]map[string]interface{}, error) {
+
+	return nil, nil
+}
+
+func (client FakeHttpClienter) HandleResponse(resp *http.Response,
 	expectedCode int,
 	expectedBodyFormat string) (interface{}, error) {
 

@@ -11,7 +11,9 @@ import (
 //--Structures init, interface implementation fakes, various test items etc.----
 //------------------------------------------------------------------------------
 var (
-	TEST_VM_MAP = map[string]interface{}{"name": "Unit test vm",
+	TEST_VM_MAP = map[string]interface{}{
+		"name": "Unit test vm",
+		"enterprise": "sewan-rd-cloud-beta",
 		"state": "UP",
 		"os":    "Debian",
 		"ram":   "8",

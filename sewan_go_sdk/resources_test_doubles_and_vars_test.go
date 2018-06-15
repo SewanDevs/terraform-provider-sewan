@@ -1,10 +1,10 @@
 package sewan_go_sdk
 
 import (
+	"bytes"
+	"encoding/json"
 	"github.com/hashicorp/terraform/helper/schema"
-  "encoding/json"
-  "bytes"
-  "io/ioutil"
+	"io/ioutil"
 )
 
 const (
@@ -91,6 +91,7 @@ var (
 	}
 	TEST_VM_MAP = map[string]interface{}{
 		"name":     "Unit test resource",
+		"enterprise": "sewan-rd-cloud-beta",
 		"template": "",
 		"state":    "UP",
 		"os":       "Debian",
@@ -128,6 +129,140 @@ var (
 		"comment":           "42",
 		"outsourcing":       "42",
 		"dynamic_field":     "42",
+	}
+	TEMPLATES_LIST = []interface{}{
+		map[string]interface{}{
+			"id":         "40",
+			"name":       "CentOS 7 Classique",
+			"slug":       "TPL-CentOS7-x64-20Go-1vCPU-1Go-2GoS",
+			"ram":        "1",
+			"cpu":        "1",
+			"os":         "CentOS",
+			"enterprise": "sewan-rd-cloud-beta",
+			"disks": []interface{}{
+				map[string]interface{}{
+					"name":   "/",
+					"size":   "20",
+					"v_disk": "sewan-rd-cloud-beta-mono-storage_enterprise",
+					"slug":   "centos7-classic-disk1",
+				},
+			},
+			"datacenter":    "dc2",
+			"nics":          []interface{}{},
+			"login":         "",
+			"password":      "",
+			"dynamic_field": "nil",
+		},
+		map[string]interface{}{
+			"id":         "41",
+			"name":       "Debian 8 Classique",
+			"slug":       "TPL-Debian8-x64-20Go-1vCPU-1Go-2GoS",
+			"ram":        "1",
+			"cpu":        "1",
+			"os":         "Debian",
+			"enterprise": "sewan-rd-cloud-beta",
+			"disks": []interface{}{
+				map[string]interface{}{
+					"name":   "/",
+					"size":   "20",
+					"v_disk": "sewan-rd-cloud-beta-mono-storage_enterprise",
+					"slug":   "debian-8-classic-disk-1",
+				},
+			},
+			"datacenter":    "dc2",
+			"nics":          []interface{}{},
+			"login":         "",
+			"password":      "",
+			"dynamic_field": "nil",
+		},
+		map[string]interface{}{
+			"id":         "43",
+			"name":       "tpl-CentOS7 R&D",
+			"slug":       "tpl-centos7-rd",
+			"ram":        "1",
+			"cpu":        "1",
+			"os":         "CentOS",
+			"enterprise": "sewan-rd-cloud-beta",
+			"disks": []interface{}{
+				map[string]interface{}{
+					"name":   "disk-tpl-CentOS7 R&D-1",
+					"size":   "20",
+					"v_disk": "sewan-rd-cloud-beta-mono-storage_enterprise",
+					"slug":   "disk-tpl-centos7-rd-1",
+				},
+			},
+			"datacenter": "dc2",
+			"nics": []interface{}{
+				map[string]interface{}{
+					"vlan":        "sewanrd-mgt-tc3",
+					"mac_address": "00:50:56:00:00:23",
+					"connected":   "true",
+				},
+				map[string]interface{}{
+					"vlan":        "sewanrd-priv-tc3",
+					"mac_address": "00:50:56:00:00:24",
+					"connected":   "true",
+				},
+			},
+			"login":         "nil",
+			"password":      "nil",
+			"dynamic_field": "nil",
+		},
+		map[string]interface{}{
+			"id":         "58",
+			"name":       "Template-Windows7",
+			"slug":       "template-windows7",
+			"ram":        "1",
+			"cpu":        "1",
+			"os":         "Windows Serveur 64bits",
+			"enterprise": "sewan-rd-cloud-beta",
+			"disks": []interface{}{
+				map[string]interface{}{
+					"name":   "disk-Template-Windows7-1",
+					"size":   "60",
+					"v_disk": "sewan-rd-cloud-beta-mono-storage_enterprise",
+					"slug":   "disk-template-windows7-1",
+				},
+			},
+			"datacenter":    "dc2",
+			"nics":          []interface{}{},
+			"login":         "nil",
+			"password":      "nil",
+			"dynamic_field": "nil",
+		},
+		map[string]interface{}{
+			"id":         "69",
+			"name":       "debian9-rd",
+			"slug":       "debian9-rd",
+			"ram":        "1",
+			"cpu":        "1",
+			"os":         "Debian",
+			"enterprise": "sewan-rd-cloud-beta",
+			"disks": []interface{}{
+				map[string]interface{}{
+					"name":   "disk-debian9-rd-1",
+					"size":   "10",
+					"v_disk": "sewan-rd-cloud-beta-mono-storage_enterprise",
+					"slug":   "disk-debian9-rd-1",
+				},
+			},
+			"datacenter": "dc2",
+			"nics": []interface{}{
+				map[string]interface{}{
+					"vlan":        "sewanrd-mgt-tc3",
+					"mac_address": "00:50:56:00:01:de",
+					"connected":   "true",
+				},
+				map[string]interface{}{
+					"vlan":        "sewanrd-priv-tc3",
+					"mac_address": "00:50:56:00:01:df",
+					"connected":   "true",
+				},
+			},
+			"login":         "nil",
+			"password":      "nil",
+			"dynamic_field": "nil",
+		},
 	}
 )
 
@@ -186,6 +321,10 @@ func resource_vm() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			"name": &schema.Schema{
+				Type:     schema.TypeString,
+				Required: true,
+			},
+			"enterprise": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
 			},
@@ -331,13 +470,18 @@ type Resp_Body struct {
 	Detail string `json:"detail"`
 }
 
-func JsonStub() map[string]interface{}{
+func JsonStub() map[string]interface{} {
 
-  var jsonStub interface{}
-  simple_json,_ := json.Marshal(Resp_Body{Detail: "a simple json"})
-  jsonBytes := ioutil.NopCloser(bytes.NewBuffer(simple_json))
-  readBytes,_ := ioutil.ReadAll(jsonBytes)
-  _ = json.Unmarshal(readBytes, &jsonStub)
+	var jsonStub interface{}
+	simple_json, _ := json.Marshal(Resp_Body{Detail: "a simple json"})
+	jsonBytes := ioutil.NopCloser(bytes.NewBuffer(simple_json))
+	readBytes, _ := ioutil.ReadAll(jsonBytes)
+	_ = json.Unmarshal(readBytes, &jsonStub)
 
 	return jsonStub.(map[string]interface{})
+}
+
+func JsonTemplateListFake() []interface{} {
+
+	return TEMPLATES_LIST
 }

@@ -19,6 +19,7 @@ type VDC struct {
 
 type VM struct {
 	Name              string        `json:"name"`
+	Enterprise        string        `json:"enterprise"`
 	Template          string        `json:"template"`
 	State             string        `json:"state"`
 	OS                string        `json:"os"`
@@ -59,28 +60,25 @@ func vmInstanceCreate(d *schema.ResourceData,
 
 	var (
 		vm               VM
-		getTemplateError error
-		enterprise_slug  string
+		getTemplateError error = nil
+		template string = d.Get("template").(string)
 	)
-	getTemplateError = nil
-
 	logger := loggerCreate("vmInstanceCreate.log")
 
-	if d.Get("template") != nil {
-		var templateList []map[string]interface{}
-
+	if template != "" {
+		var templateList []interface{}
+		logger.Println("template =", d.Get("template"))
 		//1 get template list
 		// i : get enterprise from VDC field :
 		//	enterprise_slug = d.Get("depends_on").enterprise
 		// ii : get enterprise from a new vm field :
 		//	enterprise_slug = d.Get("enterprise")
-		enterprise_slug = "sewan-rd-cloud-beta"
 		//clientToolerB := ClientTooler{
 		//	Client: HttpClienter{},
 		//}
 		templateList,
-		getTemplateError = clientTooler.Client.GetTemplatesList(clientTooler,
-			enterprise_slug)
+			getTemplateError = clientTooler.Client.GetTemplatesList(clientTooler,
+			template,api)
 		logger.Println("templateList =", templateList)
 
 		//2 validate option template is in the list
@@ -94,6 +92,7 @@ func vmInstanceCreate(d *schema.ResourceData,
 	} else {
 		vm = VM{
 			Name:              d.Get("name").(string),
+			Enterprise:        d.Get("enterprise").(string),
 			Template:          d.Get("template").(string),
 			State:             d.Get("state").(string),
 			OS:                d.Get("os").(string),

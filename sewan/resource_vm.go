@@ -15,6 +15,10 @@ func resource_vm() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
+			"enterprise": &schema.Schema{
+				Type:     schema.TypeString,
+				Required: true,
+			},
 			"template": &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,

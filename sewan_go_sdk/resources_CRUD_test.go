@@ -8,9 +8,6 @@ import (
 	"testing"
 )
 
-//------------------------------------------------------------------------------
-//-------------Units tests------------------------------------------------------
-//------------------------------------------------------------------------------
 func TestCreate_resource(t *testing.T) {
 	test_cases := []struct {
 		Id               int
@@ -104,7 +101,7 @@ func TestCreate_resource(t *testing.T) {
 		resource_res      *schema.Resource
 		d                 *schema.ResourceData
 	)
-	Apier := AirDrumResources_Apier{}
+	apier := AirDrumResources_Apier{}
 
 	sewan = &API{Token: "42", URL: "42", Client: &http.Client{}}
 	fake_client_tooler := ClientTooler{}
@@ -115,7 +112,7 @@ func TestCreate_resource(t *testing.T) {
 		d.SetId("UnitTest resource1")
 		d.Set("name", "Unit test resource")
 		fake_client_tooler.Client = test_case.TC_clienter
-		err, resp_creation_map = Apier.Create_resource(d,
+		err, resp_creation_map = apier.Create_resource(d,
 			&fake_client_tooler,
 			test_case.ResourceType,
 			sewan)

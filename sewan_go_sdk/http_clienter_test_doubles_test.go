@@ -10,6 +10,54 @@ import (
 
 //------------------------------------------------------------------------------
 // Error response *ClientTooler
+type GetTemplatesList_Sucess_HttpClienterFake struct{}
+
+func (client GetTemplatesList_Sucess_HttpClienterFake) Do(api *API,
+	req *http.Request) (*http.Response, error) {
+
+	//return a resp with TEMPLATES_LIST
+	return nil, nil
+}
+
+func (client GetTemplatesList_Sucess_HttpClienterFake) GetTemplatesList(clientTooler *ClientTooler,
+	enterprise_slug string,api *API) ([]interface{}, error) {
+
+	return nil, nil
+}
+
+func (client GetTemplatesList_Sucess_HttpClienterFake) HandleResponse(resp *http.Response,
+	expectedCode int,
+	expectedBodyFormat string) (interface{}, error) {
+
+	return TEMPLATES_LIST, nil
+}
+
+//------------------------------------------------------------------------------
+// Error response *ClientTooler
+type GetTemplatesList_Failure_HttpClienterFake struct{}
+
+func (client GetTemplatesList_Failure_HttpClienterFake) Do(api *API,
+	req *http.Request) (*http.Response, error) {
+
+	//return a resp with !TEMPLATES_LIST
+	return nil, nil
+}
+
+func (client GetTemplatesList_Failure_HttpClienterFake) GetTemplatesList(clientTooler *ClientTooler,
+	enterprise_slug string,api *API) ([]interface{}, error) {
+
+	return nil, nil
+}
+
+func (client GetTemplatesList_Failure_HttpClienterFake) HandleResponse(resp *http.Response,
+	expectedCode int,
+	expectedBodyFormat string) (interface{}, error) {
+
+	return nil, errors.New("HandleResponse() error")
+}
+
+//------------------------------------------------------------------------------
+// Error response *ClientTooler
 type ErrorResponse_HttpClienterFake struct{}
 
 func (client ErrorResponse_HttpClienterFake) Do(api *API,
@@ -19,7 +67,7 @@ func (client ErrorResponse_HttpClienterFake) Do(api *API,
 }
 
 func (client ErrorResponse_HttpClienterFake) GetTemplatesList(clientTooler *ClientTooler,
-	enterprise_slug string) ([]map[string]interface{}, error) {
+	enterprise_slug string,api *API) ([]interface{}, error) {
 
 	return nil, nil
 }
@@ -47,7 +95,7 @@ func (client BadBodyResponseContentType_HttpClienterFake) Do(api *API,
 }
 
 func (client BadBodyResponseContentType_HttpClienterFake) GetTemplatesList(clientTooler *ClientTooler,
-	enterprise_slug string) ([]map[string]interface{}, error) {
+	enterprise_slug string,api *API) ([]interface{}, error) {
 
 	return nil, nil
 }
@@ -75,7 +123,7 @@ func (client StatusInternalServerError_HttpClienterFake) Do(api *API,
 }
 
 func (client StatusInternalServerError_HttpClienterFake) GetTemplatesList(clientTooler *ClientTooler,
-	enterprise_slug string) ([]map[string]interface{}, error) {
+	enterprise_slug string,api *API) ([]interface{}, error) {
 
 	return nil, nil
 }
@@ -103,7 +151,7 @@ func (client BadBodyResponse_StatusCreated_HttpClienterFake) Do(api *API,
 }
 
 func (client BadBodyResponse_StatusCreated_HttpClienterFake) GetTemplatesList(clientTooler *ClientTooler,
-	enterprise_slug string) ([]map[string]interface{}, error) {
+	enterprise_slug string,api *API) ([]interface{}, error) {
 
 	return nil, nil
 }
@@ -131,7 +179,7 @@ func (client BadBodyResponse_StatusOK_HttpClienterFake) Do(api *API,
 }
 
 func (client BadBodyResponse_StatusOK_HttpClienterFake) GetTemplatesList(clientTooler *ClientTooler,
-	enterprise_slug string) ([]map[string]interface{}, error) {
+	enterprise_slug string,api *API) ([]interface{}, error) {
 
 	return nil, nil
 }
@@ -162,7 +210,7 @@ func (client Error401_HttpClienterFake) Do(api *API,
 }
 
 func (client Error401_HttpClienterFake) GetTemplatesList(clientTooler *ClientTooler,
-	enterprise_slug string) ([]map[string]interface{}, error) {
+	enterprise_slug string,api *API) ([]interface{}, error) {
 
 	return nil, nil
 }
@@ -193,7 +241,7 @@ func (client Error404_HttpClienterFake) Do(api *API,
 }
 
 func (client Error404_HttpClienterFake) GetTemplatesList(clientTooler *ClientTooler,
-	enterprise_slug string) ([]map[string]interface{}, error) {
+	enterprise_slug string,api *API) ([]interface{}, error) {
 
 	return nil, nil
 }
@@ -222,7 +270,7 @@ func (client VDC_CreationSuccess_HttpClienterFake) Do(api *API,
 }
 
 func (client VDC_CreationSuccess_HttpClienterFake) GetTemplatesList(clientTooler *ClientTooler,
-	enterprise_slug string) ([]map[string]interface{}, error) {
+	enterprise_slug string,api *API) ([]interface{}, error) {
 
 	return nil, nil
 }
@@ -251,7 +299,7 @@ func (client VDC_ReadSuccess_HttpClienterFake) Do(api *API,
 }
 
 func (client VDC_ReadSuccess_HttpClienterFake) GetTemplatesList(clientTooler *ClientTooler,
-	enterprise_slug string) ([]map[string]interface{}, error) {
+	enterprise_slug string,api *API) ([]interface{}, error) {
 
 	return nil, nil
 }
@@ -280,7 +328,7 @@ func (client VDC_UpdateSuccess_HttpClienterFake) Do(api *API,
 }
 
 func (client VDC_UpdateSuccess_HttpClienterFake) GetTemplatesList(clientTooler *ClientTooler,
-	enterprise_slug string) ([]map[string]interface{}, error) {
+	enterprise_slug string,api *API) ([]interface{}, error) {
 
 	return nil, nil
 }
@@ -309,7 +357,7 @@ func (client VDC_DeleteSuccess_HttpClienterFake) Do(api *API,
 }
 
 func (client VDC_DeleteSuccess_HttpClienterFake) GetTemplatesList(clientTooler *ClientTooler,
-	enterprise_slug string) ([]map[string]interface{}, error) {
+	enterprise_slug string,api *API) ([]interface{}, error) {
 
 	return nil, nil
 }
@@ -338,7 +386,7 @@ func (client VM_CreationSuccess_HttpClienterFake) Do(api *API,
 }
 
 func (client VM_CreationSuccess_HttpClienterFake) GetTemplatesList(clientTooler *ClientTooler,
-	enterprise_slug string) ([]map[string]interface{}, error) {
+	enterprise_slug string,api *API) ([]interface{}, error) {
 
 	return nil, nil
 }
@@ -367,7 +415,7 @@ func (client VM_ReadSuccess_HttpClienterFake) Do(api *API,
 }
 
 func (client VM_ReadSuccess_HttpClienterFake) GetTemplatesList(clientTooler *ClientTooler,
-	enterprise_slug string) ([]map[string]interface{}, error) {
+	enterprise_slug string,api *API) ([]interface{}, error) {
 
 	return nil, nil
 }
@@ -396,7 +444,7 @@ func (client VM_UpdateSuccess_HttpClienterFake) Do(api *API,
 }
 
 func (client VM_UpdateSuccess_HttpClienterFake) GetTemplatesList(clientTooler *ClientTooler,
-	enterprise_slug string) ([]map[string]interface{}, error) {
+	enterprise_slug string,api *API) ([]interface{}, error) {
 
 	return nil, nil
 }
@@ -425,7 +473,7 @@ func (client VM_DeleteSuccess_HttpClienterFake) Do(api *API,
 }
 
 func (client VM_DeleteSuccess_HttpClienterFake) GetTemplatesList(clientTooler *ClientTooler,
-	enterprise_slug string) ([]map[string]interface{}, error) {
+	enterprise_slug string,api *API) ([]interface{}, error) {
 
 	return nil, nil
 }
@@ -452,7 +500,7 @@ func (client DeleteWRONGResponseBody_HttpClienterFake) Do(api *API,
 }
 
 func (client DeleteWRONGResponseBody_HttpClienterFake) GetTemplatesList(clientTooler *ClientTooler,
-	enterprise_slug string) ([]map[string]interface{}, error) {
+	enterprise_slug string,api *API) ([]interface{}, error) {
 
 	return nil, nil
 }
@@ -476,7 +524,7 @@ func (client CheckRedirectReqFailure_HttpClienterFake) Do(api *API,
 }
 
 func (client CheckRedirectReqFailure_HttpClienterFake) GetTemplatesList(clientTooler *ClientTooler,
-	enterprise_slug string) ([]map[string]interface{}, error) {
+	enterprise_slug string,api *API) ([]interface{}, error) {
 
 	return nil, nil
 }
@@ -525,7 +573,7 @@ func (client FakeHttpClienter) Do(api *API, req *http.Request) (*http.Response, 
 }
 
 func (client FakeHttpClienter) GetTemplatesList(clientTooler *ClientTooler,
-	enterprise_slug string) ([]map[string]interface{}, error) {
+	enterprise_slug string,api *API) ([]interface{}, error) {
 
 	return nil, nil
 }

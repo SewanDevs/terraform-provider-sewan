@@ -32,48 +32,75 @@ func TestDo(t *testing.T) {
 //------------------------------------------------------------------------------
 func TestGetTemplatesList(t *testing.T) {
 	test_cases := []struct {
-		Id                 int
-		Response           *http.Response
-		ExpectedCode       int
-		ExpectedBodyFormat string
-		ResponseBody       interface{}
-		Error              error
+		Id              int
+		TC_clienter     Clienter
+		Enterprise_slug string
+		TemplateList    []interface{}
+		Error           error
 	}{
 		{
+			1,
+			GetTemplatesList_Sucess_HttpClienterFake{},
+			"sewan-rd-cloud-beta",
+			TEMPLATES_LIST,
+			nil,
+		},
+		{
+			2,
+			GetTemplatesList_Failure_HttpClienterFake{},
+			"sewan-rd-cloud-beta",
+			nil,
+			errors.New("HandleResponse() error"),
+		},
+		{
+			3,
+			ErrorResponse_HttpClienterFake{},
+			"sewan-rd-cloud-beta",
+			nil,
+			errors.New(REQ_ERR),
 		},
 	}
+	var (
+		templates_list []interface{}
+		err            error
+	)
+	client_tooler := ClientTooler{}
+	client_tooler.Client = HttpClienter{}
+	fake_client_tooler := ClientTooler{}
+	apiTooler := APITooler{}
+	api := apiTooler.New("token","url")
 
 	for _, test_case := range test_cases {
-		t.Log("test_case = ",test_case)
-		//responseBody, err = clienter.GetTemplatesList(test_case.Response,
-		//	test_case.ExpectedCode, test_case.ExpectedBodyFormat)
+		fake_client_tooler.Client = test_case.TC_clienter
+		templates_list, err = client_tooler.Client.GetTemplatesList(&fake_client_tooler,
+			test_case.Enterprise_slug,api)
 
-		//switch {
-		//case err == nil || test_case.Error == nil:
-		//	if !(err == nil && test_case.Error == nil) {
-		//		t.Errorf("TC %d : HandleResponse() error was incorrect,"+
-		//			"\n\rgot: \"%s\"\n\rwant: \"%s\"", test_case.Id, err, test_case.Error)
-		//	} else {
-		//		switch {
-		//		case !reflect.DeepEqual(test_case.ResponseBody, responseBody):
-		//			t.Errorf("TC %d : Wrong response read element,"+
-		//				"\n\rgot: \"%s\"\n\rwant: \"%s\"",
-		//				test_case.Id, responseBody, test_case.ResponseBody)
-		//		}
-		//	}
-		//case err != nil && test_case.Error != nil:
-		//	if responseBody != nil {
-		//		t.Errorf("TC %d : Wrong response read element,"+
-		//			" it should be nil as error is not nil,"+
-		//			"\n\rgot map: \n\r\"%s\"\n\rwant map: \n\r\"%s\"\n\r",
-		//			test_case.Id, responseBody, test_case.ResponseBody)
-		//	}
-		//	if err.Error() != test_case.Error.Error() {
-		//		t.Errorf("TC %d : Wrong response handle error,"+
-		//			"\n\rgot: \"%s\"\n\rwant: \"%s\"",
-		//			test_case.Id, err.Error(), test_case.Error.Error())
-		//	}
-		//}
+		switch {
+		case err == nil || test_case.Error == nil:
+			if !(err == nil && test_case.Error == nil) {
+				t.Errorf("TC %d : GetTemplatesList() error was incorrect,"+
+					"\n\rgot: \"%s\"\n\rwant: \"%s\"", test_case.Id, err, test_case.Error)
+			} else {
+				switch {
+				case !reflect.DeepEqual(test_case.TemplateList, templates_list):
+					t.Errorf("TC %d : Wrong template list,"+
+						"\n\rgot: \"%s\"\n\rwant: \"%s\"",
+						test_case.Id, templates_list, test_case.TemplateList)
+				}
+			}
+		case err != nil && test_case.Error != nil:
+			if templates_list != nil {
+				t.Errorf("TC %d : Wrong response read element,"+
+					" it should be nil as error is not nil,"+
+					"\n\rgot map: \n\r\"%s\"\n\rwant map: \n\r\"%s\"\n\r",
+					test_case.Id, templates_list, test_case.TemplateList)
+			}
+			if err.Error() != test_case.Error.Error() {
+				t.Errorf("TC %d : Wrong response handle error,"+
+					"\n\rgot: \"%s\"\n\rwant: \"%s\"",
+					test_case.Id, err.Error(), test_case.Error.Error())
+			}
+		}
 	}
 }
 
@@ -97,6 +124,14 @@ func TestHandleResponse(t *testing.T) {
 		},
 		{
 			2,
+			HttpResponseFake_OK_template_list_json(),
+			http.StatusOK,
+			"application/json",
+			JsonTemplateListFake(),
+			nil,
+		},
+		{
+			3,
 			HttpResponseFake_500_texthtml(),
 			http.StatusInternalServerError,
 			"text/html",
@@ -104,20 +139,12 @@ func TestHandleResponse(t *testing.T) {
 			nil,
 		},
 		{
-			3,
+			4,
 			HttpResponseFake_500_json(),
 			http.StatusInternalServerError,
 			"text/html",
 			nil,
 			errors.New("Wrong content type, \n\r expected :text/html\n\r got :application/json"),
-		},
-		{
-			4,
-			HttpResponseFake_OK_json(),
-			http.StatusInternalServerError,
-			"text/html",
-			nil,
-			errors.New("Wrong response status code, \n\r expected :500\n\r got :200"),
 		},
 		{
 			5,
@@ -129,6 +156,14 @@ func TestHandleResponse(t *testing.T) {
 		},
 		{
 			6,
+			HttpResponseFake_OK_json(),
+			http.StatusInternalServerError,
+			"text/html",
+			nil,
+			errors.New("Wrong response status code, \n\r expected :500\n\r got :200"),
+		},
+		{
+			7,
 			HttpResponseFake_OK_no_content(),
 			http.StatusOK,
 			"",
@@ -136,16 +171,16 @@ func TestHandleResponse(t *testing.T) {
 			nil,
 		},
 		{
-			7,
+			8,
 			HttpResponseFake_OK_wrongjson(),
 			http.StatusOK,
 			"application/json",
 			nil,
-			errors.New("Response body is not a properly formated json :"+
+			errors.New("Response body is not a properly formated json :" +
 				"invalid character 'a' looking for beginning of value"),
 		},
 		{
-			8,
+			9,
 			HttpResponseFake_OK_image(),
 			http.StatusOK,
 			"image",

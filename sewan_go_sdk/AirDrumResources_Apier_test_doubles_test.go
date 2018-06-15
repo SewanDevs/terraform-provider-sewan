@@ -1,8 +1,8 @@
 package sewan_go_sdk
 
 import (
-  "github.com/hashicorp/terraform/helper/schema"
-  "errors"
+	"errors"
+	"github.com/hashicorp/terraform/helper/schema"
 )
 
 type FakeAirDrumResource_APIer struct{}

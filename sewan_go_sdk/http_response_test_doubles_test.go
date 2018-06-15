@@ -18,6 +18,17 @@ func HttpResponseFake_OK_json() *http.Response {
 	return &response
 }
 
+func HttpResponseFake_OK_template_list_json() *http.Response {
+	response := http.Response{}
+	response.Status = "200 OK"
+	response.StatusCode = http.StatusOK
+	response.Header = map[string][]string{}
+	response.Header.Add("Content-Type", "application/json")
+	Resp_Body_json, _ := json.Marshal(TEMPLATES_LIST)
+	response.Body = ioutil.NopCloser(bytes.NewBuffer(Resp_Body_json))
+	return &response
+}
+
 func HttpResponseFake_500_texthtml() *http.Response {
 	response := http.Response{}
 	response.Status = "500 Internal Server Error"

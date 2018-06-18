@@ -20,6 +20,8 @@ const (
 	VM_RESOURCE_TYPE        = "vm"
 	VDC_RESOURCE_TYPE       = "vdc"
 	WRONG_RESOURCE_TYPE     = "a_non_supported_resource_type"
+	ENTERPRISE_SLUG         = "sewan-rd-cloud-beta"
+	FAKE_VM_INSTANCE_NAME = "fake vm instance name"
 )
 
 var (
@@ -90,13 +92,13 @@ var (
 		"dynamic_field": "",
 	}
 	TEST_VM_MAP = map[string]interface{}{
-		"name":     "Unit test resource",
+		"name":       "Unit test resource",
 		"enterprise": "sewan-rd-cloud-beta",
-		"template": "",
-		"state":    "UP",
-		"os":       "Debian",
-		"ram":      "8",
-		"cpu":      "4",
+		"template":   "",
+		"state":      "UP",
+		"os":         "Debian",
+		"ram":        "8",
+		"cpu":        "4",
 		"disks": []interface{}{
 			map[string]interface{}{
 				"name":   "disk 1",
@@ -317,6 +319,48 @@ func resource_vdc() *schema.Resource {
 	}
 }
 
+func resource_vm_disk() *schema.Resource {
+	return &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"name": &schema.Schema{
+				Type:     schema.TypeString,
+				Required: true,
+			},
+			"size": &schema.Schema{
+				Type:     schema.TypeInt,
+				Required: true,
+			},
+			"v_disk": &schema.Schema{
+				Type:     schema.TypeString,
+				Required: true,
+			},
+			"slug": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+		},
+	}
+}
+
+func resource_vm_nic() *schema.Resource {
+	return &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"vlan": &schema.Schema{
+				Type:     schema.TypeString,
+				Required: true,
+			},
+			"mac_adress": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"connected": &schema.Schema{
+				Type:     schema.TypeBool,
+				Required: true,
+			},
+		},
+	}
+}
+
 func resource_vm() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
@@ -326,7 +370,7 @@ func resource_vm() *schema.Resource {
 			},
 			"enterprise": &schema.Schema{
 				Type:     schema.TypeString,
-				Required: true,
+				Optional: true,
 			},
 			"template": &schema.Schema{
 				Type:     schema.TypeString,
@@ -351,46 +395,12 @@ func resource_vm() *schema.Resource {
 			"disks": &schema.Schema{
 				Type:     schema.TypeList,
 				Optional: true,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"name": &schema.Schema{
-							Type:     schema.TypeString,
-							Required: true,
-						},
-						"size": &schema.Schema{
-							Type:     schema.TypeInt,
-							Required: true,
-						},
-						"v_disk": &schema.Schema{
-							Type:     schema.TypeString,
-							Required: true,
-						},
-						"slug": &schema.Schema{
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-					},
-				},
+				Elem:     resource_vm_disk(),
 			},
 			"nics": &schema.Schema{
 				Type:     schema.TypeList,
 				Optional: true,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"vlan": &schema.Schema{
-							Type:     schema.TypeString,
-							Required: true,
-						},
-						"mac_adress": &schema.Schema{
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-						"connected": &schema.Schema{
-							Type:     schema.TypeBool,
-							Optional: true,
-						},
-					},
-				},
+				Elem:     resource_vm_nic(),
 			},
 			"vdc": &schema.Schema{
 				Type:     schema.TypeString,
@@ -441,6 +451,58 @@ func resource_vm() *schema.Resource {
 				Optional: true,
 			},
 		},
+	}
+}
+
+func vdcInstanceStub() VDC {
+	return VDC{}
+}
+
+func vmInstanceFake() VM {
+	return VM{
+		Name:       FAKE_VM_INSTANCE_NAME,
+		Enterprise: "Unit Test value",
+		Template:   "Unit Test value",
+		State:      "Unit Test value",
+		OS:         "Unit Test value",
+		RAM:        1,
+		CPU:        1,
+		Disks: []interface{}{
+			VM_DISK{
+				Name: "name1",
+				Size:10,
+				V_disk:"Unit Test value",
+			},
+			VM_DISK{
+				Name: "name2",
+				Size:10,
+				V_disk:"Unit Test value",
+			},
+		},
+		Nics: []interface{}{
+			VM_NIC{
+				Vlan: "vlan1",
+				Mac_adress:"Unit Test value",
+				Connected:true,
+			},
+			VM_NIC{
+				Vlan: "vlan1",
+				Mac_adress:"Unit Test value",
+				Connected:false,
+			},
+		},
+		Vdc:               "Unit Test value",
+		Boot:              "Unit Test value",
+		Vdc_resource_disk: "Unit Test value",
+		Slug:              "Unit Test value",
+		Token:             "Unit Test value",
+		Backup:            "Unit Test value",
+		Disk_image:        "Unit Test value",
+		Platform_name:     "Unit Test value",
+		Backup_size:       "Unit Test value",
+		Comment:           "Unit Test value",
+		Outsourcing:       "Unit Test value",
+		Dynamic_field:     "Unit Test value",
 	}
 }
 

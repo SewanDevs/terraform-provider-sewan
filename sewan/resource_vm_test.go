@@ -12,12 +12,12 @@ import (
 //------------------------------------------------------------------------------
 var (
 	TEST_VM_MAP = map[string]interface{}{
-		"name": "Unit test vm",
+		"name":       "Unit test vm",
 		"enterprise": "sewan-rd-cloud-beta",
-		"state": "UP",
-		"os":    "Debian",
-		"ram":   "8",
-		"cpu":   "4",
+		"state":      "UP",
+		"os":         "Debian",
+		"ram":        "8",
+		"cpu":        "4",
 		"disks": []interface{}{
 			map[string]interface{}{
 				"name":   "disk 1",

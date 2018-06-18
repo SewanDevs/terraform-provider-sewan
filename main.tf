@@ -54,6 +54,7 @@ resource "sewan_clouddc_vm" "server" {
   count = 1
   name = "server${count.index}"
   enterprise = "${sewan_clouddc_vdc.terraform-vdc.enterprise}"
+  template = "tpl-CentOS7 R&D"
   ram=1
   cpu = 1
   os="CentOS"

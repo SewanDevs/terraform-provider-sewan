@@ -66,7 +66,7 @@ type ClientTooler struct {
 type Clienter interface {
 	Do(api *API, req *http.Request) (*http.Response, error)
 	GetTemplatesList(clientTooler *ClientTooler,
-		enterprise_slug string,api *API) ([]interface{}, error)
+		enterprise_slug string, api *API) ([]interface{}, error)
 	HandleResponse(resp *http.Response,
 		expectedCode int,
 		expectedBodyFormat string) (interface{}, error)
@@ -79,37 +79,42 @@ func (client HttpClienter) Do(api *API, req *http.Request) (*http.Response, erro
 }
 
 func (client HttpClienter) GetTemplatesList(clientTooler *ClientTooler,
-	enterprise_slug string,api *API) ([]interface{}, error) {
+	enterprise_slug string, api *API) ([]interface{}, error) {
 
 	var (
-		req_err error
-		resp_err error
-		handler_resp_err error
-		return_err error = nil
-		template_list interface{} = nil
+		req_err              error
+		resp_err             error
+		handler_resp_err     error
+		return_err           error         = nil
+		template_list        interface{}   = nil
 		return_template_list []interface{} = nil
-		templates_list_url strings.Builder
+		templates_list_url   strings.Builder
 	)
 	resp := &http.Response{}
 	req := &http.Request{}
 	templates_list_url.WriteString(api.URL)
 	templates_list_url.WriteString("template/?enterprise__slug=")
 	templates_list_url.WriteString(enterprise_slug)
+	logger := loggerCreate("getTemplatesList.log")
 
+	logger.Println("templates_list_url.String() = ", templates_list_url.String())
 	req, req_err = http.NewRequest("GET",
 		templates_list_url.String(),
 		nil)
-	if req_err==nil{
-		resp, resp_err = clientTooler.Client.Do(api,req)
-		resp = resp
-		if resp_err==nil {
-			template_list,handler_resp_err = clientTooler.Client.HandleResponse(resp,
+	req.Header.Add("authorization", "Token "+api.Token)
+	logger.Println("req = ", req)
+	logger.Println("req_err = ", req_err)
+	if req_err == nil {
+		resp, resp_err = clientTooler.Client.Do(api, req)
+		logger.Println("resp = ", resp)
+		if resp_err == nil {
+			template_list, handler_resp_err = clientTooler.Client.HandleResponse(resp,
 				http.StatusOK,
 				"application/json")
 			if template_list != nil {
 				return_template_list = template_list.([]interface{})
 			}
-			if handler_resp_err!=nil{
+			if handler_resp_err != nil {
 				return_err = handler_resp_err
 			}
 		} else {
@@ -126,7 +131,7 @@ func (client HttpClienter) HandleResponse(resp *http.Response,
 	expectedBodyFormat string) (interface{}, error) {
 
 	var (
-		resp_err         error = nil
+		resp_err         error       = nil
 		responseBody     interface{} = nil
 		contentType      string
 		bodyBytes        []byte
@@ -169,7 +174,8 @@ func (client HttpClienter) HandleResponse(resp *http.Response,
 		}
 	} else {
 		resp_err = errors.New("Wrong response status code, \n\r expected :" +
-			strconv.Itoa(expectedCode) + "\n\r got :" + strconv.Itoa(resp.StatusCode))
+			strconv.Itoa(expectedCode) + "\n\r got :" + strconv.Itoa(resp.StatusCode) +
+			"\n\rFull response status : " + resp.Status)
 	}
 	return responseBody, resp_err
 }

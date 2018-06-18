@@ -68,12 +68,12 @@ func TestGetTemplatesList(t *testing.T) {
 	client_tooler.Client = HttpClienter{}
 	fake_client_tooler := ClientTooler{}
 	apiTooler := APITooler{}
-	api := apiTooler.New("token","url")
+	api := apiTooler.New("token", "url")
 
 	for _, test_case := range test_cases {
 		fake_client_tooler.Client = test_case.TC_clienter
 		templates_list, err = client_tooler.Client.GetTemplatesList(&fake_client_tooler,
-			test_case.Enterprise_slug,api)
+			test_case.Enterprise_slug, api)
 
 		switch {
 		case err == nil || test_case.Error == nil:
@@ -152,7 +152,8 @@ func TestHandleResponse(t *testing.T) {
 			http.StatusInternalServerError,
 			"text/html",
 			nil,
-			errors.New("Wrong response status code, \n\r expected :500\n\r got :200"),
+			errors.New("Wrong response status code, \n\r expected :500\n\r got :200" +
+				"\n\rFull response status : 200 OK"),
 		},
 		{
 			6,
@@ -160,7 +161,8 @@ func TestHandleResponse(t *testing.T) {
 			http.StatusInternalServerError,
 			"text/html",
 			nil,
-			errors.New("Wrong response status code, \n\r expected :500\n\r got :200"),
+			errors.New("Wrong response status code, \n\r expected :500\n\r got :200" +
+				"\n\rFull response status : 200 OK"),
 		},
 		{
 			7,

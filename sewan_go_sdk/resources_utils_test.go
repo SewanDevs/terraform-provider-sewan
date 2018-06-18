@@ -4,8 +4,40 @@ import (
 	"errors"
 	"net/http"
 	//"reflect"
+	"github.com/hashicorp/terraform/helper/schema"
 	"testing"
 )
+
+//------------------------------------------------------------------------------
+func TestResourceInstanceCreate(t *testing.T) {
+	test_cases := []struct {
+		Id              int
+		d               *schema.ResourceData
+		TC_clienter     Clienter
+		Enterprise_slug string
+		Resource_type   string
+		Error           error
+		VmInstance      interface{}
+		VmName          string
+	}{
+		{
+			1,
+			resource_vm().TestResourceData(),
+			GetTemplatesList_Sucess_HttpClienterFake{},
+			ENTERPRISE_SLUG,
+			VM_RESOURCE_TYPE,
+			nil,
+			vmInstanceFake(),
+			FAKE_VM_INSTANCE_NAME,
+		},
+	}
+
+	for _, test_case := range test_cases {
+
+		t.Errorf("TC %d ",
+			test_case.Id)
+	}
+}
 
 //------------------------------------------------------------------------------
 func TestvdcInstanceCreate(t *testing.T) {

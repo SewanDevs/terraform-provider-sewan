@@ -5,6 +5,7 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 	"io/ioutil"
 	"net/http"
+	"reflect"
 	"strings"
 )
 
@@ -17,28 +18,40 @@ type VDC struct {
 	Dynamic_field string        `json:"dynamic_field"`
 }
 
+type VM_DISK struct {
+	Name   string `json:"name"`
+	Size   int    `json:"size"`
+	V_disk string    `json:"v_disk"`
+}
+
+type VM_NIC struct {
+	Vlan       string `json:"vlan"`
+	Mac_adress string `json:"mac_adress"`
+	Connected  bool   `json:"connected"`
+}
+
 type VM struct {
-	Name              string        `json:"name"`
-	Enterprise        string        `json:"enterprise"`
-	Template          string        `json:"template"`
-	State             string        `json:"state"`
-	OS                string        `json:"os"`
-	RAM               int           `json:"ram"`
-	CPU               int           `json:"cpu"`
-	Disks             []interface{} `json:"disks"`
-	Nics              []interface{} `json:"nics"`
-	Vdc               string        `json:"vdc"`
-	Boot              string        `json:"boot"`
-	Vdc_resource_disk string        `json:"vdc_resource_disk"`
-	Slug              string        `json:"slug"`
-	Token             string        `json:"token"`
-	Backup            string        `json:"backup"`
-	Disk_image        string        `json:"disk_image"`
-	Platform_name     string        `json:"platform_name"`
-	Backup_size       string        `json:"backup_size"`
-	Comment           string        `json:"comment"`
-	Outsourcing       string        `json:"outsourcing"`
-	Dynamic_field     string        `json:"dynamic_field"`
+	Name              string    `json:"name"`
+	Enterprise        string    `json:"enterprise"`
+	Template          string    `json:"template"`
+	State             string    `json:"state"`
+	OS                string    `json:"os"`
+	RAM               int       `json:"ram"`
+	CPU               int       `json:"cpu"`
+	Disks             []interface{}`json:"disks"`
+	Nics              []interface{}  `json:"nics"`
+	Vdc               string    `json:"vdc"`
+	Boot              string    `json:"boot"`
+	Vdc_resource_disk string    `json:"vdc_resource_disk"`
+	Slug              string    `json:"slug"`
+	Token             string    `json:"token"`
+	Backup            string    `json:"backup"`
+	Disk_image        string    `json:"disk_image"`
+	Platform_name     string    `json:"platform_name"`
+	Backup_size       string    `json:"backup_size"`
+	Comment           string    `json:"comment"`
+	Outsourcing       string    `json:"outsourcing"`
+	Dynamic_field     string    `json:"dynamic_field"`
 }
 
 func vdcInstanceCreate(d *schema.ResourceData,
@@ -59,15 +72,19 @@ func vmInstanceCreate(d *schema.ResourceData,
 	api *API) (VM, error) {
 
 	var (
-		vm               VM
-		getTemplateError error = nil
-		template string = d.Get("template").(string)
+		vm                      VM
+		getTemplateError        error  = nil
+		templateValidationError error  = nil
+		instanceCreationError   error  = nil
+		template                string = d.Get("template").(string)
+		enterprise              string = d.Get("enterprise").(string)
+		//templateVMInstance map[string]interface{} = nil
 	)
 	logger := loggerCreate("vmInstanceCreate.log")
 
 	if template != "" {
 		var templateList []interface{}
-		logger.Println("template =", d.Get("template"))
+		logger.Println("template =", template)
 		//1 get template list
 		// i : get enterprise from VDC field :
 		//	enterprise_slug = d.Get("depends_on").enterprise
@@ -78,15 +95,65 @@ func vmInstanceCreate(d *schema.ResourceData,
 		//}
 		templateList,
 			getTemplateError = clientTooler.Client.GetTemplatesList(clientTooler,
-			template,api)
+			enterprise, api)
 		logger.Println("templateList =", templateList)
+		logger.Println("getTemplateError =", getTemplateError)
 
 		//2 validate option template is in the list
+		if getTemplateError == nil {
+			//for templateConf := range templateList{
+			//	if templateConf.Name == template {
+			//		logger.Println("content, template = ", template)
+			//	}
+			//}
+
+			for i := 0; i < len(templateList); i++ {
+				logger.Println("\n\n###################")
+				logger.Println("content, template = ", templateList[i])
+				logger.Println("")
+				logger.Println("reflect.TypeOf(templateList[i]) : ",
+					reflect.TypeOf(templateList[i]))
+				switch reflect.TypeOf(templateList[i]).Kind().String() {
+				case reflect.Map.String():
+					// Postula template name are unique
+					var templateName string = templateList[i].(map[string]interface{})["name"].(string)
+					logger.Println("content, templateList[i].Name = ",
+						templateList[i].(map[string]interface{})["name"])
+					if templateName == template {
+						logger.Println("---------VALID TEMPLATE-------")
+						//templateVMInstance = templateList[i].(map[string]interface{})
+
+						//pseudo code
+						//for elem in VM{}
+						//
+						//  case d.Get(Elem)!=nil THEN vm.Elem = template.Elem
+						//
+						//  case d.Get(Elem)==nil vm.Elem = templateVMInstance.Elem
+						//	case nics || disks
+						//		for Elem1 in d.Get("disks or nics")
+						//			for Elem2 in templateVMInstance(disks or nics)
+						//  case Elem1.Name!=Elem2.Name THEN vm.add(Elem1&2)
+						//  case Elem1.Name==Elem2.Name THEN vm.add(Elem1)
+
+					} else {
+
+					}
+				default:
+				}
+			}
+
+		} else {
+			templateValidationError = getTemplateError
+		}
 
 		//3 Create a VM instance with template paramaters
 		//		for nics and disk, add paramater disks and nics to template's one
 		//		for other parameter, replace template param with .tf file one's except for OS
+		if templateValidationError == nil {
 
+		} else {
+			instanceCreationError = templateValidationError
+		}
 		vm = VM{}
 
 	} else {
@@ -114,7 +181,7 @@ func vmInstanceCreate(d *schema.ResourceData,
 			Dynamic_field:     d.Get("dynamic_field").(string),
 		}
 	}
-	return vm, getTemplateError
+	return vm, instanceCreationError
 }
 
 func (apier AirDrumResources_Apier) ResourceInstanceCreate(d *schema.ResourceData,

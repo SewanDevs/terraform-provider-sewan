@@ -4,6 +4,48 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
+func resource_vm_disk() *schema.Resource {
+	return &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"name": &schema.Schema{
+				Type:     schema.TypeString,
+				Required: true,
+			},
+			"size": &schema.Schema{
+				Type:     schema.TypeInt,
+				Required: true,
+			},
+			"v_disk": &schema.Schema{
+				Type:     schema.TypeString,
+				Required: true,
+			},
+			"slug": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+		},
+	}
+}
+
+func resource_vm_nic() *schema.Resource {
+	return &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"vlan": &schema.Schema{
+				Type:     schema.TypeString,
+				Required: true,
+			},
+			"mac_adress": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"connected": &schema.Schema{
+				Type:     schema.TypeBool,
+				Required: true,
+			},
+		},
+	}
+}
+
 func resource_vm() *schema.Resource {
 	return &schema.Resource{
 		Create: resource_vm_create,
@@ -17,7 +59,7 @@ func resource_vm() *schema.Resource {
 			},
 			"enterprise": &schema.Schema{
 				Type:     schema.TypeString,
-				Required: true,
+				Optional: true,
 			},
 			"template": &schema.Schema{
 				Type:     schema.TypeString,
@@ -42,46 +84,12 @@ func resource_vm() *schema.Resource {
 			"disks": &schema.Schema{
 				Type:     schema.TypeList,
 				Optional: true,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"name": &schema.Schema{
-							Type:     schema.TypeString,
-							Required: true,
-						},
-						"size": &schema.Schema{
-							Type:     schema.TypeInt,
-							Required: true,
-						},
-						"v_disk": &schema.Schema{
-							Type:     schema.TypeString,
-							Required: true,
-						},
-						"slug": &schema.Schema{
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-					},
-				},
+				Elem:     resource_vm_disk(),
 			},
 			"nics": &schema.Schema{
 				Type:     schema.TypeList,
 				Optional: true,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"vlan": &schema.Schema{
-							Type:     schema.TypeString,
-							Required: true,
-						},
-						"mac_adress": &schema.Schema{
-							Type:     schema.TypeString,
-							Computed: true,
-						},
-						"connected": &schema.Schema{
-							Type:     schema.TypeBool,
-							Optional: true,
-						},
-					},
-				},
+				Elem:     resource_vm_nic(),
 			},
 			"vdc": &schema.Schema{
 				Type:     schema.TypeString,

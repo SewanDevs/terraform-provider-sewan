@@ -2,6 +2,7 @@ package sewan
 
 import (
 	"github.com/hashicorp/terraform/helper/schema"
+	sdk "terraform-provider-sewan/sewan_go_sdk"
 )
 
 func resource_vm_disk() *schema.Resource {
@@ -15,11 +16,15 @@ func resource_vm_disk() *schema.Resource {
 				Type:     schema.TypeInt,
 				Required: true,
 			},
-			"v_disk": &schema.Schema{
+			"storage_class": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
 			},
 			"slug": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"v_disk": &schema.Schema{
 				Type:     schema.TypeString,
 				Computed: true,
 			},
@@ -34,7 +39,7 @@ func resource_vm_nic() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"mac_adress": &schema.Schema{
+			"mac_address": &schema.Schema{
 				Type:     schema.TypeString,
 				Computed: true,
 			},
@@ -99,7 +104,7 @@ func resource_vm() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"vdc_resource_disk": &schema.Schema{
+			"storage_class": &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
 			},
@@ -124,7 +129,7 @@ func resource_vm() *schema.Resource {
 				Computed: true,
 			},
 			"backup_size": &schema.Schema{
-				Type:     schema.TypeString,
+				Type:     schema.TypeInt,
 				Computed: true,
 			},
 			"comment": &schema.Schema{
@@ -154,7 +159,7 @@ func resource_vm_create(d *schema.ResourceData, m interface{}) error {
 		sewan)
 
 	if creationError == nil {
-		creationError = Update_local_resource_state(apiCreationResponse, d)
+		creationError = sdk.Update_local_resource_state(apiCreationResponse, d)
 	}
 	return creationError
 }
@@ -163,18 +168,18 @@ func resource_vm_read(d *schema.ResourceData, m interface{}) error {
 	var readError error
 	readError = nil
 	var resource_exists bool
-	var apiCreationResponse map[string]interface{}
+	var apiReadResponse map[string]interface{}
 	sewan := m.(*Client).sewan
-	readError, apiCreationResponse, resource_exists = m.(*Client).sewan_apiTooler.Api.Read_resource(d,
+	readError, apiReadResponse, resource_exists = m.(*Client).sewan_apiTooler.Api.Read_resource(d,
 		m.(*Client).sewan_clientTooler,
 		VM_RESOURCE_TYPE,
 		sewan)
 
 	if resource_exists == false {
-		Delete_resource(d)
+		sdk.Delete_terraform_resource(d)
 	} else {
 		if readError == nil {
-			readError = Update_local_resource_state(apiCreationResponse, d)
+			readError = sdk.Update_local_resource_state(apiReadResponse, d)
 		}
 	}
 	return readError
@@ -200,7 +205,7 @@ func resource_vm_delete(d *schema.ResourceData, m interface{}) error {
 		VM_RESOURCE_TYPE,
 		sewan)
 	if deleteError == nil {
-		Delete_resource(d)
+		sdk.Delete_terraform_resource(d)
 	}
 	return deleteError
 }

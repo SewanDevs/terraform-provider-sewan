@@ -30,9 +30,9 @@ func (apier FakeAirDrumResource_APIer) ValidateResourceType(resourceType string)
 func (apier FakeAirDrumResource_APIer) ResourceInstanceCreate(d *schema.ResourceData,
 	clientTooler *ClientTooler,
 	resourceType string,
-	api *API) (error, interface{}, string) {
+	api *API) (error, interface{}) {
 
-	return nil, "", ""
+	return nil, ""
 }
 
 func (apier FakeAirDrumResource_APIer) Get_resource_creation_url(api *API,

@@ -21,176 +21,310 @@ const (
 	VDC_RESOURCE_TYPE       = "vdc"
 	WRONG_RESOURCE_TYPE     = "a_non_supported_resource_type"
 	ENTERPRISE_SLUG         = "sewan-rd-cloud-beta"
-	FAKE_VM_INSTANCE_NAME = "fake vm instance name"
 )
 
 var (
-	TEST_VDC_CREATION_MAP = map[string]interface{}{
-		"name":       "Unit test vdc",
+	VDC_CREATION_MAP = map[string]interface{}{
+		"name":       "Unit test vdc resource",
 		"enterprise": "sewan-rd-cloud-beta",
 		"datacenter": "dc1",
 		"vdc_resources": []interface{}{
 			map[string]interface{}{
-				"resource": "sewan-rd-cloud-beta-mono-ram",
-				"total":    "20",
+				"resource": "ram",
+				"total":    20,
 			},
 			map[string]interface{}{
-				"resource": "sewan-rd-cloud-beta-mono-cpu",
-				"total":    "1",
+				"resource": "cpu",
+				"total":    1,
 			},
 			map[string]interface{}{
-				"resource": "sewan-rd-cloud-beta-mono-storage_enterprise",
-				"total":    "10",
+				"resource": "storage_enterprise",
+				"total":    10,
 			},
 			map[string]interface{}{
-				"resource": "sewan-rd-cloud-beta-mono-storage_performance",
-				"total":    "10",
+				"resource": "storage_performance",
+				"total":    10,
 			},
 			map[string]interface{}{
-				"resource": "sewan-rd-cloud-beta-mono-storage_high_performance",
-				"total":    "10",
+				"resource": "storage_high_performance",
+				"total":    10,
 			},
 		},
 	}
-	TEST_VDC_READ_RESPONSE_MAP = map[string]interface{}{
+	VDC_READ_RESPONSE_MAP = map[string]interface{}{
 		"name":       "Unit test vdc",
 		"enterprise": "sewan-rd-cloud-beta",
 		"datacenter": "dc1",
 		"vdc_resources": []interface{}{
 			map[string]interface{}{
-				"resource": "sewan-rd-cloud-beta-mono-ram",
+				"resource": "ram",
 				"used":     "0",
 				"total":    "20",
-				"slug":     "sewan-rd-cloud-beta-dc1-vdc_te-sewan-rd-cloud-beta-mono-ram",
+				"slug":     "sewan-rd-cloud-beta-dc1-vdc_te-ram",
 			},
 			map[string]interface{}{
-				"resource": "sewan-rd-cloud-beta-mono-cpu",
+				"resource": "cpu",
 				"used":     "0",
 				"total":    "1",
-				"slug":     "sewan-rd-cloud-beta-dc1-vdc_te-sewan-rd-cloud-beta-mono-cpu",
+				"slug":     "sewan-rd-cloud-beta-dc1-vdc_te-cpu",
 			},
 			map[string]interface{}{
-				"resource": "sewan-rd-cloud-beta-mono-storage_enterprise",
+				"resource": "storage_enterprise",
 				"used":     "0",
 				"total":    "10",
-				"slug":     "sewan-rd-cloud-beta-dc1-vdc_te-sewan-rd-cloud-beta-mono-storage_enterprise",
+				"slug":     "sewan-rd-cloud-beta-dc1-vdc_te-storage_enterprise",
 			},
 			map[string]interface{}{
-				"resource": "sewan-rd-cloud-beta-mono-storage_performance",
+				"resource": "storage_performance",
 				"used":     "0",
 				"total":    "10",
-				"slug":     "sewan-rd-cloud-beta-dc1-vdc_te-sewan-rd-cloud-beta-mono-storage_performance",
+				"slug":     "sewan-rd-cloud-beta-dc1-vdc_te-storage_performance",
 			},
 			map[string]interface{}{
-				"resource": "sewan-rd-cloud-beta-mono-storage_high_performance",
+				"resource": "storage_high_performance",
 				"used":     "0",
 				"total":    "10",
-				"slug":     "sewan-rd-cloud-beta-dc1-vdc_te-sewan-rd-cloud-beta-mono-storage_high_performance",
+				"slug":     "sewan-rd-cloud-beta-dc1-vdc_te-storage_high_performance",
 			},
 		},
 		"slug":          "sewan-rd-cloud-beta-dc1-vdc_te",
 		"dynamic_field": "",
 	}
-	TEST_VM_MAP = map[string]interface{}{
-		"name":       "Unit test resource",
-		"enterprise": "sewan-rd-cloud-beta",
-		"template":   "",
-		"state":      "UP",
-		"os":         "Debian",
-		"ram":        "8",
-		"cpu":        "4",
+	NO_TEMPLATE_VM_MAP = map[string]interface{}{
+		"name":  "Unit test no template vm resource",
+		"state": "UP",
+		"os":    "Debian",
+		"ram":   8,
+		"cpu":   4,
 		"disks": []interface{}{
 			map[string]interface{}{
-				"name":   "disk 1",
-				"size":   "24",
-				"v_disk": "v_disk",
-				"slug":   "slug",
+				"name":          "disk 1",
+				"size":          24,
+				"storage_class": "storage_class",
 			},
 		},
 		"nics": []interface{}{
 			map[string]interface{}{
-				"vlan":       "vlan 1 update",
-				"mac_adress": "24",
-				"connected":  "true",
+				"vlan":        "vlan 1 update",
+				"mac_address": "00:21:21:21:21:21",
+				"connected":   true,
 			},
 			map[string]interface{}{
-				"vlan":       "vlan 2",
-				"mac_adress": "24",
-				"connected":  "true",
+				"vlan":        "vlan 2",
+				"mac_address": "00:21:21:21:21:21",
+				"connected":   true,
 			},
 		},
-		"vdc":               "vdc",
-		"boot":              "on disk",
-		"vdc_resource_disk": "vdc_disk",
-		"slug":              "42",
-		"token":             "424242",
-		"backup":            "backup-no_backup",
-		"disk_image":        "",
-		"platform_name":     "42",
-		"backup_size":       "42",
-		"comment":           "42",
-		"outsourcing":       "42",
-		"dynamic_field":     "42",
+		"vdc":           "vdc",
+		"boot":          "on disk",
+		"storage_class": "storage_enterprise",
+		"slug":          "42",
+		"token":         "424242",
+		"backup":        "backup_no_backup",
+		"disk_image":    "",
+		"platform_name": "42",
+		"backup_size":   42,
+		"comment":       "42",
+		"outsourcing":   "42",
+		"dynamic_field": "42",
+	}
+	EXISTING_TEMPLATE_NO_ADDITIONAL_NIC_OR_DISK_VM_MAP = map[string]interface{}{
+		"name":          "Unit test template no add nics nor discs vm resource",
+		"enterprise":    "sewan-rd-cloud-beta",
+		"template":      "centos7-rd-DC1",
+		"state":         "UP",
+		"vdc":           "vdc",
+		"boot":          "on disk",
+		"storage_class": "storage_enterprise",
+		"slug":          "42",
+		"token":         "424242",
+		"backup":        "backup_no_backup",
+	}
+	EXISTING_TEMPLATE_WITH_ADDITIONAL_AND_MODIFIED_NICS_AND_DISKS_VM_MAP = map[string]interface{}{
+		"name":       "EXISTING_TEMPLATE_WITH_ADDITIONAL_AND_MODIFIED_NICS_AND_DISKS_VM_MAP",
+		"enterprise": "sewan-rd-cloud-beta",
+		"template":   "centos7-rd-DC1",
+		"state":      "UP",
+		"os":         "Debian",
+		"ram":        8,
+		"cpu":        4,
+		"disks": []interface{}{
+			map[string]interface{}{
+				"name":          "disk 1",
+				"size":          24,
+				"storage_class": "storage_class",
+			},
+		},
+		"nics": []interface{}{
+			map[string]interface{}{
+				"vlan":        "non template vlan 1",
+				"mac_address": "00:21:21:21:21:21",
+				"connected":   true,
+			},
+			map[string]interface{}{
+				"vlan":        "non template vlan 2",
+				"mac_address": "00:21:21:21:21:22",
+				"connected":   true,
+			},
+		},
+		"vdc":           "vdc",
+		"boot":          "on disk",
+		"storage_class": "storage_enterprise",
+		"slug":          "42",
+		"token":         "424242",
+		"backup":        "backup_no_backup",
+		"disk_image":    "",
+		"platform_name": "42",
+		"backup_size":   42,
+		"comment":       "42",
+		"outsourcing":   "42",
+		"dynamic_field": "42",
+	}
+	EXISTING_TEMPLATE_WITH_MODIFIED_NIC_AND_DISK_VM_MAP = map[string]interface{}{
+		"name":       "EXISTING_TEMPLATE_WITH_MODIFIED_NIC_AND_DISK_VM_MAP",
+		"enterprise": "sewan-rd-cloud-beta",
+		"template":   "centos7-rd-DC1",
+		"state":      "UP",
+		"os":         "Debian",
+		"ram":        8,
+		"cpu":        4,
+		"disks": []interface{}{
+			map[string]interface{}{
+				"name":          "disk-centos7-rd-DC1-1",
+				"size":          24,
+				"storage_class": "storage_class",
+				"slug":          "disk-centos7-rd-dc1-1",
+			},
+		},
+		"nics": []interface{}{
+			map[string]interface{}{
+				"mac_address": "00:21:21:21:21:22",
+				"connected":   true,
+				"vlan":        "sewanrd-mgt-th3",
+			},
+			map[string]interface{}{
+				"vlan":        "sewanrd-priv-th3",
+				"mac_address": "00:21:21:21:21:21",
+				"connected":   true,
+			},
+		},
+		"vdc":           "vdc",
+		"boot":          "on disk",
+		"storage_class": "storage_enterprise",
+		"slug":          "42",
+		"token":         "424242",
+		"backup":        "backup_no_backup",
+		"disk_image":    "",
+		"platform_name": "42",
+		"backup_size":   42,
+		"comment":       "42",
+		"outsourcing":   "42",
+		"dynamic_field": "42",
+	}
+	NON_EXISTING_TEMPLATE_VM_MAP = map[string]interface{}{
+		"name":          "windows95 vm",
+		"enterprise":    "sewan-rd-cloud-beta",
+		"template":      "windows95",
+		"state":         "UP",
+		"ram":           8,
+		"cpu":           4,
+		"vdc":           "vdc",
+		"boot":          "on disk",
+		"storage_class": "storage_enterprise",
+		"slug":          "42",
+		"token":         "424242",
+		"backup":        "backup_no_backup",
+		"disk_image":    "",
 	}
 	TEMPLATES_LIST = []interface{}{
 		map[string]interface{}{
-			"id":         "40",
+			"id":         40,
 			"name":       "CentOS 7 Classique",
 			"slug":       "TPL-CentOS7-x64-20Go-1vCPU-1Go-2GoS",
-			"ram":        "1",
-			"cpu":        "1",
+			"ram":        1,
+			"cpu":        1,
 			"os":         "CentOS",
 			"enterprise": "sewan-rd-cloud-beta",
 			"disks": []interface{}{
 				map[string]interface{}{
-					"name":   "/",
-					"size":   "20",
-					"v_disk": "sewan-rd-cloud-beta-mono-storage_enterprise",
-					"slug":   "centos7-classic-disk1",
+					"name":          "/",
+					"size":          20,
+					"storage_class": "storage_enterprise",
+					"slug":          "centos7-classic-disk1",
 				},
 			},
 			"datacenter":    "dc2",
 			"nics":          []interface{}{},
 			"login":         "",
 			"password":      "",
-			"dynamic_field": "nil",
+			"dynamic_field": "",
 		},
 		map[string]interface{}{
-			"id":         "41",
+			"id":         82,
+			"name":       "centos7-rd-DC1",
+			"slug":       "centos7-rd-dc1",
+			"ram":        1,
+			"cpu":        1,
+			"os":         "CentOS",
+			"enterprise": "sewan-rd-cloud-beta",
+			"disks": []interface{}{
+				map[string]interface{}{"name": "disk-centos7-rd-DC1-1",
+					"size":          20,
+					"storage_class": "storage_enterprise",
+					"slug":          "disk-centos7-rd-dc1-1",
+				},
+			},
+			"datacenter": "dc1",
+			"nics": []interface{}{
+				map[string]interface{}{"vlan": "sewanrd-mgt-th3",
+					"mac_address": "00:50:56:21:7c:ab",
+					"connected":   true,
+				},
+				map[string]interface{}{"vlan": "sewanrd-priv-th3",
+					"mac_address": "00:50:56:21:7c:ac",
+					"connected":   true,
+				},
+			},
+			"login":         "",
+			"password":      "",
+			"dynamic_field": "",
+		},
+		map[string]interface{}{
+			"id":         41,
 			"name":       "Debian 8 Classique",
 			"slug":       "TPL-Debian8-x64-20Go-1vCPU-1Go-2GoS",
-			"ram":        "1",
-			"cpu":        "1",
+			"ram":        1,
+			"cpu":        1,
 			"os":         "Debian",
 			"enterprise": "sewan-rd-cloud-beta",
 			"disks": []interface{}{
 				map[string]interface{}{
-					"name":   "/",
-					"size":   "20",
-					"v_disk": "sewan-rd-cloud-beta-mono-storage_enterprise",
-					"slug":   "debian-8-classic-disk-1",
+					"name":          "/",
+					"size":          20,
+					"storage_class": "storage_enterprise",
+					"slug":          "debian-8-classic-disk-1",
 				},
 			},
 			"datacenter":    "dc2",
 			"nics":          []interface{}{},
 			"login":         "",
 			"password":      "",
-			"dynamic_field": "nil",
+			"dynamic_field": "",
 		},
 		map[string]interface{}{
-			"id":         "43",
+			"id":         43,
 			"name":       "tpl-CentOS7 R&D",
 			"slug":       "tpl-centos7-rd",
-			"ram":        "1",
-			"cpu":        "1",
+			"ram":        1,
+			"cpu":        1,
 			"os":         "CentOS",
 			"enterprise": "sewan-rd-cloud-beta",
 			"disks": []interface{}{
 				map[string]interface{}{
-					"name":   "disk-tpl-CentOS7 R&D-1",
-					"size":   "20",
-					"v_disk": "sewan-rd-cloud-beta-mono-storage_enterprise",
-					"slug":   "disk-tpl-centos7-rd-1",
+					"name":          "disk-tpl-CentOS7 R&D-1",
+					"size":          20,
+					"storage_class": "storage_enterprise",
+					"slug":          "disk-tpl-centos7-rd-1",
 				},
 			},
 			"datacenter": "dc2",
@@ -198,54 +332,54 @@ var (
 				map[string]interface{}{
 					"vlan":        "sewanrd-mgt-tc3",
 					"mac_address": "00:50:56:00:00:23",
-					"connected":   "true",
+					"connected":   true,
 				},
 				map[string]interface{}{
 					"vlan":        "sewanrd-priv-tc3",
 					"mac_address": "00:50:56:00:00:24",
-					"connected":   "true",
+					"connected":   true,
 				},
 			},
-			"login":         "nil",
-			"password":      "nil",
-			"dynamic_field": "nil",
+			"login":         nil,
+			"password":      nil,
+			"dynamic_field": nil,
 		},
 		map[string]interface{}{
-			"id":         "58",
+			"id":         58,
 			"name":       "Template-Windows7",
 			"slug":       "template-windows7",
-			"ram":        "1",
-			"cpu":        "1",
+			"ram":        1,
+			"cpu":        1,
 			"os":         "Windows Serveur 64bits",
 			"enterprise": "sewan-rd-cloud-beta",
 			"disks": []interface{}{
 				map[string]interface{}{
-					"name":   "disk-Template-Windows7-1",
-					"size":   "60",
-					"v_disk": "sewan-rd-cloud-beta-mono-storage_enterprise",
-					"slug":   "disk-template-windows7-1",
+					"name":          "disk-Template-Windows7-1",
+					"size":          60,
+					"storage_class": "storage_enterprise",
+					"slug":          "disk-template-windows7-1",
 				},
 			},
 			"datacenter":    "dc2",
 			"nics":          []interface{}{},
-			"login":         "nil",
-			"password":      "nil",
-			"dynamic_field": "nil",
+			"login":         nil,
+			"password":      nil,
+			"dynamic_field": nil,
 		},
 		map[string]interface{}{
-			"id":         "69",
+			"id":         69,
 			"name":       "debian9-rd",
 			"slug":       "debian9-rd",
-			"ram":        "1",
-			"cpu":        "1",
+			"ram":        1,
+			"cpu":        1,
 			"os":         "Debian",
 			"enterprise": "sewan-rd-cloud-beta",
 			"disks": []interface{}{
 				map[string]interface{}{
-					"name":   "disk-debian9-rd-1",
-					"size":   "10",
-					"v_disk": "sewan-rd-cloud-beta-mono-storage_enterprise",
-					"slug":   "disk-debian9-rd-1",
+					"name":          "disk-debian9-rd-1",
+					"size":          10,
+					"storage_class": "storage_enterprise",
+					"slug":          "disk-debian9-rd-1",
 				},
 			},
 			"datacenter": "dc2",
@@ -253,20 +387,166 @@ var (
 				map[string]interface{}{
 					"vlan":        "sewanrd-mgt-tc3",
 					"mac_address": "00:50:56:00:01:de",
-					"connected":   "true",
+					"connected":   true,
 				},
 				map[string]interface{}{
 					"vlan":        "sewanrd-priv-tc3",
 					"mac_address": "00:50:56:00:01:df",
-					"connected":   "true",
+					"connected":   true,
 				},
 			},
-			"login":         "nil",
-			"password":      "nil",
-			"dynamic_field": "nil",
+			"login":         nil,
+			"password":      nil,
+			"dynamic_field": nil,
 		},
 	}
+	TEST_UPDATE_VM_MAP = map[string]interface{}{
+		"id":    "unit test vm",
+		"name":  "Unit test vm",
+		"state": "DOWN",
+		"os":    "CentOS",
+		"ram":   16,
+		"cpu":   8,
+		"disks": []interface{}{
+			map[string]interface{}{
+				"name":          "disk 1 update",
+				"size":          42,
+				"storage_class": "storage_class update",
+				"slug":          "slug update",
+			},
+			map[string]interface{}{
+				"name":          "disk 2 update",
+				"size":          42,
+				"storage_class": "storage_class update",
+				"slug":          "slug update",
+			},
+		},
+		"nics": []interface{}{
+			map[string]interface{}{
+				"vlan":        "vlan 1 update",
+				"mac_address": "42",
+				"connected":   false,
+			},
+		},
+		"vdc":           "vdc update",
+		"boot":          "on disk update",
+		"storage_class": "storage_enterprise update",
+		"slug":          "42 update",
+		"token":         "424242 update",
+		"backup":        "backup_no_backup update",
+		"disk_image":    " update",
+		"platform_name": "",
+		"backup_size":   42,
+		"comment":       "",
+		"outsourcing":   "42 update",
+		"dynamic_field": "42 update",
+	}
+	TEST_UPDATE_VM_MAP_INTID = map[string]interface{}{
+		"id":    1212,
+		"name":  "Unit test vm",
+		"state": "DOWN",
+		"os":    "CentOS",
+		"ram":   16,
+		"cpu":   8,
+		"disks": []interface{}{
+			map[string]interface{}{
+				"name":          "disk 1 update",
+				"size":          42,
+				"storage_class": "storage_class update",
+				"slug":          "slug update",
+			},
+			map[string]interface{}{
+				"name":          "disk 2 update",
+				"size":          42,
+				"storage_class": "storage_class update",
+				"slug":          "slug update",
+			},
+		},
+		"nics": []interface{}{
+			map[string]interface{}{
+				"vlan":        "vlan 1 update",
+				"mac_address": "42",
+				"connected":   false,
+			},
+		},
+		"vdc":           "vdc update",
+		"boot":          "on disk update",
+		"storage_class": "storage_enterprise update",
+		"slug":          "42 update",
+		"token":         "424242 update",
+		"backup":        "backup_no_backup update",
+		"disk_image":    " update",
+		"platform_name": "",
+		"backup_size":   43,
+		"comment":       "",
+		"outsourcing":   "42 update",
+		"dynamic_field": "42 update",
+	}
+	TEST_UPDATE_VM_MAP_FLOATID = map[string]interface{}{
+		"id":    121212.12,
+		"name":  "Unit test vm",
+		"state": "DOWN",
+		"os":    "CentOS",
+		"ram":   16,
+		"cpu":   8,
+		"disks": []interface{}{
+			map[string]interface{}{
+				"name":          "disk 1 update",
+				"size":          42,
+				"storage_class": "storage_class update",
+				"slug":          "slug update",
+			},
+			map[string]interface{}{
+				"name":          "disk 2 update",
+				"size":          42,
+				"storage_class": "storage_class update",
+				"slug":          "slug update",
+			},
+		},
+		"nics": []interface{}{
+			map[string]interface{}{
+				"vlan":        "vlan 1 update",
+				"mac_address": "42",
+				"connected":   false,
+			},
+		},
+		"vdc":           "vdc update",
+		"boot":          "on disk update",
+		"storage_class": "storage_enterprise update",
+		"slug":          "42 update",
+		"token":         "424242 update",
+		"backup":        "backup_no_backup update",
+		"disk_image":    " update",
+		"platform_name": "",
+		"backup_size":   42,
+		"comment":       "",
+		"outsourcing":   "42 update",
+		"dynamic_field": "42 update",
+	}
 )
+
+func resource_vdc_resource() *schema.Resource {
+	return &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"resource": &schema.Schema{
+				Type:     schema.TypeString,
+				Required: true,
+			},
+			"used": &schema.Schema{
+				Type:     schema.TypeInt,
+				Computed: true,
+			},
+			"total": &schema.Schema{
+				Type:     schema.TypeInt,
+				Required: true,
+			},
+			"slug": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+		},
+	}
+}
 
 func resource_vdc() *schema.Resource {
 	return &schema.Resource{
@@ -286,26 +566,7 @@ func resource_vdc() *schema.Resource {
 			"vdc_resources": &schema.Schema{
 				Type:     schema.TypeList,
 				Optional: true,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"resource": &schema.Schema{
-							Type:     schema.TypeString,
-							Required: true,
-						},
-						"used": &schema.Schema{
-							Type:     schema.TypeInt,
-							Computed: true,
-						},
-						"total": &schema.Schema{
-							Type:     schema.TypeInt,
-							Required: true,
-						},
-						"slug": &schema.Schema{
-							Type:     schema.TypeInt,
-							Computed: true,
-						},
-					},
-				},
+				Elem:     resource_vdc_resource(),
 			},
 			"slug": &schema.Schema{
 				Type:     schema.TypeString,
@@ -330,7 +591,7 @@ func resource_vm_disk() *schema.Resource {
 				Type:     schema.TypeInt,
 				Required: true,
 			},
-			"v_disk": &schema.Schema{
+			"storage_class": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
 			},
@@ -349,7 +610,7 @@ func resource_vm_nic() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"mac_adress": &schema.Schema{
+			"mac_address": &schema.Schema{
 				Type:     schema.TypeString,
 				Computed: true,
 			},
@@ -410,7 +671,7 @@ func resource_vm() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"vdc_resource_disk": &schema.Schema{
+			"storage_class": &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
 			},
@@ -435,7 +696,7 @@ func resource_vm() *schema.Resource {
 				Computed: true,
 			},
 			"backup_size": &schema.Schema{
-				Type:     schema.TypeString,
+				Type:     schema.TypeInt,
 				Computed: true,
 			},
 			"comment": &schema.Schema{
@@ -454,56 +715,323 @@ func resource_vm() *schema.Resource {
 	}
 }
 
-func vdcInstanceStub() VDC {
-	return VDC{}
+func Fake_vdcInstance_VDC_CREATION_MAP() VDC {
+	return VDC{
+		Name:       "Unit test vdc resource",
+		Enterprise: "sewan-rd-cloud-beta",
+		Datacenter: "dc1",
+		Vdc_resources: []interface{}{
+			map[string]interface{}{
+				"resource": "ram",
+				"used":     0,
+				"total":    20,
+				"slug":     "",
+			},
+			map[string]interface{}{
+				"resource": "cpu",
+				"used":     0,
+				"total":    1,
+				"slug":     "",
+			},
+			map[string]interface{}{
+				"resource": "storage_enterprise",
+				"used":     0,
+				"total":    10,
+				"slug":     "",
+			},
+			map[string]interface{}{
+				"resource": "storage_performance",
+				"used":     0,
+				"total":    10,
+				"slug":     "",
+			},
+			map[string]interface{}{
+				"resource": "storage_high_performance",
+				"used":     0,
+				"total":    10,
+				"slug":     "",
+			},
+		},
+		Slug:          "",
+		Dynamic_field: "",
+	}
 }
 
-func vmInstanceFake() VM {
-	return VM{
-		Name:       FAKE_VM_INSTANCE_NAME,
+func vdcInstanceFake() VDC {
+	return VDC{
+		Name:       "Unit test vdc resource",
 		Enterprise: "Unit Test value",
-		Template:   "Unit Test value",
+		Datacenter: "Unit Test value",
+		Vdc_resources: []interface{}{
+			map[string]interface{}{
+				"resource": "Resource1",
+				"used":     1,
+				"total":    2,
+				"slug":     "Unit Test value1",
+			},
+			map[string]interface{}{
+				"Resource": "Resource2",
+				"used":     1,
+				"total":    2,
+				"slug":     "Unit Test value2",
+			},
+			map[string]interface{}{
+				"resource": "Resource3",
+				"used":     1,
+				"total":    2,
+				"slug":     "Unit Test value3",
+			},
+		},
+		Slug:          "Unit Test value",
+		Dynamic_field: "Unit Test value",
+	}
+}
+
+func vmInstanceNO_TEMPLATE_VM_MAP() VM {
+	return VM{
+		Name:  "Unit test no template vm resource",
+		State: "UP",
+		OS:    "Debian",
+		RAM:   8,
+		CPU:   4,
+		Disks: []interface{}{
+			map[string]interface{}{
+				"name":          "disk 1",
+				"size":          24,
+				"storage_class": "storage_class",
+				"slug":          "",
+			},
+		},
+		Nics: []interface{}{
+			map[string]interface{}{
+				"vlan":        "vlan 1 update",
+				"mac_address": "00:21:21:21:21:21",
+				"connected":   true,
+			},
+			map[string]interface{}{
+				"vlan":        "vlan 2",
+				"mac_address": "00:21:21:21:21:21",
+				"connected":   true,
+			},
+		},
+		Vdc:           "vdc",
+		Boot:          "on disk",
+		Storage_class: "storage_enterprise",
+		Slug:          "42",
+		Token:         "424242",
+		Backup:        "backup_no_backup",
+		Disk_image:    "",
+		Platform_name: "42",
+		Backup_size:   42,
+		Comment:       "42",
+		Outsourcing:   "42",
+		Dynamic_field: "42",
+	}
+}
+
+func Fake_vmInstance_EXISTING_TEMPLATE_NO_ADDITIONAL_NIC_OR_DISK_VM_MAP() VM {
+	return VM{
+		Name:       "Unit test template no add nics nor discs vm resource",
+		Enterprise: "sewan-rd-cloud-beta",
+		Template:   "centos7-rd-DC1",
+		State:      "UP",
+		RAM:        1,
+		CPU:        1,
+		Disks: []interface{}{
+			map[string]interface{}{
+				"name":          "disk-centos7-rd-DC1-1",
+				"size":          20,
+				"storage_class": "storage_enterprise",
+				"slug":          "disk-centos7-rd-dc1-1",
+			},
+		},
+		Nics: []interface{}{
+			map[string]interface{}{
+				"vlan":        "sewanrd-mgt-th3",
+				"mac_address": "00:50:56:21:7c:ab",
+				"connected":   true,
+			},
+			map[string]interface{}{
+				"vlan":        "sewanrd-priv-th3",
+				"mac_address": "00:50:56:21:7c:ac",
+				"connected":   true,
+			},
+		},
+		Vdc:           "vdc",
+		Boot:          "on disk",
+		Storage_class: "storage_enterprise",
+		Slug:          "42",
+		Token:         "424242",
+		Backup:        "backup_no_backup",
+	}
+}
+
+func Fake_vmInstance_EXISTING_TEMPLATE_WITH_ADDITIONAL_AND_MODIFIED_NICS_AND_DISKS_VM_MAP() VM {
+	return VM{
+		Name:       "EXISTING_TEMPLATE_WITH_ADDITIONAL_AND_MODIFIED_NICS_AND_DISKS_VM_MAP",
+		Enterprise: "sewan-rd-cloud-beta",
+		Template:   "centos7-rd-DC1",
+		State:      "UP",
+		OS:         "Debian",
+		RAM:        8,
+		CPU:        4,
+		Disks: []interface{}{
+			map[string]interface{}{
+				"name":          "disk 1",
+				"size":          24,
+				"storage_class": "storage_class",
+				"slug":          "",
+			},
+			map[string]interface{}{
+				"name":          "disk-centos7-rd-DC1-1",
+				"size":          20,
+				"storage_class": "storage_enterprise",
+				"slug":          "disk-centos7-rd-dc1-1",
+			},
+		},
+		Nics: []interface{}{
+			map[string]interface{}{
+				"vlan":        "non template vlan 1",
+				"mac_address": "00:21:21:21:21:21",
+				"connected":   true,
+			},
+			map[string]interface{}{
+				"vlan":        "non template vlan 2",
+				"mac_address": "00:21:21:21:21:22",
+				"connected":   true,
+			},
+			map[string]interface{}{
+				"vlan":        "sewanrd-mgt-th3",
+				"mac_address": "00:50:56:21:7c:ab",
+				"connected":   true,
+			},
+			map[string]interface{}{
+				"vlan":        "sewanrd-priv-th3",
+				"mac_address": "00:50:56:21:7c:ac",
+				"connected":   true,
+			},
+		},
+		Vdc:           "vdc",
+		Boot:          "on disk",
+		Storage_class: "storage_enterprise",
+		Slug:          "42",
+		Token:         "424242",
+		Backup:        "backup_no_backup",
+		Disk_image:    "",
+		Platform_name: "42",
+		Backup_size:   42,
+		Comment:       "42",
+		Outsourcing:   "42",
+		Dynamic_field: "42",
+	}
+}
+
+func Fake_vmInstance_EXISTING_TEMPLATE_WITH_MODIFIED_NIC_AND_DISK_VM_MAP() VM {
+	return VM{
+		Name:       "EXISTING_TEMPLATE_WITH_MODIFIED_NIC_AND_DISK_VM_MAP",
+		Enterprise: "sewan-rd-cloud-beta",
+		Template:   "centos7-rd-DC1",
+		State:      "UP",
+		OS:         "Debian",
+		RAM:        8,
+		CPU:        4,
+		Disks: []interface{}{
+			map[string]interface{}{
+				"name":          "disk-centos7-rd-DC1-1",
+				"size":          24,
+				"storage_class": "storage_class",
+				"slug":          "disk-centos7-rd-dc1-1",
+			},
+		},
+		Nics: []interface{}{
+			map[string]interface{}{
+				"vlan":        "sewanrd-mgt-th3",
+				"mac_address": "00:21:21:21:21:22",
+				"connected":   true,
+			},
+			map[string]interface{}{
+				"vlan":        "sewanrd-priv-th3",
+				"mac_address": "00:21:21:21:21:21",
+				"connected":   true,
+			},
+		},
+		Vdc:           "vdc",
+		Boot:          "on disk",
+		Storage_class: "storage_enterprise",
+		Slug:          "42",
+		Token:         "424242",
+		Backup:        "backup_no_backup",
+		Disk_image:    "",
+		Platform_name: "42",
+		Backup_size:   42,
+		Comment:       "42",
+		Outsourcing:   "42",
+		Dynamic_field: "42",
+	}
+}
+
+func vmInstanceNoTemplateFake() VM {
+	return VM{
+		Name:       "Unit test vm resource",
+		Enterprise: "Unit Test value",
+		Template:   "",
 		State:      "Unit Test value",
 		OS:         "Unit Test value",
 		RAM:        1,
 		CPU:        1,
 		Disks: []interface{}{
-			VM_DISK{
-				Name: "name1",
-				Size:10,
-				V_disk:"Unit Test value",
+			map[string]interface{}{
+				"name":          "name1",
+				"size":          10,
+				"storage_class": "Unit Test value",
 			},
-			VM_DISK{
-				Name: "name2",
-				Size:10,
-				V_disk:"Unit Test value",
+			map[string]interface{}{
+				"name":          "name2",
+				"size":          10,
+				"storage_class": "Unit Test value",
 			},
 		},
 		Nics: []interface{}{
-			VM_NIC{
-				Vlan: "vlan1",
-				Mac_adress:"Unit Test value",
-				Connected:true,
+			map[string]interface{}{
+				"vlan":        "vlan1",
+				"mac_address": "00:21:21:21:21:21",
+				"connected":   true,
 			},
-			VM_NIC{
-				Vlan: "vlan1",
-				Mac_adress:"Unit Test value",
-				Connected:false,
+			map[string]interface{}{
+				"vlan":        "vlan1",
+				"mac_address": "00:21:21:21:21:21",
+				"connected":   false,
 			},
 		},
-		Vdc:               "Unit Test value",
-		Boot:              "Unit Test value",
-		Vdc_resource_disk: "Unit Test value",
-		Slug:              "Unit Test value",
-		Token:             "Unit Test value",
-		Backup:            "Unit Test value",
-		Disk_image:        "Unit Test value",
-		Platform_name:     "Unit Test value",
-		Backup_size:       "Unit Test value",
-		Comment:           "Unit Test value",
-		Outsourcing:       "Unit Test value",
-		Dynamic_field:     "Unit Test value",
+		Vdc:           "Unit Test value",
+		Boot:          "Unit Test value",
+		Storage_class: "Unit Test value",
+		Slug:          "Unit Test value",
+		Token:         "Unit Test value",
+		Backup:        "Unit Test value",
+		Disk_image:    "Unit Test value",
+		Platform_name: "Unit Test value",
+		Backup_size:   42,
+		Comment:       "Unit Test value",
+		Outsourcing:   "Unit Test value",
+		Dynamic_field: "Unit Test value",
 	}
+}
+
+func vdc_schema_init(vdc map[string]interface{}) *schema.ResourceData {
+	d := resource_vdc().TestResourceData()
+
+	Update_local_resource_state(vdc, d)
+
+	return d
+}
+
+func vm_schema_init(vm map[string]interface{}) *schema.ResourceData {
+	d := resource_vm().TestResourceData()
+
+	Update_local_resource_state(vm, d)
+
+	return d
 }
 
 func resource(resourceType string) *schema.Resource {
@@ -544,6 +1072,11 @@ func JsonStub() map[string]interface{} {
 }
 
 func JsonTemplateListFake() []interface{} {
+	var jsonFake interface{}
+	fake_json, _ := json.Marshal(TEMPLATES_LIST)
+	jsonBytes := ioutil.NopCloser(bytes.NewBuffer(fake_json))
+	readBytes, _ := ioutil.ReadAll(jsonBytes)
+	_ = json.Unmarshal(readBytes, &jsonFake)
 
-	return TEMPLATES_LIST
+	return jsonFake.([]interface{})
 }

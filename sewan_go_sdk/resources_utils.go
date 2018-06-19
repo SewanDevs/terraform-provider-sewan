@@ -4,10 +4,19 @@ import (
 	"errors"
 	"github.com/hashicorp/terraform/helper/schema"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"reflect"
+	"strconv"
 	"strings"
 )
+
+type VDC_resource struct {
+	Resource string `json:"resource"`
+	Used     int    `json:"used"`
+	Total    int    `json:"total"`
+	Slug     string `json:"slug"`
+}
 
 type VDC struct {
 	Name          string        `json:"name"`
@@ -19,44 +28,47 @@ type VDC struct {
 }
 
 type VM_DISK struct {
-	Name   string `json:"name"`
-	Size   int    `json:"size"`
-	V_disk string    `json:"v_disk"`
+	Name          string `json:"name"`
+	Size          int    `json:"size"`
+	Storage_class string `json:"storage_class"`
+	Slug          string `json:"slug"`
+	V_disk        string `json:"v_disk"`
 }
 
 type VM_NIC struct {
-	Vlan       string `json:"vlan"`
-	Mac_adress string `json:"mac_adress"`
-	Connected  bool   `json:"connected"`
+	Vlan        string `json:"vlan"`
+	Mac_address string `json:"mac_address"`
+	Connected   bool   `json:"connected"`
 }
 
 type VM struct {
-	Name              string    `json:"name"`
-	Enterprise        string    `json:"enterprise"`
-	Template          string    `json:"template"`
-	State             string    `json:"state"`
-	OS                string    `json:"os"`
-	RAM               int       `json:"ram"`
-	CPU               int       `json:"cpu"`
-	Disks             []interface{}`json:"disks"`
-	Nics              []interface{}  `json:"nics"`
-	Vdc               string    `json:"vdc"`
-	Boot              string    `json:"boot"`
-	Vdc_resource_disk string    `json:"vdc_resource_disk"`
-	Slug              string    `json:"slug"`
-	Token             string    `json:"token"`
-	Backup            string    `json:"backup"`
-	Disk_image        string    `json:"disk_image"`
-	Platform_name     string    `json:"platform_name"`
-	Backup_size       string    `json:"backup_size"`
-	Comment           string    `json:"comment"`
-	Outsourcing       string    `json:"outsourcing"`
-	Dynamic_field     string    `json:"dynamic_field"`
+	Name          string        `json:"name"`
+	Enterprise    string        `json:"enterprise"`
+	Template      string        `json:"template,omitempty"`
+	State         string        `json:"state"`
+	OS            string        `json:"os,omitempty"`
+	RAM           int           `json:"ram"`
+	CPU           int           `json:"cpu"`
+	Disks         []interface{} `json:"disks,omitempty"`
+	Nics          []interface{} `json:"nics,omitempty"`
+	Vdc           string        `json:"vdc"`
+	Boot          string        `json:"boot"`
+	Storage_class string        `json:"storage_class"`
+	Slug          string        `json:"slug"`
+	Token         string        `json:"token"`
+	Backup        string        `json:"backup"`
+	Disk_image    string        `json:"disk_image"`
+	Platform_name string        `json:"platform_name"`
+	Backup_size   int           `json:"backup_size"`
+	Comment       string        `json:"comment",omitempty`
+	Outsourcing   string        `json:"outsourcing,omitempty"`
+	Dynamic_field string        `json:"dynamic_field,omitempty"`
 }
 
 func vdcInstanceCreate(d *schema.ResourceData,
 	clientTooler *ClientTooler,
 	api *API) (VDC, error) {
+
 	return VDC{
 		Name:          d.Get("name").(string),
 		Enterprise:    d.Get("enterprise").(string),
@@ -72,143 +84,115 @@ func vmInstanceCreate(d *schema.ResourceData,
 	api *API) (VM, error) {
 
 	var (
-		vm                      VM
-		getTemplateError        error  = nil
-		templateValidationError error  = nil
-		instanceCreationError   error  = nil
-		template                string = d.Get("template").(string)
-		enterprise              string = d.Get("enterprise").(string)
-		//templateVMInstance map[string]interface{} = nil
+		vm                    VM
+		getTemplateError      error  = nil
+		template_list_Error   error  = nil
+		instanceCreationError error  = nil
+		template_exists       bool   = false
+		template              string = d.Get("template").(string)
+		enterprise            string = d.Get("enterprise").(string)
 	)
-	logger := loggerCreate("vmInstanceCreate.log")
+	// @TODO : log to delete
+	logger := loggerCreate("vmInstanceCreate" + d.Get("name").(string) + ".log")
+	logger.Println("template =", template)
 
 	if template != "" {
+		vm = VM{}
 		var templateList []interface{}
-		logger.Println("template =", template)
-		//1 get template list
-		// i : get enterprise from VDC field :
-		//	enterprise_slug = d.Get("depends_on").enterprise
-		// ii : get enterprise from a new vm field :
-		//	enterprise_slug = d.Get("enterprise")
-		//clientToolerB := ClientTooler{
-		//	Client: HttpClienter{},
-		//}
+
 		templateList,
 			getTemplateError = clientTooler.Client.GetTemplatesList(clientTooler,
 			enterprise, api)
+		// @TODO : log to delete
 		logger.Println("templateList =", templateList)
 		logger.Println("getTemplateError =", getTemplateError)
 
-		//2 validate option template is in the list
 		if getTemplateError == nil {
-			//for templateConf := range templateList{
-			//	if templateConf.Name == template {
-			//		logger.Println("content, template = ", template)
-			//	}
-			//}
-
-			for i := 0; i < len(templateList); i++ {
-				logger.Println("\n\n###################")
-				logger.Println("content, template = ", templateList[i])
-				logger.Println("")
-				logger.Println("reflect.TypeOf(templateList[i]) : ",
-					reflect.TypeOf(templateList[i]))
-				switch reflect.TypeOf(templateList[i]).Kind().String() {
-				case reflect.Map.String():
-					// Postula template name are unique
-					var templateName string = templateList[i].(map[string]interface{})["name"].(string)
-					logger.Println("content, templateList[i].Name = ",
-						templateList[i].(map[string]interface{})["name"])
-					if templateName == template {
-						logger.Println("---------VALID TEMPLATE-------")
-						//templateVMInstance = templateList[i].(map[string]interface{})
-
-						//pseudo code
-						//for elem in VM{}
-						//
-						//  case d.Get(Elem)!=nil THEN vm.Elem = template.Elem
-						//
-						//  case d.Get(Elem)==nil vm.Elem = templateVMInstance.Elem
-						//	case nics || disks
-						//		for Elem1 in d.Get("disks or nics")
-						//			for Elem2 in templateVMInstance(disks or nics)
-						//  case Elem1.Name!=Elem2.Name THEN vm.add(Elem1&2)
-						//  case Elem1.Name==Elem2.Name THEN vm.add(Elem1)
-
-					} else {
-
-					}
-				default:
-				}
+			template_exists, template_list_Error = Handle_templates_list(d, templateList)
+			switch {
+			case template_list_Error != nil:
+				instanceCreationError = template_list_Error
 			}
-
+			if template_exists == false {
+				instanceCreationError = errors.New("Unavailable template : " +
+					template)
+			}
 		} else {
-			templateValidationError = getTemplateError
+			instanceCreationError = getTemplateError
 		}
-
-		//3 Create a VM instance with template paramaters
-		//		for nics and disk, add paramater disks and nics to template's one
-		//		for other parameter, replace template param with .tf file one's except for OS
-		if templateValidationError == nil {
-
-		} else {
-			instanceCreationError = templateValidationError
-		}
-		vm = VM{}
-
 	} else {
-		vm = VM{
-			Name:              d.Get("name").(string),
-			Enterprise:        d.Get("enterprise").(string),
-			Template:          d.Get("template").(string),
-			State:             d.Get("state").(string),
-			OS:                d.Get("os").(string),
-			RAM:               d.Get("ram").(int),
-			CPU:               d.Get("cpu").(int),
-			Disks:             d.Get("disks").([]interface{}),
-			Nics:              d.Get("nics").([]interface{}),
-			Vdc:               d.Get("vdc").(string),
-			Boot:              d.Get("boot").(string),
-			Vdc_resource_disk: d.Get("vdc_resource_disk").(string),
-			Slug:              d.Get("slug").(string),
-			Token:             d.Get("token").(string),
-			Backup:            d.Get("backup").(string),
-			Disk_image:        d.Get("disk_image").(string),
-			Platform_name:     d.Get("platform_name").(string),
-			Backup_size:       d.Get("backup_size").(string),
-			Comment:           d.Get("comment").(string),
-			Outsourcing:       d.Get("outsourcing").(string),
-			Dynamic_field:     d.Get("dynamic_field").(string),
-		}
+		// @TODO : log to delete
+		logger.Println("template = nil")
 	}
+
+	logger.Println("instanceCreationError =", instanceCreationError)
+
+	if instanceCreationError == nil {
+
+		// @TODO : log to delete
+		logger.Println("vm = VM{} set")
+
+		vm = VM{
+			Name:          d.Get("name").(string),
+			Enterprise:    d.Get("enterprise").(string),
+			State:         d.Get("state").(string),
+			OS:            d.Get("os").(string),
+			RAM:           d.Get("ram").(int),
+			CPU:           d.Get("cpu").(int),
+			Disks:         d.Get("disks").([]interface{}),
+			Nics:          d.Get("nics").([]interface{}),
+			Vdc:           d.Get("vdc").(string),
+			Boot:          d.Get("boot").(string),
+			Storage_class: d.Get("storage_class").(string),
+			Slug:          d.Get("slug").(string),
+			Token:         d.Get("token").(string),
+			Backup:        d.Get("backup").(string),
+			Disk_image:    d.Get("disk_image").(string),
+			Platform_name: d.Get("platform_name").(string),
+			Backup_size:   d.Get("backup_size").(int),
+			Comment:       d.Get("comment").(string),
+			Outsourcing:   d.Get("outsourcing").(string),
+			Dynamic_field: d.Get("dynamic_field").(string),
+		}
+
+		if d.Id() == "" {
+			vm.Template = d.Get("template").(string)
+		} else {
+			vm.Template = ""
+		}
+
+	}
+	logger.Println("vm = ", vm)
+
 	return vm, instanceCreationError
 }
 
 func (apier AirDrumResources_Apier) ResourceInstanceCreate(d *schema.ResourceData,
 	clientTooler *ClientTooler,
 	resourceType string,
-	api *API) (error, interface{}, string) {
+	api *API) (error, interface{}) {
 
 	var (
-		resourceInstance interface{}
-		instanceName     string
-		instanceError    error
+		resourceInstance interface{} = nil
+		instanceError    error       = nil
 	)
 
+	logger := loggerCreate("ResourceInstanceCreate.log")
+	logger.Println("resourceType = ", resourceType)
 	switch resourceType {
 	case "vdc":
+		logger.Println("vdc case")
 		resourceInstance, instanceError = vdcInstanceCreate(d, clientTooler, api)
-		instanceName = d.Get("name").(string)
 	case "vm":
+		logger.Println("vm case")
 		resourceInstance, instanceError = vmInstanceCreate(d, clientTooler, api)
-		instanceName = d.Get("name").(string)
 	default:
-		resourceInstance = nil
-		instanceName = ""
+		logger.Println("default case")
 		instanceError = apier.ValidateResourceType(resourceType)
 	}
 
-	return instanceError, resourceInstance, instanceName
+	logger.Println("instanceError, resourceInstance = ", instanceError, resourceInstance)
+	return instanceError, resourceInstance
 }
 
 func (apier AirDrumResources_Apier) ValidateResourceType(resourceType string) error {
@@ -290,4 +274,86 @@ func (apier AirDrumResources_Apier) Validate_status(api *API,
 	}
 
 	return apiErr
+}
+
+func Delete_terraform_resource(d *schema.ResourceData) {
+	d.SetId("")
+}
+
+func Update_local_resource_state(resource_state map[string]interface{},
+	d *schema.ResourceData) error {
+
+	var (
+		updateError error = nil
+		read_value  interface{}
+	)
+	logger := LoggerCreate("update_local_resource_state_" +
+		d.Get("name").(string) + ".log")
+	for key, value := range resource_state {
+		read_value, updateError = read_element(key, value, logger)
+		logger.Println("Set \"", key, "\" to \"", read_value, "\"")
+		if key == "id" {
+			var s_id string = ""
+			switch {
+			case reflect.TypeOf(value).Kind() == reflect.Float64:
+				s_id = strconv.FormatFloat(value.(float64), 'f', -1, 64)
+			case reflect.TypeOf(value).Kind() == reflect.Int:
+				s_id = strconv.Itoa(value.(int))
+			case reflect.TypeOf(value).Kind() == reflect.String:
+				s_id = value.(string)
+			default:
+				updateError = errors.New("Format of " + key + "(" +
+					reflect.TypeOf(value).Kind().String() + ") not handled.")
+			}
+			d.SetId(s_id)
+		} else {
+			updateError = d.Set(key, read_value)
+		}
+		read_value = nil
+	}
+	return updateError
+}
+
+func read_element(key interface{}, value interface{},
+	logger *log.Logger) (interface{}, error) {
+
+	var (
+		readError  error = nil
+		read_value interface{}
+	)
+	switch value_type := value.(type) {
+	case string:
+		read_value = value.(string)
+	case bool:
+		read_value = value.(bool)
+	case float64:
+		read_value = int(value.(float64))
+	case int:
+		read_value = value.(int)
+	case map[string]interface{}:
+		var read_map_value map[string]interface{}
+		read_map_value = make(map[string]interface{})
+		var map_item interface{}
+		for map_key, map_value := range value_type {
+			map_item, readError = read_element(map_key, map_value, logger)
+			read_map_value[map_key] = map_item
+		}
+		read_value = read_map_value
+	case []interface{}:
+		var read_list_value []interface{}
+		var list_item interface{}
+		for list_key, list_value := range value_type {
+			list_item, readError = read_element(list_key, list_value, logger)
+			read_list_value = append(read_list_value, list_item)
+		}
+		read_value = read_list_value
+	default:
+		if value == nil {
+			read_value = nil
+		} else {
+			readError = errors.New("Format " +
+				reflect.TypeOf(value_type).Kind().String() + " not handled.")
+		}
+	}
+	return read_value, readError
 }

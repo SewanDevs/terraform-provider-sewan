@@ -26,28 +26,28 @@ var (
 		},
 		"nics": []interface{}{
 			map[string]interface{}{
-				"vlan":       "vlan 1 update",
-				"mac_adress": "24",
-				"connected":  "true",
+				"vlan":        "vlan 1 update",
+				"mac_address": "24",
+				"connected":   "true",
 			},
 			map[string]interface{}{
-				"vlan":       "vlan 2",
-				"mac_adress": "24",
-				"connected":  "true",
+				"vlan":        "vlan 2",
+				"mac_address": "24",
+				"connected":   "true",
 			},
 		},
-		"vdc":               "vdc",
-		"boot":              "on disk",
-		"vdc_resource_disk": "vdc_disk", //"template":"template name",
-		"slug":              "42",
-		"token":             "424242",
-		"backup":            "backup-no_backup",
-		"disk_image":        "",
-		"platform_name":     "42",
-		"backup_size":       "42",
-		"comment":           "42",
-		"outsourcing":       "42",
-		"dynamic_field":     "42",
+		"vdc":           "vdc",
+		"boot":          "on disk",
+		"storage_class": "storage_enterprise", //"template":"template name",
+		"slug":          "42",
+		"token":         "424242",
+		"backup":        "backup-no_backup",
+		"disk_image":    "",
+		"platform_name": "42",
+		"backup_size":   "42",
+		"comment":       "42",
+		"outsourcing":   "42",
+		"dynamic_field": "42",
 	}
 )
 
@@ -102,11 +102,22 @@ func (apier VDC_successfull_CRUD_operations_AirDrumAPIer) Get_resource_url(api *
 
 	return ""
 }
+func (apier VDC_successfull_CRUD_operations_AirDrumAPIer) ValidateResourceType(resourceType string) error {
+	return nil
+}
 func (apier VDC_successfull_CRUD_operations_AirDrumAPIer) Validate_status(api *sdk.API,
 	resourceType string,
 	client sdk.ClientTooler) error {
 
 	return nil
+}
+func (apier VDC_successfull_CRUD_operations_AirDrumAPIer) ResourceInstanceCreate(d *schema.ResourceData,
+	clientTooler *sdk.ClientTooler,
+	resourceType string,
+	api *sdk.API) (error,
+	interface{}) {
+
+	return nil, nil
 }
 
 type VDC_failure_CRUD_operations_AirDrumAPIer struct{}
@@ -118,7 +129,6 @@ func (apier VDC_failure_CRUD_operations_AirDrumAPIer) Create_resource(d *schema.
 
 	return errors.New(VDC_CREATION_FAILURE), nil
 }
-
 func (apier VDC_failure_CRUD_operations_AirDrumAPIer) Read_resource(d *schema.ResourceData,
 	clientTooler *sdk.ClientTooler,
 	resourceType string,
@@ -126,7 +136,6 @@ func (apier VDC_failure_CRUD_operations_AirDrumAPIer) Read_resource(d *schema.Re
 
 	return nil, nil, false
 }
-
 func (apier VDC_failure_CRUD_operations_AirDrumAPIer) Update_resource(d *schema.ResourceData,
 	clientTooler *sdk.ClientTooler,
 	resourceType string,
@@ -134,7 +143,6 @@ func (apier VDC_failure_CRUD_operations_AirDrumAPIer) Update_resource(d *schema.
 
 	return errors.New(VDC_UPDATE_FAILURE)
 }
-
 func (apier VDC_failure_CRUD_operations_AirDrumAPIer) Delete_resource(d *schema.ResourceData,
 	clientTooler *sdk.ClientTooler,
 	resourceType string,
@@ -142,7 +150,6 @@ func (apier VDC_failure_CRUD_operations_AirDrumAPIer) Delete_resource(d *schema.
 
 	return errors.New(VDC_DELETION_FAILURE)
 }
-
 func (apier VDC_failure_CRUD_operations_AirDrumAPIer) Get_resource_creation_url(api *sdk.API,
 	resourceType string) string {
 	return ""
@@ -153,11 +160,22 @@ func (apier VDC_failure_CRUD_operations_AirDrumAPIer) Get_resource_url(api *sdk.
 
 	return ""
 }
+func (apier VDC_failure_CRUD_operations_AirDrumAPIer) ValidateResourceType(resourceType string) error {
+	return nil
+}
 func (apier VDC_failure_CRUD_operations_AirDrumAPIer) Validate_status(api *sdk.API,
 	resourceType string,
 	client sdk.ClientTooler) error {
 
 	return nil
+}
+func (apier VDC_failure_CRUD_operations_AirDrumAPIer) ResourceInstanceCreate(d *schema.ResourceData,
+	clientTooler *sdk.ClientTooler,
+	resourceType string,
+	api *sdk.API) (error,
+	interface{}) {
+
+	return nil, nil
 }
 
 type VDC_readfailure_CRUD_operations_AirDrumAPIer struct{}
@@ -169,7 +187,6 @@ func (apier VDC_readfailure_CRUD_operations_AirDrumAPIer) Create_resource(d *sch
 
 	return nil, nil
 }
-
 func (apier VDC_readfailure_CRUD_operations_AirDrumAPIer) Read_resource(d *schema.ResourceData,
 	clientTooler *sdk.ClientTooler,
 	resourceType string,
@@ -177,7 +194,6 @@ func (apier VDC_readfailure_CRUD_operations_AirDrumAPIer) Read_resource(d *schem
 
 	return errors.New(VDC_READ_FAILURE), nil, true
 }
-
 func (apier VDC_readfailure_CRUD_operations_AirDrumAPIer) Update_resource(d *schema.ResourceData,
 	clientTooler *sdk.ClientTooler,
 	resourceType string,
@@ -202,11 +218,22 @@ func (apier VDC_readfailure_CRUD_operations_AirDrumAPIer) Get_resource_url(api *
 
 	return ""
 }
+func (apier VDC_readfailure_CRUD_operations_AirDrumAPIer) ValidateResourceType(resourceType string) error {
+	return nil
+}
 func (apier VDC_readfailure_CRUD_operations_AirDrumAPIer) Validate_status(api *sdk.API,
 	resourceType string,
 	client sdk.ClientTooler) error {
 
 	return nil
+}
+func (apier VDC_readfailure_CRUD_operations_AirDrumAPIer) ResourceInstanceCreate(d *schema.ResourceData,
+	clientTooler *sdk.ClientTooler,
+	resourceType string,
+	api *sdk.API) (error,
+	interface{}) {
+
+	return nil, nil
 }
 
 //------------------------------------------------------------------------------

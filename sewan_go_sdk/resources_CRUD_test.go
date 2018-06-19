@@ -44,14 +44,14 @@ func TestCreate_resource(t *testing.T) {
 			VDC_CreationSuccess_HttpClienterFake{},
 			VDC_RESOURCE_TYPE,
 			nil,
-			TEST_VDC_READ_RESPONSE_MAP,
+			VDC_READ_RESPONSE_MAP,
 		},
 		{
 			5,
 			VM_CreationSuccess_HttpClienterFake{},
 			VM_RESOURCE_TYPE,
 			nil,
-			TEST_VM_MAP,
+			NO_TEMPLATE_VM_MAP,
 		},
 		{
 			6,
@@ -207,7 +207,7 @@ func TestRead_resource(t *testing.T) {
 			VDC_ReadSuccess_HttpClienterFake{},
 			VDC_RESOURCE_TYPE,
 			nil,
-			TEST_VDC_READ_RESPONSE_MAP,
+			VDC_READ_RESPONSE_MAP,
 			true,
 		},
 		{
@@ -215,7 +215,7 @@ func TestRead_resource(t *testing.T) {
 			VM_ReadSuccess_HttpClienterFake{},
 			VM_RESOURCE_TYPE,
 			nil,
-			TEST_VM_MAP,
+			NO_TEMPLATE_VM_MAP,
 			true,
 		},
 		{
@@ -421,7 +421,7 @@ func TestUpdate_resource(t *testing.T) {
 	}
 }
 
-//------------------------------------------------------------------------------
+////------------------------------------------------------------------------------
 func TestDelete_resource(t *testing.T) {
 	test_cases := []struct {
 		Id           int

@@ -2,7 +2,31 @@ package sewan
 
 import (
 	"github.com/hashicorp/terraform/helper/schema"
+	sdk "terraform-provider-sewan/sewan_go_sdk"
 )
+
+func resource_vdc_resource() *schema.Resource {
+	return &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"resource": &schema.Schema{
+				Type:     schema.TypeString,
+				Required: true,
+			},
+			"used": &schema.Schema{
+				Type:     schema.TypeInt,
+				Computed: true,
+			},
+			"total": &schema.Schema{
+				Type:     schema.TypeInt,
+				Required: true,
+			},
+			"slug": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+		},
+	}
+}
 
 func resource_vdc() *schema.Resource {
 	return &schema.Resource{
@@ -26,26 +50,7 @@ func resource_vdc() *schema.Resource {
 			"vdc_resources": &schema.Schema{
 				Type:     schema.TypeList,
 				Optional: true,
-				Elem: &schema.Resource{
-					Schema: map[string]*schema.Schema{
-						"resource": &schema.Schema{
-							Type:     schema.TypeString,
-							Required: true,
-						},
-						"used": &schema.Schema{
-							Type:     schema.TypeInt,
-							Computed: true,
-						},
-						"total": &schema.Schema{
-							Type:     schema.TypeInt,
-							Required: true,
-						},
-						"slug": &schema.Schema{
-							Type:     schema.TypeInt,
-							Computed: true,
-						},
-					},
-				},
+				Elem:     resource_vdc_resource(),
 			},
 			"slug": &schema.Schema{
 				Type:     schema.TypeString,
@@ -70,7 +75,7 @@ func resource_vdc_create(d *schema.ResourceData, m interface{}) error {
 		sewan)
 
 	if creationError == nil {
-		creationError = Update_local_resource_state(apiCreationResponse, d)
+		creationError = sdk.Update_local_resource_state(apiCreationResponse, d)
 	}
 	return creationError
 }
@@ -87,10 +92,10 @@ func resource_vdc_read(d *schema.ResourceData, m interface{}) error {
 		sewan)
 
 	if resource_exists == false {
-		Delete_resource(d)
+		sdk.Delete_terraform_resource(d)
 	} else {
 		if readError == nil {
-			readError = Update_local_resource_state(apiCreationResponse, d)
+			readError = sdk.Update_local_resource_state(apiCreationResponse, d)
 		}
 	}
 	return readError
@@ -117,7 +122,7 @@ func resource_vdc_delete(d *schema.ResourceData, m interface{}) error {
 		VDC_RESOURCE_TYPE,
 		sewan)
 	if deleteError == nil {
-		Delete_resource(d)
+		sdk.Delete_terraform_resource(d)
 	}
 	return deleteError
 }

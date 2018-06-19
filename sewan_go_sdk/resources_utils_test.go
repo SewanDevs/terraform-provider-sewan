@@ -2,128 +2,140 @@ package sewan_go_sdk
 
 import (
 	"errors"
-	"net/http"
-	//"reflect"
 	"github.com/hashicorp/terraform/helper/schema"
+	"net/http"
+	"reflect"
 	"testing"
 )
 
 //------------------------------------------------------------------------------
 func TestResourceInstanceCreate(t *testing.T) {
 	test_cases := []struct {
-		Id              int
-		d               *schema.ResourceData
-		TC_clienter     Clienter
-		Enterprise_slug string
-		Resource_type   string
-		Error           error
-		VmInstance      interface{}
-		VmName          string
+		Id            int
+		D             *schema.ResourceData
+		TC_clienter   Clienter
+		Resource_type string
+		Error         error
+		VmInstance    interface{}
 	}{
 		{
 			1,
-			resource_vm().TestResourceData(),
-			GetTemplatesList_Sucess_HttpClienterFake{},
-			ENTERPRISE_SLUG,
+			vm_schema_init(NO_TEMPLATE_VM_MAP),
+			GetTemplatesList_Success_HttpClienterFake{},
 			VM_RESOURCE_TYPE,
 			nil,
-			vmInstanceFake(),
-			FAKE_VM_INSTANCE_NAME,
+			vmInstanceNO_TEMPLATE_VM_MAP(),
+		},
+		{
+			2,
+			vm_schema_init(EXISTING_TEMPLATE_NO_ADDITIONAL_NIC_OR_DISK_VM_MAP),
+			GetTemplatesList_Success_HttpClienterFake{},
+			VM_RESOURCE_TYPE,
+			nil,
+			Fake_vmInstance_EXISTING_TEMPLATE_NO_ADDITIONAL_NIC_OR_DISK_VM_MAP(),
+		},
+		{
+			3,
+			vm_schema_init(EXISTING_TEMPLATE_WITH_ADDITIONAL_AND_MODIFIED_NICS_AND_DISKS_VM_MAP),
+			GetTemplatesList_Success_HttpClienterFake{},
+			VM_RESOURCE_TYPE,
+			nil,
+			Fake_vmInstance_EXISTING_TEMPLATE_WITH_ADDITIONAL_AND_MODIFIED_NICS_AND_DISKS_VM_MAP(),
+		},
+		{
+			4,
+			vm_schema_init(EXISTING_TEMPLATE_WITH_MODIFIED_NIC_AND_DISK_VM_MAP),
+			GetTemplatesList_Success_HttpClienterFake{},
+			VM_RESOURCE_TYPE,
+			nil,
+			Fake_vmInstance_EXISTING_TEMPLATE_WITH_MODIFIED_NIC_AND_DISK_VM_MAP(),
+		},
+		{
+			5,
+			vm_schema_init(NON_EXISTING_TEMPLATE_VM_MAP),
+			GetTemplatesList_Success_HttpClienterFake{},
+			VM_RESOURCE_TYPE,
+			errors.New("Unavailable template : windows95"),
+			VM{},
+		},
+		{
+			6,
+			vdc_schema_init(VDC_CREATION_MAP),
+			nil,
+			VDC_RESOURCE_TYPE,
+			nil,
+			Fake_vdcInstance_VDC_CREATION_MAP(),
+		},
+		{
+			7,
+			vdc_schema_init(VDC_CREATION_MAP),
+			GetTemplatesList_Success_HttpClienterFake{},
+			WRONG_RESOURCE_TYPE,
+			errors.New("Resource of type \"a_non_supported_resource_type\" not supported," +
+				"list of accepted resource types :\n\r" +
+				"- \"vdc\"\n\r" +
+				"- \"vm\""),
+			nil,
 		},
 	}
 
-	for _, test_case := range test_cases {
-
-		t.Errorf("TC %d ",
-			test_case.Id)
+	var (
+		sewan    *API
+		err      error = nil
+		instance interface{}
+	)
+	api_tools := APITooler{
+		Api: AirDrumResources_Apier{},
 	}
-}
+	fake_client_tooler := ClientTooler{}
+	sewan = &API{Token: "42", URL: "42", Client: &http.Client{}}
 
-//------------------------------------------------------------------------------
-func TestvdcInstanceCreate(t *testing.T) {
-	//slice elements "disks" and "nics" not tested, ref=TD-35489-UT-35737-1
-	//vdc_res := resource_vdc()
-	//d := vdc_res.TestResourceData()
-	//var (
-	//	vdcInstance       VDC
-	//	res_data_value    interface{}
-	//	vdcInstance_value interface{}
-	//)
-
-	//d.SetId("UnitTest vdc1")
-	//d.Set("enterprise", "enterprise")
-	//d.Set("datacenter", "datacenter")
-	//d.Set("vdc_resources", nil)
-	//d.Set("slug", "slug")
-	//d.Set("dynamic_field", "42")
-
-	//vdcInstance, _ = vdcInstanceCreate(d,HttpClienter{},API{})
-	//val := reflect.ValueOf(vdcInstance)
-
-	//for i := 0; i < val.Type().NumField(); i++ {
-	//	switch value_type := val.Field(i).Kind(); value_type {
-	//	case reflect.String:
-	//		res_data_value = d.Get(val.Type().Field(i).Tag.Get("json")).(string)
-	//		vdcInstance_value = val.Field(i).Interface().(string)
-	//		if res_data_value != vdcInstance_value {
-	//			t.Errorf("vdc instance was incorrect,\n\rgot: \"%s\"\n\rwant: \"%s\"",
-	//				vdcInstance_value, res_data_value)
-	//		}
-	//	case reflect.Slice:
-	//		//slice elements "disks" and "nics" not tested, ref=TD-35489-UT-35737-1
-	//	}
-	//}
-}
-
-//------------------------------------------------------------------------------
-func TestvmInstanceCreate(t *testing.T) {
-	//slice elements "disks" and "nics" not tested, ref=TD-35489-UT-35737-1
-	//resource_res := resource(VM_RESOURCE_TYPE)
-	//d := resource_res.TestResourceData()
-	//var (
-	//	resourceInstance       VM
-	//	res_data_value         interface{}
-	//	resourceInstance_value interface{}
-	//)
-
-	//d.SetId("UnitTest resource1")
-	//d.Set("name", "Unit test resource")
-	//d.Set("template", "")
-	//d.Set("state", "UP")
-	//d.Set("os", "Debian")
-	//d.Set("ram", "4")
-	//d.Set("cpu", "2")
-	//d.Set("disks", nil)
-	//d.Set("nics", nil)
-	//d.Set("vdc", "vdc1")
-	//d.Set("boot", "on disk")
-	//d.Set("vdc_resource_disk", "vdc_resource_disk")
-	//d.Set("slug", "slug")
-	//d.Set("token", "424242")
-	//d.Set("backup", "backup_no_backup")
-	//d.Set("disk_image", "disk img")
-	//d.Set("platform_name", "plateforme name")
-	//d.Set("backup_size", "42")
-	//d.Set("comment", "42")
-	//d.Set("outsourcing", "false")
-	//d.Set("dynamic_field", "42")
-
-	//resourceInstance = vmInstanceCreate(d)
-	//val := reflect.ValueOf(resourceInstance)
-
-	//for i := 0; i < val.Type().NumField(); i++ {
-	//	switch value_type := val.Field(i).Kind(); value_type {
-	//	case reflect.String:
-	//		res_data_value = d.Get(val.Type().Field(i).Tag.Get("json")).(string)
-	//		resourceInstance_value = val.Field(i).Interface().(string)
-	//		if res_data_value != resourceInstance_value {
-	//			t.Errorf("resource instance was incorrect,\n\rgot: \"%s\"\n\rwant: \"%s\"",
-	//				resourceInstance_value, res_data_value)
-	//		}
-	//	case reflect.Slice:
-	//		//slice elements "disks" and "nics" not tested, ref=TD-35489-UT-35737-1
-	//	}
-	//}
+	for _, test_case := range test_cases {
+		fake_client_tooler.Client = test_case.TC_clienter
+		err, instance = api_tools.Api.ResourceInstanceCreate(test_case.D,
+			&fake_client_tooler,
+			test_case.Resource_type,
+			sewan)
+		switch {
+		case err == nil || test_case.Error == nil:
+			if !(err == nil && test_case.Error == nil) {
+				t.Errorf("TC %d : ResourceInstanceCreate() error was incorrect,"+
+					"\n\rgot: \"%s\"\n\rwant: \"%s\"",
+					test_case.Id, err, test_case.Error)
+			} else {
+				switch {
+				//case !reflect.DeepEqual(test_case.VmInstance, instance):
+				case !reflect.DeepEqual(test_case.VmInstance, instance):
+					t.Errorf("TC %d : Wrong ResourceInstanceCreate() created instance,"+
+						"\n\rgot: \"%s\"\n\rwant: \"%s\"",
+						test_case.Id, instance, test_case.VmInstance)
+					v := reflect.ValueOf(instance)
+					v2 := reflect.ValueOf(test_case.VmInstance)
+					for i := 0; i < v.NumField(); i++ {
+						if !reflect.DeepEqual(v.Field(i).Interface(), v2.Field(i).Interface()) {
+							t.Log("reflect.DeepEqual(",
+								v.Field(i).Interface(), "(",
+								reflect.TypeOf(v.Field(i).Interface()), "),",
+								v2.Field(i).Interface(),
+								"(", reflect.TypeOf(v2.Field(i).Interface()), ")) = ",
+								reflect.DeepEqual(v.Field(i), v2.Field(i)))
+						}
+					}
+				}
+			}
+		case err != nil && test_case.Error != nil:
+			switch {
+			case !reflect.DeepEqual(instance, test_case.VmInstance):
+				t.Errorf("TC %d : Wrong ResourceInstanceCreate() created instance,"+
+					"\n\rgot: \"%s\"\n\rwant: \"%s\"",
+					test_case.Id, instance, test_case.VmInstance)
+			case err.Error() != test_case.Error.Error():
+				t.Errorf("TC %d : resource creation error was incorrect,"+
+					"\n\rgot: \"%s\"\n\rwant: \"%s\"",
+					test_case.Id, err.Error(), test_case.Error.Error())
+			}
+		}
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -297,6 +309,64 @@ func TestValidate_status(t *testing.T) {
 			t.Errorf("TC %d : Validate_status() error was incorrect,"+
 				"\n\rgot: \"%s\"\n\rwant: \"%s\"",
 				test_case.Id, apiClientErr.Error(), test_case.Err.Error())
+		}
+	}
+}
+
+func Create_test_resource_schema(id interface{}) *schema.ResourceData {
+	vm_res := resource_vm()
+	d := vm_res.TestResourceData()
+	d.SetId(id.(string))
+	return d
+}
+
+func TestDelete_terraform_resource(t *testing.T) {
+	d := Create_test_resource_schema("resource to delete")
+	Delete_terraform_resource(d)
+	if d.Id() != "" {
+		t.Errorf("Deletion of unit test resource failed.")
+	}
+}
+
+func TestUpdate_local_resource_state_AND_read_element(t *testing.T) {
+	test_cases := []struct {
+		Id           int
+		Vm_map       map[string]interface{}
+		Vm_Id_string string
+	}{
+		{
+			1,
+			TEST_UPDATE_VM_MAP,
+			"unit test vm",
+		},
+		{
+			2,
+			TEST_UPDATE_VM_MAP_FLOATID,
+			"121212.12",
+		},
+		{
+			3,
+			TEST_UPDATE_VM_MAP_INTID,
+			"1212",
+		},
+	}
+	var d *schema.ResourceData
+
+	for _, test_case := range test_cases {
+		d = Create_test_resource_schema(test_case.Vm_Id_string)
+		_ = Update_local_resource_state(test_case.Vm_map, d)
+		for key, value := range test_case.Vm_map {
+			if key != "id" {
+				if !reflect.DeepEqual(d.Get(key), value) {
+					t.Errorf("TC %d : Update of %s field failed :\n\rGot :%s\n\rWant :%s",
+						test_case.Id, key, d.Get(key), value)
+				}
+			} else {
+				if d.Id() != test_case.Vm_Id_string {
+					t.Errorf("TC %d : Update of Id reserved field failed :\n\rGot :%s\n\rWant :%s",
+						test_case.Id, d.Id(), test_case.Vm_Id_string)
+				}
+			}
 		}
 	}
 }

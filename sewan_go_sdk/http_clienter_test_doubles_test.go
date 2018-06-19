@@ -9,23 +9,22 @@ import (
 )
 
 //------------------------------------------------------------------------------
-// Error response *ClientTooler
-type GetTemplatesList_Sucess_HttpClienterFake struct{}
+type GetTemplatesList_Success_HttpClienterFake struct{}
 
-func (client GetTemplatesList_Sucess_HttpClienterFake) Do(api *API,
+func (client GetTemplatesList_Success_HttpClienterFake) Do(api *API,
 	req *http.Request) (*http.Response, error) {
 
 	//return a resp with TEMPLATES_LIST
 	return nil, nil
 }
 
-func (client GetTemplatesList_Sucess_HttpClienterFake) GetTemplatesList(clientTooler *ClientTooler,
+func (client GetTemplatesList_Success_HttpClienterFake) GetTemplatesList(clientTooler *ClientTooler,
 	enterprise_slug string, api *API) ([]interface{}, error) {
 
 	return TEMPLATES_LIST, nil
 }
 
-func (client GetTemplatesList_Sucess_HttpClienterFake) HandleResponse(resp *http.Response,
+func (client GetTemplatesList_Success_HttpClienterFake) HandleResponse(resp *http.Response,
 	expectedCode int,
 	expectedBodyFormat string) (interface{}, error) {
 
@@ -264,7 +263,7 @@ func (client VDC_CreationSuccess_HttpClienterFake) Do(api *API,
 	resp.Header = map[string][]string{}
 	resp.Header.Add("Content-Type", "application/json")
 	resp.StatusCode = http.StatusCreated
-	js, _ := json.Marshal(TEST_VDC_READ_RESPONSE_MAP)
+	js, _ := json.Marshal(VDC_READ_RESPONSE_MAP)
 	resp.Body = ioutil.NopCloser(bytes.NewBuffer(js))
 	return &resp, nil
 }
@@ -293,7 +292,7 @@ func (client VDC_ReadSuccess_HttpClienterFake) Do(api *API,
 	resp.Header = map[string][]string{}
 	resp.Header.Add("Content-Type", "application/json")
 	resp.StatusCode = http.StatusOK
-	js, _ := json.Marshal(TEST_VDC_READ_RESPONSE_MAP)
+	js, _ := json.Marshal(VDC_READ_RESPONSE_MAP)
 	resp.Body = ioutil.NopCloser(bytes.NewBuffer(js))
 	return &resp, nil
 }
@@ -322,7 +321,7 @@ func (client VDC_UpdateSuccess_HttpClienterFake) Do(api *API,
 	resp.Header = map[string][]string{}
 	resp.Header.Add("Content-Type", "application/json")
 	resp.StatusCode = http.StatusOK
-	js, _ := json.Marshal(TEST_VDC_CREATION_MAP)
+	js, _ := json.Marshal(VDC_CREATION_MAP)
 	resp.Body = ioutil.NopCloser(bytes.NewBuffer(js))
 	return &resp, nil
 }
@@ -380,7 +379,7 @@ func (client VM_CreationSuccess_HttpClienterFake) Do(api *API,
 	resp.Header = map[string][]string{}
 	resp.Header.Add("Content-Type", "application/json")
 	resp.StatusCode = http.StatusCreated
-	js, _ := json.Marshal(TEST_VM_MAP)
+	js, _ := json.Marshal(NO_TEMPLATE_VM_MAP)
 	resp.Body = ioutil.NopCloser(bytes.NewBuffer(js))
 	return &resp, nil
 }
@@ -409,7 +408,7 @@ func (client VM_ReadSuccess_HttpClienterFake) Do(api *API,
 	resp.Header = map[string][]string{}
 	resp.Header.Add("Content-Type", "application/json")
 	resp.StatusCode = http.StatusOK
-	js, _ := json.Marshal(TEST_VM_MAP)
+	js, _ := json.Marshal(NO_TEMPLATE_VM_MAP)
 	resp.Body = ioutil.NopCloser(bytes.NewBuffer(js))
 	return &resp, nil
 }
@@ -438,7 +437,7 @@ func (client VM_UpdateSuccess_HttpClienterFake) Do(api *API,
 	resp.Header = map[string][]string{}
 	resp.Header.Add("Content-Type", "application/json")
 	resp.StatusCode = http.StatusOK
-	js, _ := json.Marshal(TEST_VM_MAP)
+	js, _ := json.Marshal(NO_TEMPLATE_VM_MAP)
 	resp.Body = ioutil.NopCloser(bytes.NewBuffer(js))
 	return &resp, nil
 }

@@ -28,7 +28,7 @@ type VM struct {
 	Nics              []interface{} `json:"nics"`
 	Vdc               string        `json:"vdc"`
 	Boot              string        `json:"boot"`
-	Vdc_resource_disk string        `json:"vdc_resource_disk"`
+	Storage_class string        `json:"storage_class"`
 	//Template string `json:"template"`
 	Slug          string `json:"slug"`
 	Token         string `json:"token"`
@@ -63,7 +63,7 @@ func vmInstanceCreate(d *schema.ResourceData) VM {
 		Nics:              d.Get("nics").([]interface{}),
 		Vdc:               d.Get("vdc").(string),
 		Boot:              d.Get("boot").(string),
-		Vdc_resource_disk: d.Get("vdc_resource_disk").(string),
+		Storage_class: d.Get("storage_class").(string),
 		//Template:  d.Get("template").(string),
 		Slug:          d.Get("slug").(string),
 		Token:         d.Get("token").(string),

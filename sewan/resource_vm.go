@@ -44,7 +44,7 @@ func resource_vm() *schema.Resource {
 							Type:     schema.TypeInt,
 							Required: true,
 						},
-						"v_disk": &schema.Schema{
+						"storage_class": &schema.Schema{
 							Type:     schema.TypeString,
 							Required: true,
 						},
@@ -83,7 +83,7 @@ func resource_vm() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"vdc_resource_disk": &schema.Schema{
+			"storage_class": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
 			},

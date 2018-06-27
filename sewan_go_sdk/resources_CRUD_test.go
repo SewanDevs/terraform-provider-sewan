@@ -105,6 +105,9 @@ func TestCreate_resource(t *testing.T) {
 
 	sewan = &API{Token: "42", URL: "42", Client: &http.Client{}}
 	fake_client_tooler := ClientTooler{}
+	fake_templates_tooler := TemplatesTooler{
+		TemplatesTools: Template_Templater{},
+	}
 
 	for _, test_case := range test_cases {
 		resource_res = resource(test_case.ResourceType)
@@ -114,36 +117,37 @@ func TestCreate_resource(t *testing.T) {
 		fake_client_tooler.Client = test_case.TC_clienter
 		err, resp_creation_map = apier.Create_resource(d,
 			&fake_client_tooler,
+			&fake_templates_tooler,
 			test_case.ResourceType,
 			sewan)
 
 		switch {
 		case err == nil || test_case.Creation_Err == nil:
 			if !(err == nil && test_case.Creation_Err == nil) {
-				t.Errorf("TC %d : resource creation error was incorrect,"+
+				t.Errorf("\n\nTC %d : resource creation error was incorrect,"+
 					"\n\rgot: \"%s\"\n\rwant: \"%s\"", test_case.Id, err, test_case.Creation_Err)
 			} else {
 				switch {
 				case !reflect.DeepEqual(test_case.Created_resource, resp_creation_map):
-					t.Errorf("TC %d : Wrong created resource map,"+
+					t.Errorf("\n\nTC %d : Wrong created resource map,"+
 						"\n\rgot: \"%s\"\n\rwant: \"%s\"",
 						test_case.Id, resp_creation_map, test_case.Created_resource)
 				}
 			}
 		case err != nil && test_case.Creation_Err != nil:
 			if resp_creation_map != nil {
-				t.Errorf("TC %d : Wrong created resource map,"+
+				t.Errorf("\n\nTC %d : Wrong created resource map,"+
 					" it should be nil as error is not nil,"+
 					"\n\rgot map: \n\r\"%s\"\n\rwant map: \n\r\"%s\"\n\r",
 					test_case.Id, resp_creation_map, test_case.Created_resource)
 			}
 			if err.Error() != test_case.Creation_Err.Error() {
-				t.Errorf("TC %d : resource creation error was incorrect,"+
+				t.Errorf("\n\nTC %d : resource creation error was incorrect,"+
 					"\n\rgot: \"%s\"\n\rwant: \"%s\"",
 					test_case.Id, err.Error(), test_case.Creation_Err.Error())
 			}
 		case !reflect.DeepEqual(test_case.Created_resource, resp_creation_map):
-			t.Errorf("TC %d : Wrong created resource map,"+
+			t.Errorf("\n\nTC %d : Wrong created resource map,"+
 				"\n\rgot: \"%s\"\n\rwant: \"%s\"",
 				test_case.Id, resp_creation_map, test_case.Created_resource)
 		}
@@ -258,6 +262,9 @@ func TestRead_resource(t *testing.T) {
 	Apier := AirDrumResources_Apier{}
 	sewan = &API{Token: "42", URL: "42", Client: &http.Client{}}
 	fake_client_tooler := ClientTooler{}
+	fake_templates_tooler := TemplatesTooler{
+		TemplatesTools: Template_Templater{},
+	}
 
 	for _, test_case := range test_cases {
 		resource_res = resource(test_case.ResourceType)
@@ -267,44 +274,45 @@ func TestRead_resource(t *testing.T) {
 		fake_client_tooler.Client = test_case.TC_clienter
 		err, resp_creation_map, res_exists = Apier.Read_resource(d,
 			&fake_client_tooler,
+			&fake_templates_tooler,
 			test_case.ResourceType,
 			sewan)
 
 		switch {
 		case err == nil || test_case.Read_Err == nil:
 			if !((err == nil) && (test_case.Read_Err == nil)) {
-				t.Errorf("TC %d : resource read error was incorrect,"+
+				t.Errorf("\n\nTC %d : resource read error was incorrect,"+
 					"\n\rgot: \"%s\"\n\rwant: \"%s\"", test_case.Id, err, test_case.Read_Err)
 			} else {
 				switch {
 				case res_exists != test_case.Resource_exists:
-					t.Errorf("TC %d : Wrong read resource exists value"+
+					t.Errorf("\n\nTC %d : Wrong read resource exists value"+
 						"\n\rgot: \"%v\"\n\rwant: \"%v\"",
 						test_case.Id, res_exists, test_case.Resource_exists)
 				case !reflect.DeepEqual(test_case.Read_resource, resp_creation_map):
-					t.Errorf("TC %d : Wrong resource read resource map,"+
+					t.Errorf("\n\nTC %d : Wrong resource read resource map,"+
 						"\n\rgot: \"%s\"\n\rwant: \"%s\"",
 						test_case.Id, resp_creation_map, test_case.Read_resource)
 				}
 			}
 		case err != nil && test_case.Read_Err != nil:
 			if resp_creation_map != nil {
-				t.Errorf("TC %d : Wrong created resource map,"+
+				t.Errorf("\n\nTC %d : Wrong created resource map,"+
 					" it should be nil as error is not nil,"+
 					"\n\rgot map: \n\r\"%s\"\n\rwant map: \n\r\"%s\"\n\r",
 					test_case.Id, resp_creation_map, test_case.Read_resource)
 			}
 			if err.Error() != test_case.Read_Err.Error() {
-				t.Errorf("TC %d : resource read error was incorrect,"+
+				t.Errorf("\n\nTC %d : resource read error was incorrect,"+
 					"\n\rgot: \"%s\"\n\rwant: \"%s\"",
 					test_case.Id, err.Error(), test_case.Read_Err.Error())
 			}
 		case res_exists != test_case.Resource_exists:
-			t.Errorf("TC %d : Wrong read resource exists value"+
+			t.Errorf("\n\nTC %d : Wrong read resource exists value"+
 				"\n\rgot: \"%v\"\n\rwant: \"%v\"",
 				test_case.Id, res_exists, test_case.Resource_exists)
 		case !reflect.DeepEqual(test_case.Read_resource, resp_creation_map):
-			t.Errorf("TC %d : Wrong resource read resource map,"+
+			t.Errorf("\n\nTC %d : Wrong resource read resource map,"+
 				"\n\rgot: \"%s\"\n\rwant: \"%s\"",
 				test_case.Id, resp_creation_map, test_case.Read_resource)
 		}
@@ -395,6 +403,9 @@ func TestUpdate_resource(t *testing.T) {
 	)
 	sewan = &API{Token: "42", URL: "42", Client: &http.Client{}}
 	fake_client_tooler := ClientTooler{}
+	fake_templates_tooler := TemplatesTooler{
+		TemplatesTools: Template_Templater{},
+	}
 
 	for _, test_case := range test_cases {
 		resource_res = resource(test_case.ResourceType)
@@ -404,17 +415,18 @@ func TestUpdate_resource(t *testing.T) {
 		fake_client_tooler.Client = test_case.TC_clienter
 		err = Apier.Update_resource(d,
 			&fake_client_tooler,
+			&fake_templates_tooler,
 			test_case.ResourceType,
 			sewan)
 
 		switch {
 		case err == nil || test_case.Update_Err == nil:
 			if !(err == nil && test_case.Update_Err == nil) {
-				t.Errorf("TC %d : resource read error was incorrect,"+
+				t.Errorf("\n\nTC %d : resource read error was incorrect,"+
 					"\n\rgot: \"%s\"\n\rwant: \"%s\"", test_case.Id, err, test_case.Update_Err)
 			}
 		case err.Error() != test_case.Update_Err.Error():
-			t.Errorf("TC %d : resource read error was incorrect,"+
+			t.Errorf("\n\nTC %d : resource read error was incorrect,"+
 				"\n\rgot: \"%s\"\n\rwant: \"%s\"",
 				test_case.Id, err.Error(), test_case.Update_Err.Error())
 		}
@@ -511,6 +523,9 @@ func TestDelete_resource(t *testing.T) {
 	Apier := AirDrumResources_Apier{}
 	sewan = &API{Token: "42", URL: "42", Client: &http.Client{}}
 	fake_client_tooler := ClientTooler{}
+	fake_templates_tooler := TemplatesTooler{
+		TemplatesTools: Template_Templater{},
+	}
 
 	for _, test_case := range test_cases {
 		resource_res = resource(test_case.ResourceType)
@@ -520,17 +535,18 @@ func TestDelete_resource(t *testing.T) {
 		fake_client_tooler.Client = test_case.TC_clienter
 		err = Apier.Delete_resource(d,
 			&fake_client_tooler,
+			&fake_templates_tooler,
 			test_case.ResourceType,
 			sewan)
 
 		switch {
 		case err == nil || test_case.Delete_Err == nil:
 			if !(err == nil && test_case.Delete_Err == nil) {
-				t.Errorf("TC %d : resource read error was incorrect,"+
+				t.Errorf("\n\nTC %d : resource read error was incorrect,"+
 					"\n\rgot: \"%s\"\n\rwant: \"%s\"", test_case.Id, err, test_case.Delete_Err)
 			}
 		case err.Error() != test_case.Delete_Err.Error():
-			t.Errorf("TC %d : resource read error was incorrect,"+
+			t.Errorf("\n\nTC %d : resource read error was incorrect,"+
 				"\n\rgot: \"%s\"\n\rwant: \"%s\"",
 				test_case.Id, err.Error(), test_case.Delete_Err.Error())
 		}

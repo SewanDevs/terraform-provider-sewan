@@ -71,6 +71,7 @@ func resource_vdc_create(d *schema.ResourceData, m interface{}) error {
 	sewan := m.(*Client).sewan
 	creationError, apiCreationResponse = m.(*Client).sewan_apiTooler.Api.Create_resource(d,
 		m.(*Client).sewan_clientTooler,
+		m.(*Client).sewan_TemplatesTooler,
 		VDC_RESOURCE_TYPE,
 		sewan)
 
@@ -88,6 +89,7 @@ func resource_vdc_read(d *schema.ResourceData, m interface{}) error {
 	sewan := m.(*Client).sewan
 	readError, apiCreationResponse, resource_exists = m.(*Client).sewan_apiTooler.Api.Read_resource(d,
 		m.(*Client).sewan_clientTooler,
+		m.(*Client).sewan_TemplatesTooler,
 		VDC_RESOURCE_TYPE,
 		sewan)
 
@@ -107,6 +109,7 @@ func resource_vdc_update(d *schema.ResourceData, m interface{}) error {
 	sewan := m.(*Client).sewan
 	updateError = m.(*Client).sewan_apiTooler.Api.Update_resource(d,
 		m.(*Client).sewan_clientTooler,
+		m.(*Client).sewan_TemplatesTooler,
 		VDC_RESOURCE_TYPE,
 		sewan)
 	return updateError
@@ -119,6 +122,7 @@ func resource_vdc_delete(d *schema.ResourceData, m interface{}) error {
 	sewan := m.(*Client).sewan
 	deleteError = m.(*Client).sewan_apiTooler.Api.Delete_resource(d,
 		m.(*Client).sewan_clientTooler,
+		m.(*Client).sewan_TemplatesTooler,
 		VDC_RESOURCE_TYPE,
 		sewan)
 	if deleteError == nil {

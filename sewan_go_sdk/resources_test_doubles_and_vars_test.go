@@ -128,8 +128,8 @@ var (
 		"outsourcing":   "42",
 		"dynamic_field": "42",
 	}
-	EXISTING_TEMPLATE_NO_ADDITIONAL_NIC_OR_DISK_VM_MAP = map[string]interface{}{
-		"name":          "Unit test template no add nics nor discs vm resource",
+	EXISTING_TEMPLATE_NO_ADDITIONAL_DISK_VM_MAP = map[string]interface{}{
+		"name":          "Unit test template no disc add on vm resource",
 		"enterprise":    "sewan-rd-cloud-beta",
 		"template":      "centos7-rd-DC1",
 		"state":         "UP",
@@ -829,9 +829,9 @@ func vmInstanceNO_TEMPLATE_VM_MAP() VM {
 	}
 }
 
-func Fake_vmInstance_EXISTING_TEMPLATE_NO_ADDITIONAL_NIC_OR_DISK_VM_MAP() VM {
+func Fake_vmInstance_EXISTING_TEMPLATE_NO_ADDITIONAL_DISK_VM_MAP() VM {
 	return VM{
-		Name:       "Unit test template no add nics nor discs vm resource",
+		Name:       "Unit test template no disc add on vm resource",
 		Enterprise: "sewan-rd-cloud-beta",
 		Template:   "centos7-rd-DC1",
 		State:      "UP",
@@ -843,18 +843,6 @@ func Fake_vmInstance_EXISTING_TEMPLATE_NO_ADDITIONAL_NIC_OR_DISK_VM_MAP() VM {
 				"size":          20,
 				"storage_class": "storage_enterprise",
 				"slug":          "disk-centos7-rd-dc1-1",
-			},
-		},
-		Nics: []interface{}{
-			map[string]interface{}{
-				"vlan":        "sewanrd-mgt-th3",
-				"mac_address": "00:50:56:21:7c:ab",
-				"connected":   true,
-			},
-			map[string]interface{}{
-				"vlan":        "sewanrd-priv-th3",
-				"mac_address": "00:50:56:21:7c:ac",
-				"connected":   true,
 			},
 		},
 		Vdc:           "vdc",

@@ -279,11 +279,11 @@ func TestResource_vdc_create(t *testing.T) {
 		switch {
 		case err == nil || test_case.Creation_Err == nil:
 			if !(err == nil && test_case.Creation_Err == nil) {
-				t.Errorf("TC %d : VDC creation error was incorrect,"+
+				t.Errorf("\n\nTC %d : VDC creation error was incorrect,"+
 					"\n\rgot: \"%s\"\n\rwant: \"%s\"", test_case.Id, err, test_case.Creation_Err)
 			}
 		case err.Error() != test_case.Creation_Err.Error():
-			t.Errorf("TC %d : VDC creation error was incorrect,"+
+			t.Errorf("\n\nTC %d : VDC creation error was incorrect,"+
 				"\n\rgot: \"%s\"\n\rwant: \"%s\"",
 				test_case.Id, err.Error(), test_case.Creation_Err.Error())
 		}
@@ -339,11 +339,11 @@ func TestResource_vdc_read(t *testing.T) {
 		switch {
 		case err == nil || test_case.Read_Err == nil:
 			if !(err == nil && test_case.Read_Err == nil) {
-				t.Errorf("TC %d : VDC update error was incorrect,"+
+				t.Errorf("\n\nTC %d : VDC update error was incorrect,"+
 					"\n\rgot: \"%s\"\n\rwant: \"%s\"", test_case.Id, err, test_case.Read_Err)
 			}
 		case err.Error() != test_case.Read_Err.Error():
-			t.Errorf("TC %d : VDC update error was incorrect,"+
+			t.Errorf("\n\nTC %d : VDC update error was incorrect,"+
 				"\n\rgot: \"%s\"\n\rwant: \"%s\"",
 				test_case.Id, err.Error(), test_case.Read_Err.Error())
 		}
@@ -390,11 +390,11 @@ func TestResource_vdc_update(t *testing.T) {
 		switch {
 		case err == nil || test_case.Update_Err == nil:
 			if !(err == nil && test_case.Update_Err == nil) {
-				t.Errorf("TC %d : VDC update error was incorrect,"+
+				t.Errorf("\n\nTC %d : VDC update error was incorrect,"+
 					"\n\rgot: \"%s\"\n\rwant: \"%s\"", test_case.Id, err, test_case.Update_Err)
 			}
 		case err.Error() != test_case.Update_Err.Error():
-			t.Errorf("TC %d : VDC update error was incorrect,"+
+			t.Errorf("\n\nTC %d : VDC update error was incorrect,"+
 				"\n\rgot: \"%s\"\n\rwant: \"%s\"",
 				test_case.Id, err.Error(), test_case.Update_Err.Error())
 		}
@@ -441,11 +441,11 @@ func TestResource_vdc_delete(t *testing.T) {
 		switch {
 		case err == nil || test_case.Delete_Err == nil:
 			if !(err == nil && test_case.Delete_Err == nil) {
-				t.Errorf("TC %d : VDC deletion error was incorrect,"+
+				t.Errorf("\n\nTC %d : VDC deletion error was incorrect,"+
 					"\n\rgot: \"%s\"\n\rwant: \"%s\"", test_case.Id, err, test_case.Delete_Err)
 			}
 		case err.Error() != test_case.Delete_Err.Error():
-			t.Errorf("TC %d : VDC deletion error was incorrect,"+
+			t.Errorf("\n\nTC %d : VDC deletion error was incorrect,"+
 				"\n\rgot: \"%s\"\n\rwant: \"%s\"",
 				test_case.Id, err.Error(), test_case.Delete_Err.Error())
 		}

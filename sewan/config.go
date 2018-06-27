@@ -22,9 +22,10 @@ type API struct {
 }
 
 type Client struct {
-	sewan              *sdk.API
-	sewan_apiTooler    *sdk.APITooler
-	sewan_clientTooler *sdk.ClientTooler
+	sewan                 *sdk.API
+	sewan_apiTooler       *sdk.APITooler
+	sewan_clientTooler    *sdk.ClientTooler
+	sewan_TemplatesTooler *sdk.TemplatesTooler
 }
 
 func (c *Config) Client() (*Client, error) {
@@ -34,11 +35,14 @@ func (c *Config) Client() (*Client, error) {
 	clientTooler := sdk.ClientTooler{
 		Client: sdk.HttpClienter{},
 	}
+	templatesTooler := sdk.TemplatesTooler{
+		TemplatesTools: sdk.Template_Templater{},
+	}
 	api := apiTooler.New(
 		c.Api_token,
 		c.Api_url,
 	)
 	err := apiTooler.CheckStatus(api)
 
-	return &Client{api, &apiTooler, &clientTooler}, err
+	return &Client{api, &apiTooler, &clientTooler, &templatesTooler}, err
 }

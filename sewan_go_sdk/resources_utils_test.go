@@ -13,7 +13,8 @@ func TestResourceInstanceCreate(t *testing.T) {
 	test_cases := []struct {
 		Id            int
 		D             *schema.ResourceData
-		TC_clienter   Clienter
+		TC_Clienter   Clienter
+		TC_Templater  Templater
 		Resource_type string
 		Error         error
 		VmInstance    interface{}
@@ -22,22 +23,25 @@ func TestResourceInstanceCreate(t *testing.T) {
 			1,
 			vm_schema_init(NO_TEMPLATE_VM_MAP),
 			GetTemplatesList_Success_HttpClienterFake{},
+			TemplaterDummy{},
 			VM_RESOURCE_TYPE,
 			nil,
 			vmInstanceNO_TEMPLATE_VM_MAP(),
 		},
 		{
 			2,
-			vm_schema_init(EXISTING_TEMPLATE_NO_ADDITIONAL_NIC_OR_DISK_VM_MAP),
+			vm_schema_init(EXISTING_TEMPLATE_NO_ADDITIONAL_DISK_VM_MAP),
 			GetTemplatesList_Success_HttpClienterFake{},
+			EXISTING_TEMPLATE_NO_ADDITIONAL_DISK_VM_MAP_TemplaterFake{},
 			VM_RESOURCE_TYPE,
 			nil,
-			Fake_vmInstance_EXISTING_TEMPLATE_NO_ADDITIONAL_NIC_OR_DISK_VM_MAP(),
+			Fake_vmInstance_EXISTING_TEMPLATE_NO_ADDITIONAL_DISK_VM_MAP(),
 		},
 		{
 			3,
 			vm_schema_init(EXISTING_TEMPLATE_WITH_ADDITIONAL_AND_MODIFIED_NICS_AND_DISKS_VM_MAP),
 			GetTemplatesList_Success_HttpClienterFake{},
+			TemplaterDummy{},
 			VM_RESOURCE_TYPE,
 			nil,
 			Fake_vmInstance_EXISTING_TEMPLATE_WITH_ADDITIONAL_AND_MODIFIED_NICS_AND_DISKS_VM_MAP(),
@@ -46,6 +50,7 @@ func TestResourceInstanceCreate(t *testing.T) {
 			4,
 			vm_schema_init(EXISTING_TEMPLATE_WITH_MODIFIED_NIC_AND_DISK_VM_MAP),
 			GetTemplatesList_Success_HttpClienterFake{},
+			TemplaterDummy{},
 			VM_RESOURCE_TYPE,
 			nil,
 			Fake_vmInstance_EXISTING_TEMPLATE_WITH_MODIFIED_NIC_AND_DISK_VM_MAP(),
@@ -54,6 +59,7 @@ func TestResourceInstanceCreate(t *testing.T) {
 			5,
 			vm_schema_init(NON_EXISTING_TEMPLATE_VM_MAP),
 			GetTemplatesList_Success_HttpClienterFake{},
+			TemplaterDummy{},
 			VM_RESOURCE_TYPE,
 			errors.New("Unavailable template : windows95"),
 			VM{},
@@ -62,6 +68,7 @@ func TestResourceInstanceCreate(t *testing.T) {
 			6,
 			vdc_schema_init(VDC_CREATION_MAP),
 			nil,
+			TemplaterDummy{},
 			VDC_RESOURCE_TYPE,
 			nil,
 			Fake_vdcInstance_VDC_CREATION_MAP(),
@@ -70,6 +77,7 @@ func TestResourceInstanceCreate(t *testing.T) {
 			7,
 			vdc_schema_init(VDC_CREATION_MAP),
 			GetTemplatesList_Success_HttpClienterFake{},
+			TemplaterDummy{},
 			WRONG_RESOURCE_TYPE,
 			errors.New("Resource of type \"a_non_supported_resource_type\" not supported," +
 				"list of accepted resource types :\n\r" +
@@ -88,25 +96,28 @@ func TestResourceInstanceCreate(t *testing.T) {
 		Api: AirDrumResources_Apier{},
 	}
 	fake_client_tooler := ClientTooler{}
+	fake_templates_tooler := TemplatesTooler{}
 	sewan = &API{Token: "42", URL: "42", Client: &http.Client{}}
 
 	for _, test_case := range test_cases {
-		fake_client_tooler.Client = test_case.TC_clienter
+		fake_client_tooler.Client = test_case.TC_Clienter
+		fake_templates_tooler.TemplatesTools = test_case.TC_Templater
 		err, instance = api_tools.Api.ResourceInstanceCreate(test_case.D,
 			&fake_client_tooler,
+			&fake_templates_tooler,
 			test_case.Resource_type,
 			sewan)
 		switch {
 		case err == nil || test_case.Error == nil:
 			if !(err == nil && test_case.Error == nil) {
-				t.Errorf("TC %d : ResourceInstanceCreate() error was incorrect,"+
+				t.Errorf("\n\nTC %d : ResourceInstanceCreate() error was incorrect,"+
 					"\n\rgot: \"%s\"\n\rwant: \"%s\"",
 					test_case.Id, err, test_case.Error)
 			} else {
 				switch {
 				//case !reflect.DeepEqual(test_case.VmInstance, instance):
 				case !reflect.DeepEqual(test_case.VmInstance, instance):
-					t.Errorf("TC %d : Wrong ResourceInstanceCreate() created instance,"+
+					t.Errorf("\n\nTC %d : Wrong ResourceInstanceCreate() created instance,"+
 						"\n\rgot: \"%s\"\n\rwant: \"%s\"",
 						test_case.Id, instance, test_case.VmInstance)
 					v := reflect.ValueOf(instance)
@@ -126,11 +137,11 @@ func TestResourceInstanceCreate(t *testing.T) {
 		case err != nil && test_case.Error != nil:
 			switch {
 			case !reflect.DeepEqual(instance, test_case.VmInstance):
-				t.Errorf("TC %d : Wrong ResourceInstanceCreate() created instance,"+
+				t.Errorf("\n\nTC %d : Wrong ResourceInstanceCreate() created instance,"+
 					"\n\rgot: \"%s\"\n\rwant: \"%s\"",
 					test_case.Id, instance, test_case.VmInstance)
 			case err.Error() != test_case.Error.Error():
-				t.Errorf("TC %d : resource creation error was incorrect,"+
+				t.Errorf("\n\nTC %d : resource creation error was incorrect,"+
 					"\n\rgot: \"%s\"\n\rwant: \"%s\"",
 					test_case.Id, err.Error(), test_case.Error.Error())
 			}
@@ -301,12 +312,12 @@ func TestValidate_status(t *testing.T) {
 		switch {
 		case apiClientErr == nil || test_case.Err == nil:
 			if !(apiClientErr == nil && test_case.Err == nil) {
-				t.Errorf("TC %d : Validate_status() error was incorrect,"+
+				t.Errorf("\n\nTC %d : Validate_status() error was incorrect,"+
 					"\n\rgot: \"%s\"\n\rwant: \"%s\"",
 					test_case.Id, apiClientErr, test_case.Err)
 			}
 		case apiClientErr.Error() != test_case.Err.Error():
-			t.Errorf("TC %d : Validate_status() error was incorrect,"+
+			t.Errorf("\n\nTC %d : Validate_status() error was incorrect,"+
 				"\n\rgot: \"%s\"\n\rwant: \"%s\"",
 				test_case.Id, apiClientErr.Error(), test_case.Err.Error())
 		}
@@ -358,12 +369,12 @@ func TestUpdate_local_resource_state_AND_read_element(t *testing.T) {
 		for key, value := range test_case.Vm_map {
 			if key != "id" {
 				if !reflect.DeepEqual(d.Get(key), value) {
-					t.Errorf("TC %d : Update of %s field failed :\n\rGot :%s\n\rWant :%s",
+					t.Errorf("\n\nTC %d : Update of %s field failed :\n\rGot :%s\n\rWant :%s",
 						test_case.Id, key, d.Get(key), value)
 				}
 			} else {
 				if d.Id() != test_case.Vm_Id_string {
-					t.Errorf("TC %d : Update of Id reserved field failed :\n\rGot :%s\n\rWant :%s",
+					t.Errorf("\n\nTC %d : Update of Id reserved field failed :\n\rGot :%s\n\rWant :%s",
 						test_case.Id, d.Id(), test_case.Vm_Id_string)
 				}
 			}

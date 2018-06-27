@@ -22,7 +22,7 @@ resource "sewan_clouddc_vdc" "terraform-vdc" {
   },
   {
     resource="sewan-rd-cloud-beta-mono-storage_performance"
-    total=10
+    total=20
   },
   {
     resource="sewan-rd-cloud-beta-mono-storage_high_performance"
@@ -32,44 +32,54 @@ resource "sewan_clouddc_vdc" "terraform-vdc" {
 }
 
 resource "sewan_clouddc_vm" "template-server" {
-  template
-}
-
-resource "sewan_clouddc_vm" "template-server" {
   depends_on = ["sewan_clouddc_vdc.terraform-vdc"]
   count = 1
   name = "template-server${count.index}"
-  template = "centos7-rd-DC1"
+  ram = 1
+  cpu = 1
   disks=[
     {
-      name="centos dc1"
-      size=15
-      storage_class="storage_enterprise"
-      delete = true
+      name="add disk test"
+      size=16
+      storage_class="storage_performance"
     }
   ]
   nics=[
     {
-      vlan="internal-2410"
-      connected=true
-    },
-    {
-      vlan="internal-2410"
-      connected=true
+      vlan="internal-2412"
+      connected=false
     },
   ]
-  vdc = "${sewan_clouddc_vdc.terraform-vdc.slug}"
-  backup = "backup-no-backup"
-  storage_class = "storage_enterprise"
-}
-
-
-resource "sewan_clouddc_vm" "template-server" {
-  depends_on = ["sewan_clouddc_vdc.terraform-vdc"]
-  count = 1
-  name = "template-server${count.index}"
   template = "centos7-rd-DC1"
   vdc = "${sewan_clouddc_vdc.terraform-vdc.slug}"
   backup = "backup-no-backup"
   storage_class = "storage_enterprise"
 }
+
+//resource "sewan_clouddc_vm" "template-server" {
+//  depends_on = ["sewan_clouddc_vdc.terraform-vdc"]
+//  count = 1
+//  name = "template-server${count.index}"
+//  template = "centos7-rd-DC1"
+//  disks=[
+//    {
+//      name="centos dc1"
+//      size=15
+//      storage_class="storage_enterprise"
+//      delete = true
+//    }
+//  ]
+//  nics=[
+//    {
+//      vlan="internal-2410"
+//      connected=true
+//    },
+//    {
+//      vlan="internal-2410"
+//      connected=true
+//    },
+//  ]
+//  vdc = "${sewan_clouddc_vdc.terraform-vdc.slug}"
+//  backup = "backup-no-backup"
+//  storage_class = "storage_enterprise"
+//}

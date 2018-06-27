@@ -153,8 +153,10 @@ func resource_vm_create(d *schema.ResourceData, m interface{}) error {
 	creationError = nil
 	var apiCreationResponse map[string]interface{}
 	sewan := m.(*Client).sewan
-	creationError, apiCreationResponse = m.(*Client).sewan_apiTooler.Api.Create_resource(d,
+	creationError,
+		apiCreationResponse = m.(*Client).sewan_apiTooler.Api.Create_resource(d,
 		m.(*Client).sewan_clientTooler,
+		m.(*Client).sewan_TemplatesTooler,
 		VM_RESOURCE_TYPE,
 		sewan)
 
@@ -170,8 +172,11 @@ func resource_vm_read(d *schema.ResourceData, m interface{}) error {
 	var resource_exists bool
 	var apiReadResponse map[string]interface{}
 	sewan := m.(*Client).sewan
-	readError, apiReadResponse, resource_exists = m.(*Client).sewan_apiTooler.Api.Read_resource(d,
+	readError,
+		apiReadResponse,
+		resource_exists = m.(*Client).sewan_apiTooler.Api.Read_resource(d,
 		m.(*Client).sewan_clientTooler,
+		m.(*Client).sewan_TemplatesTooler,
 		VM_RESOURCE_TYPE,
 		sewan)
 
@@ -191,6 +196,7 @@ func resource_vm_update(d *schema.ResourceData, m interface{}) error {
 	sewan := m.(*Client).sewan
 	updateError = m.(*Client).sewan_apiTooler.Api.Update_resource(d,
 		m.(*Client).sewan_clientTooler,
+		m.(*Client).sewan_TemplatesTooler,
 		VM_RESOURCE_TYPE,
 		sewan)
 	return updateError
@@ -202,6 +208,7 @@ func resource_vm_delete(d *schema.ResourceData, m interface{}) error {
 	sewan := m.(*Client).sewan
 	deleteError = m.(*Client).sewan_apiTooler.Api.Delete_resource(d,
 		m.(*Client).sewan_clientTooler,
+		m.(*Client).sewan_TemplatesTooler,
 		VM_RESOURCE_TYPE,
 		sewan)
 	if deleteError == nil {

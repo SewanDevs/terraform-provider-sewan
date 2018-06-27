@@ -17,6 +17,7 @@ const (
 //------------------------------------------------------------------------------
 func (apier AirDrumResources_Apier) Create_resource(d *schema.ResourceData,
 	clientTooler *ClientTooler,
+	templatesTooler *TemplatesTooler,
 	resourceType string,
 	sewan *API) (error, map[string]interface{}) {
 
@@ -41,6 +42,7 @@ func (apier AirDrumResources_Apier) Create_resource(d *schema.ResourceData,
 	resourceTypeErr,
 		resourceInstance = api_tools.Api.ResourceInstanceCreate(d,
 		clientTooler,
+		templatesTooler,
 		resourceType,
 		sewan)
 	logger := loggerCreate("create_resource_" + instanceName + ".log")
@@ -120,6 +122,7 @@ func (apier AirDrumResources_Apier) Create_resource(d *schema.ResourceData,
 //------------------------------------------------------------------------------
 func (apier AirDrumResources_Apier) Read_resource(d *schema.ResourceData,
 	clientTooler *ClientTooler,
+	templatesTooler *TemplatesTooler,
 	resourceType string,
 	sewan *API) (error, map[string]interface{}, bool) {
 
@@ -211,6 +214,7 @@ func (apier AirDrumResources_Apier) Read_resource(d *schema.ResourceData,
 //------------------------------------------------------------------------------
 func (apier AirDrumResources_Apier) Update_resource(d *schema.ResourceData,
 	clientTooler *ClientTooler,
+	templatesTooler *TemplatesTooler,
 	resourceType string,
 	sewan *API) error {
 
@@ -234,6 +238,7 @@ func (apier AirDrumResources_Apier) Update_resource(d *schema.ResourceData,
 	resourceTypeErr,
 		resourceInstance = api_tools.Api.ResourceInstanceCreate(d,
 		clientTooler,
+		templatesTooler,
 		resourceType,
 		sewan)
 	logger := loggerCreate("update_resource_" + instanceName + ".log")
@@ -303,6 +308,7 @@ func (apier AirDrumResources_Apier) Update_resource(d *schema.ResourceData,
 //------------------------------------------------------------------------------
 func (apier AirDrumResources_Apier) Delete_resource(d *schema.ResourceData,
 	clientTooler *ClientTooler,
+	templatesTooler *TemplatesTooler,
 	resourceType string,
 	sewan *API) error {
 

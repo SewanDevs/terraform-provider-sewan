@@ -60,25 +60,25 @@ func TestGetTemplatesList(t *testing.T) {
 		switch {
 		case err == nil || test_case.Error == nil:
 			if !(err == nil && test_case.Error == nil) {
-				t.Errorf("TC %d : GetTemplatesList() error was incorrect,"+
+				t.Errorf("\n\nTC %d : GetTemplatesList() error was incorrect,"+
 					"\n\rgot: \"%s\"\n\rwant: \"%s\"", test_case.Id, err, test_case.Error)
 			} else {
 				switch {
 				case !reflect.DeepEqual(test_case.TemplateList, templates_list):
-					t.Errorf("TC %d : Wrong template list,"+
+					t.Errorf("\n\nTC %d : Wrong template list,"+
 						"\n\rgot: \"%s\"\n\rwant: \"%s\"",
 						test_case.Id, templates_list, test_case.TemplateList)
 				}
 			}
 		case err != nil && test_case.Error != nil:
 			if templates_list != nil {
-				t.Errorf("TC %d : Wrong response read element,"+
+				t.Errorf("\n\nTC %d : Wrong response read element,"+
 					" it should be nil as error is not nil,"+
 					"\n\rgot map: \n\r\"%s\"\n\rwant map: \n\r\"%s\"\n\r",
 					test_case.Id, templates_list, test_case.TemplateList)
 			}
 			if err.Error() != test_case.Error.Error() {
-				t.Errorf("TC %d : Wrong response handle error,"+
+				t.Errorf("\n\nTC %d : Wrong response handle error,"+
 					"\n\rgot: \"%s\"\n\rwant: \"%s\"",
 					test_case.Id, err.Error(), test_case.Error.Error())
 			}
@@ -187,25 +187,25 @@ func TestHandleResponse(t *testing.T) {
 		switch {
 		case err == nil || test_case.Error == nil:
 			if !(err == nil && test_case.Error == nil) {
-				t.Errorf("TC %d : HandleResponse() error was incorrect,"+
+				t.Errorf("\n\nTC %d : HandleResponse() error was incorrect,"+
 					"\n\rgot: \"%s\"\n\rwant: \"%s\"", test_case.Id, err, test_case.Error)
 			} else {
 				switch {
 				case !reflect.DeepEqual(test_case.ResponseBody, responseBody):
-					t.Errorf("TC %d : Wrong response read element,"+
+					t.Errorf("\n\nTC %d : Wrong response read element,"+
 						"\n\rgot: \"%s\"\n\rwant: \"%s\"",
 						test_case.Id, responseBody, test_case.ResponseBody)
 				}
 			}
 		case err != nil && test_case.Error != nil:
 			if responseBody != nil {
-				t.Errorf("TC %d : Wrong response read element,"+
+				t.Errorf("\n\nTC %d : Wrong response read element,"+
 					" it should be nil as error is not nil,"+
 					"\n\rgot map: \n\r\"%s\"\n\rwant map: \n\r\"%s\"\n\r",
 					test_case.Id, responseBody, test_case.ResponseBody)
 			}
 			if err.Error() != test_case.Error.Error() {
-				t.Errorf("TC %d : Wrong response handle error,"+
+				t.Errorf("\n\nTC %d : Wrong response handle error,"+
 					"\n\rgot: \"%s\"\n\rwant: \"%s\"",
 					test_case.Id, err.Error(), test_case.Error.Error())
 			}

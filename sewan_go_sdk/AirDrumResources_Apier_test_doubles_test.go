@@ -29,6 +29,7 @@ func (apier FakeAirDrumResource_APIer) ValidateResourceType(resourceType string)
 
 func (apier FakeAirDrumResource_APIer) ResourceInstanceCreate(d *schema.ResourceData,
 	clientTooler *ClientTooler,
+	templatesTooler *TemplatesTooler,
 	resourceType string,
 	api *API) (error, interface{}) {
 
@@ -50,6 +51,7 @@ func (apier FakeAirDrumResource_APIer) Get_resource_url(api *API,
 
 func (apier FakeAirDrumResource_APIer) Create_resource(d *schema.ResourceData,
 	clientTooler *ClientTooler,
+	templatesTooler *TemplatesTooler,
 	resourceType string,
 	sewan *API) (error, map[string]interface{}) {
 
@@ -57,6 +59,7 @@ func (apier FakeAirDrumResource_APIer) Create_resource(d *schema.ResourceData,
 }
 func (apier FakeAirDrumResource_APIer) Read_resource(d *schema.ResourceData,
 	clientTooler *ClientTooler,
+	templatesTooler *TemplatesTooler,
 	resourceType string,
 	sewan *API) (error, map[string]interface{}, bool) {
 
@@ -64,6 +67,7 @@ func (apier FakeAirDrumResource_APIer) Read_resource(d *schema.ResourceData,
 }
 func (apier FakeAirDrumResource_APIer) Update_resource(d *schema.ResourceData,
 	clientTooler *ClientTooler,
+	templatesTooler *TemplatesTooler,
 	resourceType string,
 	sewan *API) error {
 
@@ -71,6 +75,7 @@ func (apier FakeAirDrumResource_APIer) Update_resource(d *schema.ResourceData,
 }
 func (apier FakeAirDrumResource_APIer) Delete_resource(d *schema.ResourceData,
 	clientTooler *ClientTooler,
+	templatesTooler *TemplatesTooler,
 	resourceType string,
 	sewan *API) error {
 

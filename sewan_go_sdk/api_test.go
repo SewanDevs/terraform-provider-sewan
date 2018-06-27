@@ -64,11 +64,11 @@ func TestNew(t *testing.T) {
 
 		switch {
 		case api.Token != test_case.Output_api.Token:
-			t.Errorf("TC %d : API token error was incorrect,"+
+			t.Errorf("\n\nTC %d : API token error was incorrect,"+
 				"\n\rgot: \"%s\"\n\rwant: \"%s\"",
 				test_case.Id, api.Token, test_case.Output_api.Token)
 		case api.URL != test_case.Output_api.URL:
-			t.Errorf("TC %d : API token error was incorrect,"+
+			t.Errorf("\n\nTC %d : API token error was incorrect,"+
 				"\n\rgot: \"%s\"\n\rwant: \"%s\"",
 				test_case.Id, api.URL, test_case.Output_api.URL)
 		}
@@ -125,12 +125,12 @@ func TestCheckStatus(t *testing.T) {
 		switch {
 		case err == nil || test_case.Err == nil:
 			if !(err == nil && test_case.Err == nil) {
-				t.Errorf("TC %d : Check API error was incorrect,"+
+				t.Errorf("\n\nTC %d : Check API error was incorrect,"+
 					"\n\rgot: \"%s\"\n\rwant: \"%s\"",
 					test_case.Id, err, test_case.Err)
 			}
 		case err.Error() != test_case.Err.Error():
-			t.Errorf("TC %d : Check API error was incorrect,"+
+			t.Errorf("\n\nTC %d : Check API error was incorrect,"+
 				"\n\rgot: \"%s\"\n\rwant: \"%s\"",
 				test_case.Id, err.Error(), test_case.Err.Error())
 		}

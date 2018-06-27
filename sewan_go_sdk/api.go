@@ -29,26 +29,31 @@ type APIer interface {
 		client ClientTooler) error
 	ResourceInstanceCreate(d *schema.ResourceData,
 		clientTooler *ClientTooler,
+		templatesTooler *TemplatesTooler,
 		resourceType string,
 		api *API) (error,
 		interface{})
 	Create_resource(d *schema.ResourceData,
 		clientTooler *ClientTooler,
+		templatesTooler *TemplatesTooler,
 		resourceType string,
 		sewan *API) (error,
 		map[string]interface{})
 	Read_resource(d *schema.ResourceData,
 		clientTooler *ClientTooler,
+		templatesTooler *TemplatesTooler,
 		resourceType string,
 		sewan *API) (error,
 		map[string]interface{},
 		bool)
 	Update_resource(d *schema.ResourceData,
 		clientTooler *ClientTooler,
+		templatesTooler *TemplatesTooler,
 		resourceType string,
 		sewan *API) error
 	Delete_resource(d *schema.ResourceData,
 		clientTooler *ClientTooler,
+		templatesTooler *TemplatesTooler,
 		resourceType string,
 		sewan *API) error
 }

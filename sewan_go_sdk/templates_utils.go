@@ -6,22 +6,41 @@ import (
 	"reflect"
 )
 
-func Handle_templates_list(d *schema.ResourceData,
-	templateList []interface{}) (bool, error) {
+const (
+	NICS_PARAM     = "nics"
+	DISKS_PARAM    = "disks"
+	TEMPLATE_FIELD = "template"
+	NAME_FIELD     = "name"
+)
+
+type TemplatesTooler struct {
+	TemplatesTools Templater
+}
+type Templater interface {
+	FetchTemplateFromList(template_name string,
+		templateList []interface{}) (map[string]interface{}, error)
+	UpdateSchema(d *schema.ResourceData,
+		template map[string]interface{},
+		templatesTooler *TemplatesTooler) error
+	UpdateSchemaDisks(d *schema.ResourceData,
+		disks []interface{}) error
+	UpdateSchemaNics(d *schema.ResourceData) error
+}
+type Template_Templater struct{}
+
+func (templater Template_Templater) FetchTemplateFromList(template_name string,
+	templateList []interface{}) (map[string]interface{}, error) {
 
 	var (
-		template_exists     bool   = false
-		template_list_valid error  = nil
-		template_handle_err error  = nil
-		template            string = d.Get("template").(string)
+		template            map[string]interface{} = nil
+		template_list_valid error                  = nil
 	)
 	for i := 0; i < len(templateList); i++ {
 		switch reflect.TypeOf(templateList[i]).Kind() {
 		case reflect.Map:
-			var templateName string = templateList[i].(map[string]interface{})["name"].(string)
-			if templateName == template {
-				template_exists = true
-				template_handle_err = Handle_template_and_set_schema(d, templateList[i].(map[string]interface{}))
+			var list_template_name string = templateList[i].(map[string]interface{})[NAME_FIELD].(string)
+			if list_template_name == template_name {
+				template = templateList[i].(map[string]interface{})
 				break
 			}
 		default:
@@ -30,19 +49,21 @@ func Handle_templates_list(d *schema.ResourceData,
 				"want :" + reflect.Map.String())
 		}
 	}
-	if template_handle_err != nil {
-		template_list_valid = template_handle_err
+	if template == nil {
+		template_list_valid = errors.New("Template \"" + template_name +
+			"\" does not exists, please validate it's name.")
 	}
-	return template_exists, template_list_valid
+	return template, template_list_valid
 }
 
-func Handle_template_and_set_schema(d *schema.ResourceData,
-	template map[string]interface{}) error {
+func (templater Template_Templater) UpdateSchema(d *schema.ResourceData,
+	template map[string]interface{},
+	templatesTooler *TemplatesTooler) error {
 
 	var template_handle_err error = nil
-	logger := LoggerCreate("Handle_template_and_set_schema" + d.Get("name").(string) + ".log")
-	logger.Println("d.Get(\"disks\").([]interface{}) = ",d.Get("disks").([]interface{}))
-	logger.Println("d.Get(\"nics\").([]interface{}) = ",d.Get("nics").([]interface{}))
+	logger := LoggerCreate("UpdateSchema" + d.Get("name").(string) + ".log")
+	logger.Println("d.Get(\"disks\").([]interface{}) = ", d.Get("disks").([]interface{}))
+	logger.Println("d.Get(\"nics\").([]interface{}) = ", d.Get("nics").([]interface{}))
 
 	for template_param_name, template_param_value := range template {
 		if reflect.ValueOf(template_param_name).IsValid() && reflect.ValueOf(template_param_value).IsValid() {
@@ -58,7 +79,7 @@ func Handle_template_and_set_schema(d *schema.ResourceData,
 					case reflect.ValueOf(template_param_name).String() == "name":
 						logger.Println("2a")
 					default:
-						if d.Get(reflect.ValueOf(template_param_name).String()) == ""{
+						if d.Get(reflect.ValueOf(template_param_name).String()) == "" {
 							logger.Println("3a : ", reflect.ValueOf(template_param_value).String())
 							d.Set(reflect.ValueOf(template_param_name).String(),
 								reflect.ValueOf(template_param_value).String())
@@ -69,7 +90,7 @@ func Handle_template_and_set_schema(d *schema.ResourceData,
 					case reflect.ValueOf(template_param_name).String() == "name":
 						logger.Println("2b")
 					default:
-						if d.Get(reflect.ValueOf(template_param_name).String()) == ""{
+						if d.Get(reflect.ValueOf(template_param_name).String()) == "" {
 							logger.Println("3a : ", reflect.ValueOf(template_param_value).String())
 							d.Set(reflect.ValueOf(template_param_name).String(),
 								reflect.ValueOf(template_param_value).String())
@@ -83,9 +104,9 @@ func Handle_template_and_set_schema(d *schema.ResourceData,
 				if d.Id() == "" {
 					switch {
 					case reflect.ValueOf(template_param_name).String() == "id":
-						logger.Println("2, d.Id() = ",d.Id())
+						logger.Println("2, d.Id() = ", d.Id())
 					default:
-						if d.Get(reflect.ValueOf(template_param_name).String()).(int) == 0{
+						if d.Get(reflect.ValueOf(template_param_name).String()).(int) == 0 {
 							logger.Println("3, val to set = ",
 								int(reflect.ValueOf(template_param_value).Interface().(float64)))
 							d.Set(reflect.ValueOf(template_param_name).String(),
@@ -95,10 +116,10 @@ func Handle_template_and_set_schema(d *schema.ResourceData,
 				} else {
 					switch {
 					case reflect.ValueOf(template_param_name).String() == "id":
-						logger.Println("2, d.Id() = ",d.Id())
+						logger.Println("2, d.Id() = ", d.Id())
 					default:
 						if d.Get(reflect.ValueOf(template_param_name).String()) == 0 {
-							if d.Get(reflect.ValueOf(template_param_name).String()).(int) == 0{
+							if d.Get(reflect.ValueOf(template_param_name).String()).(int) == 0 {
 								logger.Println("3, val to set = ",
 									int(reflect.ValueOf(template_param_value).Interface().(float64)))
 								d.Set(reflect.ValueOf(template_param_name).String(),
@@ -115,7 +136,7 @@ func Handle_template_and_set_schema(d *schema.ResourceData,
 					case reflect.ValueOf(template_param_name).String() == "id":
 						logger.Println("2")
 					default:
-						if d.Get(reflect.ValueOf(template_param_name).String()).(int) == 0{
+						if d.Get(reflect.ValueOf(template_param_name).String()).(int) == 0 {
 							logger.Println("3, val to set = ",
 								int(reflect.ValueOf(template_param_value).Interface().(int)))
 							d.Set(reflect.ValueOf(template_param_name).String(),
@@ -127,7 +148,7 @@ func Handle_template_and_set_schema(d *schema.ResourceData,
 					case reflect.ValueOf(template_param_name).String() == "id":
 						logger.Println("2")
 					default:
-						if d.Get(reflect.ValueOf(template_param_name).String()).(int) == 0{
+						if d.Get(reflect.ValueOf(template_param_name).String()).(int) == 0 {
 							logger.Println("3, val to set = ",
 								int(reflect.ValueOf(template_param_value).Interface().(int)))
 							d.Set(reflect.ValueOf(template_param_name).String(),
@@ -138,121 +159,84 @@ func Handle_template_and_set_schema(d *schema.ResourceData,
 			case reflect.Slice:
 				logger.Println("case Slice : ", template_param_name, " = ",
 					d.Get(reflect.ValueOf(template_param_name).String()))
-				var (
-					schema_slice []interface{}
-					map_item     interface{}
-				)
-				if d.Id() != "" {
-					if len(d.Get(reflect.ValueOf(template_param_name).String()).([]interface{})) == 0 {
-						logger.Println("6, slice elem number = 0")
-						//val, err := read_element(template_param_name, template_param_value, logger)
-						//logger.Println("val, err = ", val, err)
-						//err = d.Set(reflect.ValueOf(template_param_name).String(), val)
-
-					if template_param_name == "disks"{
-					for _, template_slice_element := range template_param_value.([]interface{}) {
-						logger.Println("template_slice_element = ",template_slice_element)
-
-						//template_slice_element.(map[string]interface{})["mac_address"] = ""
-
-						schema_slice = append(schema_slice,
-						template_slice_element.(map[string]interface{}))
-					}
+				switch {
+				case template_param_name == NICS_PARAM:
+					templatesTooler.TemplatesTools.UpdateSchemaNics(d)
+				case template_param_name == DISKS_PARAM:
+					templatesTooler.TemplatesTools.UpdateSchemaDisks(d,
+						template_param_value.([]interface{}))
+				default:
+					template_handle_err = errors.New("Handle_template_and_set_schema : Format of " + template_param_name + "(" +
+						reflect.TypeOf(template_param_value).Kind().String() + ") not handled.")
 				}
-					err := d.Set(reflect.ValueOf(template_param_name).String(), schema_slice)
-					logger.Println("set err = ", err)
-					logger.Println("set val = ", d.Get(reflect.ValueOf(template_param_name).String()))
-
-					} else {
-						var (
-							elem_id      string = ""
-						)
-						schema_slice = d.Get(reflect.ValueOf(template_param_name).String()).([]interface{})
-						logger.Println("schema_slice init=", schema_slice)
-						for _, template_slice_element := range template_param_value.([]interface{}) {
-							var (
-								elem_already_in_list = false
-							)
-							if template_param_name == "nics" {
-								elem_id = "vlan"
-							} else if template_param_name == "disks" {
-								elem_id = "name"
-							}
-							for schema_slice_index, schema_slice_element := range schema_slice {
-								if template_slice_element.(map[string]interface{})[elem_id] == schema_slice_element.(map[string]interface{})[elem_id] {
-									for map_key, map_value := range schema_slice_element.(map[string]interface{}) {
-										if map_key != "mac_address"{
-											logger.Println("map_key, map_value =",map_key, map_value)
-											map_item, _ = read_element(map_key, map_value, logger)
-											logger.Println("schema_slice[",schema_slice_index,
-												"].(map[string]interface{})[",map_key,"] = ",map_item)
-											schema_slice[schema_slice_index].(map[string]interface{})[map_key] = map_item
-										}
-									}
-									elem_already_in_list = true
-								}
-							}
-							if elem_already_in_list == false {
-								schema_slice = append(schema_slice,
-									template_slice_element.(map[string]interface{}))
-							}
-						}
-						logger.Println("schema_slice =", schema_slice)
-						d.Set(reflect.ValueOf(template_param_name).String(), schema_slice)
-					}
-				} else {
-					if template_param_name == "nics" {
-						if len(d.Get(reflect.ValueOf(template_param_name).String()).([]interface{})) == 0 {
-							logger.Println("6, slice elem number = 0")
-							val, err := read_element(template_param_name, template_param_value, logger)
-							logger.Println("val, err = ", val, err)
-							err = d.Set(reflect.ValueOf(template_param_name).String(), val)
-							logger.Println("set err = ", err)
-							logger.Println("set val = ", d.Get(reflect.ValueOf(template_param_name).String()))
-						} else {
-							var (
-								map_item     interface{}
-								schema_slice []interface{} = d.Get(reflect.ValueOf(template_param_name).String()).([]interface{})
-							)
-							logger.Println("schema_slice init=", schema_slice)
-							for _, template_slice_element := range template_param_value.([]interface{}) {
-								var (
-									elem_already_in_list = false
-								)
-								for schema_slice_index, schema_slice_element := range schema_slice {
-									if template_slice_element.(map[string]interface{})[template_param_name] == schema_slice_element.(map[string]interface{})[template_param_name] {
-										for map_key, map_value := range schema_slice_element.(map[string]interface{}) {
-											if map_key != "mac_address" {
-												map_item, _ = read_element(map_key, map_value, logger)
-												schema_slice[schema_slice_index].(map[string]interface{})[map_key] = map_item
-											}
-										}
-										elem_already_in_list = true
-									}
-								}
-								if elem_already_in_list == false {
-									schema_slice = append(schema_slice,
-										template_slice_element.(map[string]interface{}))
-								}
-							}
-							logger.Println("schema_slice =", schema_slice)
-							d.Set(reflect.ValueOf(template_param_name).String(), schema_slice)
-						}
-					}
+				if template_handle_err != nil {
+					logger.Println(template_param_name, "=",
+						d.Get(reflect.ValueOf(template_param_name).String()),
+						"error :", template_handle_err)
+					break
 				}
 			default:
-				template_handle_err = errors.New("Handle_template_and_set_schema : Format of " + template_param_name + "(" +
-					reflect.TypeOf(template_param_value).Kind().String() + ") not handled.")
-			}
-			if template_handle_err != nil {
-				logger.Println(template_param_name, "=",
-					d.Get(reflect.ValueOf(template_param_name).String()),
-					"error :", template_handle_err)
-				break
 			}
 		}
 	}
-	logger.Println("d.Get(\"disks\").([]interface{}) = ",d.Get("disks").([]interface{}))
-	logger.Println("d.Get(\"nics\").([]interface{}) = ",d.Get("nics").([]interface{}))
+	logger.Println("d.Get(\"disks\").([]interface{}) = ", d.Get("disks").([]interface{}))
+	logger.Println("d.Get(\"nics\").([]interface{}) = ", d.Get("nics").([]interface{}))
 	return template_handle_err
+}
+
+func (templater Template_Templater) UpdateSchemaDisks(d *schema.ResourceData,
+	disks []interface{}) error {
+
+	var (
+		template_name = d.Get(TEMPLATE_FIELD).(string)
+		schema_slice  []interface{}
+	)
+	logger := LoggerCreate("UpdateSchemaDisks" + d.Get("name").(string) + ".log")
+	logger.Println("case disks")
+	if d.Id() != "" {
+		if len(d.Get(DISKS_PARAM).([]interface{})) == 0 {
+			for _, template_slice_element := range disks {
+				logger.Println("template_slice_element = ", template_slice_element)
+				schema_slice = append(schema_slice,
+					template_slice_element.(map[string]interface{}))
+			}
+			err := d.Set(reflect.ValueOf(template_name).String(), schema_slice)
+			logger.Println("set err = ", err)
+			logger.Println("set val = ", d.Get(DISKS_PARAM))
+
+		} else {
+			schema_slice = d.Get(DISKS_PARAM).([]interface{})
+			logger.Println("schema_slice init=", schema_slice)
+			for _, template_slice_element := range disks {
+				var (
+					elem_already_in_list = false
+				)
+				for schema_slice_index, schema_slice_element := range schema_slice {
+					if template_slice_element.(map[string]interface{})[NAME_FIELD] == schema_slice_element.(map[string]interface{})[NAME_FIELD] {
+						for map_key, map_value := range schema_slice_element.(map[string]interface{}) {
+							logger.Println("map_key, map_value =", map_key, map_value)
+							map_item, _ := read_element(map_key, map_value, logger)
+							logger.Println("schema_slice[", schema_slice_index,
+								"].(map[string]interface{})[", map_key, "] = ", map_item)
+							schema_slice[schema_slice_index].(map[string]interface{})[map_key] = map_item
+						}
+						elem_already_in_list = true
+					}
+				}
+				if elem_already_in_list == false {
+					schema_slice = append(schema_slice,
+						template_slice_element.(map[string]interface{}))
+				}
+			}
+		}
+	} else {
+	}
+	logger.Println("schema_slice =", schema_slice)
+	d.Set(DISKS_PARAM, schema_slice)
+	return nil
+}
+
+func (templater Template_Templater) UpdateSchemaNics(d *schema.ResourceData) error {
+
+	return nil
 }

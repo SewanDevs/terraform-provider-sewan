@@ -81,53 +81,56 @@ func vdcInstanceCreate(d *schema.ResourceData,
 
 func vmInstanceCreate(d *schema.ResourceData,
 	clientTooler *ClientTooler,
+	templatesTooler *TemplatesTooler,
 	api *API) (VM, error) {
 
 	var (
-		vm                    VM
-		getTemplateError      error  = nil
-		template_list_Error   error  = nil
-		instanceCreationError error  = nil
-		template_exists       bool   = false
-		template              string = d.Get("template").(string)
-		enterprise            string = d.Get("enterprise").(string)
+		vm                             VM
+		get_templates_list_error       error                  = nil
+		fetch_template_from_list_error error                  = nil
+		instance_creation_error        error                  = nil
+		template                       map[string]interface{} = nil
+		template_name                  string                 = d.Get("template").(string)
+		enterprise                     string                 = d.Get("enterprise").(string)
 	)
 	// @TODO : log to delete
 	logger := loggerCreate("vmInstanceCreate" + d.Get("name").(string) + ".log")
-	logger.Println("template =", template)
+	logger.Println("template =", template_name)
 
-	if template != "" {
+	if template_name != "" {
 		vm = VM{}
 		var templateList []interface{}
 
 		templateList,
-			getTemplateError = clientTooler.Client.GetTemplatesList(clientTooler,
+			get_templates_list_error = clientTooler.Client.GetTemplatesList(clientTooler,
 			enterprise, api)
 		// @TODO : log to delete
 		logger.Println("templateList =", templateList)
-		logger.Println("getTemplateError =", getTemplateError)
+		logger.Println("get_templates_list_error =", get_templates_list_error)
 
-		if getTemplateError == nil {
-			template_exists, template_list_Error = Handle_templates_list(d, templateList)
+		if get_templates_list_error == nil {
+			template,
+				fetch_template_from_list_error = templatesTooler.TemplatesTools.FetchTemplateFromList(template_name,
+				templateList)
+			logger.Println("template = ",template)
 			switch {
-			case template_list_Error != nil:
-				instanceCreationError = template_list_Error
-			}
-			if template_exists == false {
-				instanceCreationError = errors.New("Unavailable template : " +
-					template)
+			case fetch_template_from_list_error != nil:
+				instance_creation_error = fetch_template_from_list_error
+			default:
+				instance_creation_error = templatesTooler.TemplatesTools.UpdateSchema(d,
+					template, templatesTooler)
 			}
 		} else {
-			instanceCreationError = getTemplateError
+			instance_creation_error = get_templates_list_error
 		}
 	} else {
 		// @TODO : log to delete
 		logger.Println("template = nil")
 	}
 
-	logger.Println("instanceCreationError =", instanceCreationError)
+	logger.Println("instance_creation_error =", instance_creation_error)
 
-	if instanceCreationError == nil {
+	if instance_creation_error == nil {
 
 		// @TODO : log to delete
 		logger.Println("vm = VM{} set")
@@ -164,11 +167,12 @@ func vmInstanceCreate(d *schema.ResourceData,
 	}
 	logger.Println("vm = ", vm)
 
-	return vm, instanceCreationError
+	return vm, instance_creation_error
 }
 
 func (apier AirDrumResources_Apier) ResourceInstanceCreate(d *schema.ResourceData,
 	clientTooler *ClientTooler,
+	templatesTooler *TemplatesTooler,
 	resourceType string,
 	api *API) (error, interface{}) {
 
@@ -182,10 +186,15 @@ func (apier AirDrumResources_Apier) ResourceInstanceCreate(d *schema.ResourceDat
 	switch resourceType {
 	case "vdc":
 		logger.Println("vdc case")
-		resourceInstance, instanceError = vdcInstanceCreate(d, clientTooler, api)
+		resourceInstance, instanceError = vdcInstanceCreate(d,
+			clientTooler,
+			api)
 	case "vm":
 		logger.Println("vm case")
-		resourceInstance, instanceError = vmInstanceCreate(d, clientTooler, api)
+		resourceInstance, instanceError = vmInstanceCreate(d,
+			clientTooler,
+			templatesTooler,
+			api)
 	default:
 		logger.Println("default case")
 		instanceError = apier.ValidateResourceType(resourceType)

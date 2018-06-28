@@ -38,7 +38,6 @@ type GetTemplatesList_Failure_HttpClienterFake struct{}
 func (client GetTemplatesList_Failure_HttpClienterFake) Do(api *API,
 	req *http.Request) (*http.Response, error) {
 
-	//return a resp with !TEMPLATES_LIST
 	return nil, nil
 }
 

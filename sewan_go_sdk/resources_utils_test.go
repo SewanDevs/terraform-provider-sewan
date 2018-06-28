@@ -41,7 +41,7 @@ func TestResourceInstanceCreate(t *testing.T) {
 			3,
 			vm_schema_init(EXISTING_TEMPLATE_WITH_ADDITIONAL_AND_MODIFIED_NICS_AND_DISKS_VM_MAP),
 			GetTemplatesList_Success_HttpClienterFake{},
-			TemplaterDummy{},
+			EXISTING_TEMPLATE_WITH_ADDITIONAL_AND_MODIFIED_NICS_AND_DISKS_VM_MAP_TemplaterFake{},
 			VM_RESOURCE_TYPE,
 			nil,
 			Fake_vmInstance_EXISTING_TEMPLATE_WITH_ADDITIONAL_AND_MODIFIED_NICS_AND_DISKS_VM_MAP(),
@@ -59,7 +59,7 @@ func TestResourceInstanceCreate(t *testing.T) {
 			5,
 			vm_schema_init(NON_EXISTING_TEMPLATE_VM_MAP),
 			GetTemplatesList_Success_HttpClienterFake{},
-			TemplaterDummy{},
+			Unexisting_template_TemplaterFake{},
 			VM_RESOURCE_TYPE,
 			errors.New("Unavailable template : windows95"),
 			VM{},
@@ -84,6 +84,15 @@ func TestResourceInstanceCreate(t *testing.T) {
 				"- \"vdc\"\n\r" +
 				"- \"vm\""),
 			nil,
+		},
+		{
+			8,
+			vm_schema_init(NON_EXISTING_TEMPLATE_VM_MAP),
+			GetTemplatesList_Failure_HttpClienterFake{},
+			Unexisting_template_TemplaterFake{},
+			VM_RESOURCE_TYPE,
+			errors.New("GetTemplatesList() error"),
+			VM{},
 		},
 	}
 
@@ -115,7 +124,6 @@ func TestResourceInstanceCreate(t *testing.T) {
 					test_case.Id, err, test_case.Error)
 			} else {
 				switch {
-				//case !reflect.DeepEqual(test_case.VmInstance, instance):
 				case !reflect.DeepEqual(test_case.VmInstance, instance):
 					t.Errorf("\n\nTC %d : Wrong ResourceInstanceCreate() created instance,"+
 						"\n\rgot: \"%s\"\n\rwant: \"%s\"",
@@ -124,12 +132,11 @@ func TestResourceInstanceCreate(t *testing.T) {
 					v2 := reflect.ValueOf(test_case.VmInstance)
 					for i := 0; i < v.NumField(); i++ {
 						if !reflect.DeepEqual(v.Field(i).Interface(), v2.Field(i).Interface()) {
-							t.Log("reflect.DeepEqual(",
-								v.Field(i).Interface(), "(",
-								reflect.TypeOf(v.Field(i).Interface()), "),",
-								v2.Field(i).Interface(),
-								"(", reflect.TypeOf(v2.Field(i).Interface()), ")) = ",
-								reflect.DeepEqual(v.Field(i), v2.Field(i)))
+							t.Log("Got field difference(s) :",
+								"\ngot :", v.Field(i).Interface(),
+								"(", reflect.TypeOf(v.Field(i).Interface()), ")",
+								"\nwant :", v2.Field(i).Interface(),
+								"(", reflect.TypeOf(v2.Field(i).Interface()), ")")
 						}
 					}
 				}

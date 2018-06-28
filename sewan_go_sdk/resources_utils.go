@@ -93,9 +93,6 @@ func vmInstanceCreate(d *schema.ResourceData,
 		template_name                  string                 = d.Get("template").(string)
 		enterprise                     string                 = d.Get("enterprise").(string)
 	)
-	// @TODO : log to delete
-	logger := loggerCreate("vmInstanceCreate" + d.Get("name").(string) + ".log")
-	logger.Println("template =", template_name)
 
 	if template_name != "" {
 		vm = VM{}
@@ -104,15 +101,10 @@ func vmInstanceCreate(d *schema.ResourceData,
 		templateList,
 			get_templates_list_error = clientTooler.Client.GetTemplatesList(clientTooler,
 			enterprise, api)
-		// @TODO : log to delete
-		logger.Println("templateList =", templateList)
-		logger.Println("get_templates_list_error =", get_templates_list_error)
-
 		if get_templates_list_error == nil {
 			template,
 				fetch_template_from_list_error = templatesTooler.TemplatesTools.FetchTemplateFromList(template_name,
 				templateList)
-			logger.Println("template = ",template)
 			switch {
 			case fetch_template_from_list_error != nil:
 				instance_creation_error = fetch_template_from_list_error
@@ -123,18 +115,9 @@ func vmInstanceCreate(d *schema.ResourceData,
 		} else {
 			instance_creation_error = get_templates_list_error
 		}
-	} else {
-		// @TODO : log to delete
-		logger.Println("template = nil")
 	}
 
-	logger.Println("instance_creation_error =", instance_creation_error)
-
 	if instance_creation_error == nil {
-
-		// @TODO : log to delete
-		logger.Println("vm = VM{} set")
-
 		vm = VM{
 			Name:          d.Get("name").(string),
 			Enterprise:    d.Get("enterprise").(string),
@@ -157,15 +140,14 @@ func vmInstanceCreate(d *schema.ResourceData,
 			Outsourcing:   d.Get("outsourcing").(string),
 			Dynamic_field: d.Get("dynamic_field").(string),
 		}
-
 		if d.Id() == "" {
 			vm.Template = d.Get("template").(string)
 		} else {
 			vm.Template = ""
 		}
-
+	} else {
+		vm = VM{}
 	}
-	logger.Println("vm = ", vm)
 
 	return vm, instance_creation_error
 }
@@ -181,26 +163,20 @@ func (apier AirDrumResources_Apier) ResourceInstanceCreate(d *schema.ResourceDat
 		instanceError    error       = nil
 	)
 
-	logger := loggerCreate("ResourceInstanceCreate.log")
-	logger.Println("resourceType = ", resourceType)
 	switch resourceType {
 	case "vdc":
-		logger.Println("vdc case")
 		resourceInstance, instanceError = vdcInstanceCreate(d,
 			clientTooler,
 			api)
 	case "vm":
-		logger.Println("vm case")
 		resourceInstance, instanceError = vmInstanceCreate(d,
 			clientTooler,
 			templatesTooler,
 			api)
 	default:
-		logger.Println("default case")
 		instanceError = apier.ValidateResourceType(resourceType)
 	}
 
-	logger.Println("instanceError, resourceInstance = ", instanceError, resourceInstance)
 	return instanceError, resourceInstance
 }
 

@@ -845,6 +845,7 @@ func Fake_vmInstance_EXISTING_TEMPLATE_NO_ADDITIONAL_DISK_VM_MAP() VM {
 				"slug":          "disk-centos7-rd-dc1-1",
 			},
 		},
+		Nics:          []interface{}{},
 		Vdc:           "vdc",
 		Boot:          "on disk",
 		Storage_class: "storage_enterprise",
@@ -867,12 +868,12 @@ func Fake_vmInstance_EXISTING_TEMPLATE_WITH_ADDITIONAL_AND_MODIFIED_NICS_AND_DIS
 			map[string]interface{}{
 				"name":          "disk 1",
 				"size":          24,
-				"storage_class": "storage_class",
+				"storage_class": "storage_enterprise",
 				"slug":          "",
 			},
 			map[string]interface{}{
 				"name":          "disk-centos7-rd-DC1-1",
-				"size":          20,
+				"size":          25,
 				"storage_class": "storage_enterprise",
 				"slug":          "disk-centos7-rd-dc1-1",
 			},
@@ -886,16 +887,6 @@ func Fake_vmInstance_EXISTING_TEMPLATE_WITH_ADDITIONAL_AND_MODIFIED_NICS_AND_DIS
 			map[string]interface{}{
 				"vlan":        "non template vlan 2",
 				"mac_address": "00:21:21:21:21:22",
-				"connected":   true,
-			},
-			map[string]interface{}{
-				"vlan":        "sewanrd-mgt-th3",
-				"mac_address": "00:50:56:21:7c:ab",
-				"connected":   true,
-			},
-			map[string]interface{}{
-				"vlan":        "sewanrd-priv-th3",
-				"mac_address": "00:50:56:21:7c:ac",
 				"connected":   true,
 			},
 		},

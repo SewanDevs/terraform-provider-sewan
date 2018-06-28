@@ -93,6 +93,7 @@ func vmInstanceCreate(d *schema.ResourceData,
 		template_name                  string                 = d.Get("template").(string)
 		enterprise                     string                 = d.Get("enterprise").(string)
 	)
+	logger := LoggerCreate("vminstanceCreate"+d.Id()+".log")
 
 	if template_name != "" {
 		vm = VM{}
@@ -117,6 +118,7 @@ func vmInstanceCreate(d *schema.ResourceData,
 		}
 	}
 
+	logger.Println("instance_creation_error = ",instance_creation_error)
 	if instance_creation_error == nil {
 		vm = VM{
 			Name:          d.Get("name").(string),
@@ -136,19 +138,18 @@ func vmInstanceCreate(d *schema.ResourceData,
 			Disk_image:    d.Get("disk_image").(string),
 			Platform_name: d.Get("platform_name").(string),
 			Backup_size:   d.Get("backup_size").(int),
-			Comment:       d.Get("comment").(string),
 			Outsourcing:   d.Get("outsourcing").(string),
 			Dynamic_field: d.Get("dynamic_field").(string),
 		}
 		if d.Id() == "" {
 			vm.Template = d.Get("template").(string)
+			vm.Comment = d.Get("template").(string)
 		} else {
 			vm.Template = ""
 		}
-	} else {
-		vm = VM{}
 	}
-
+	logger.Println("vm = ",vm)
+	logger.Println("instance_creation_error = ",instance_creation_error)
 	return vm, instance_creation_error
 }
 

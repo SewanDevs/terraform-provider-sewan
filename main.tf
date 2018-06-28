@@ -50,10 +50,13 @@ resource "sewan_clouddc_vm" "template-server" {
       connected=false
     },
   ]
+  //template = "Debian 7"
   template = "centos7-rd-DC1"
   vdc = "${sewan_clouddc_vdc.terraform-vdc.slug}"
   backup = "backup-no-backup"
   storage_class = "storage_enterprise"
+  boot = "on disk"
+  dynamic_field = "test"
 }
 
 //resource "sewan_clouddc_vm" "template-server" {

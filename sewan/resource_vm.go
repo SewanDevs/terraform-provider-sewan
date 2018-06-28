@@ -134,7 +134,7 @@ func resource_vm() *schema.Resource {
 			},
 			"comment": &schema.Schema{
 				Type:     schema.TypeString,
-				Optional: true,
+				Computed: true,
 			},
 			"outsourcing": &schema.Schema{
 				Type:     schema.TypeString,

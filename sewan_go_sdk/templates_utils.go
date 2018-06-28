@@ -11,6 +11,9 @@ const (
 	DISKS_PARAM    = "disks"
 	TEMPLATE_FIELD = "template"
 	NAME_FIELD     = "name"
+	OS_FIELD = "os"
+	ID_FIELD = "id"
+	COMMENT_FIELD = "comment"
 )
 
 type TemplatesTooler struct {
@@ -62,116 +65,132 @@ func (templater Template_Templater) UpdateSchema(d *schema.ResourceData,
 
 	var template_handle_err error = nil
 	logger := LoggerCreate("UpdateSchema" + d.Get("name").(string) + ".log")
-	logger.Println("d.Get(\"disks\").([]interface{}) = ", d.Get("disks").([]interface{}))
-	logger.Println("d.Get(\"nics\").([]interface{}) = ", d.Get("nics").([]interface{}))
+	logger.Println("d.Get(\"disks\").([]interface{}) = ",
+		d.Get("disks").([]interface{}))
+	logger.Println("d.Get(\"nics\").([]interface{}) = ",
+		d.Get("nics").([]interface{}))
 
 	for template_param_name, template_param_value := range template {
 		if reflect.ValueOf(template_param_name).IsValid() && reflect.ValueOf(template_param_value).IsValid() {
 			logger.Println("--")
+			var (
+				s_template_param_name string = reflect.ValueOf(template_param_name).String()
+				interface_template_name interface{} = reflect.ValueOf(template_param_value).Interface()
+				s_template_param_value string = reflect.ValueOf(template_param_value).String()
+			)
 			switch reflect.TypeOf(template_param_value).Kind() {
 			case reflect.String:
 				logger.Println("case String : ", template_param_name)
-
 				if d.Id() == "" {
 					switch {
-					case reflect.ValueOf(template_param_name).String() == "os":
-						logger.Println("1a")
-					case reflect.ValueOf(template_param_name).String() == "name":
-						logger.Println("2a")
+					case s_template_param_name == OS_FIELD:
+						logger.Println("Case os")
+					case s_template_param_name == NAME_FIELD:
+						logger.Println("Case name")
 					default:
-						if d.Get(reflect.ValueOf(template_param_name).String()) == "" {
-							logger.Println("3a : ", reflect.ValueOf(template_param_value).String())
-							d.Set(reflect.ValueOf(template_param_name).String(),
-								reflect.ValueOf(template_param_value).String())
+						if d.Get(s_template_param_name) == "" {
+							logger.Println("Case : ", s_template_param_name)
+							d.Set(s_template_param_name,
+								s_template_param_value)
 						}
 					}
 				} else {
 					switch {
-					case reflect.ValueOf(template_param_name).String() == "name":
-						logger.Println("2b")
+					case s_template_param_name == NAME_FIELD:
+						logger.Println("Case template name",
+						"\ns_template_param_value =",s_template_param_value,
+						"\nd.Get(",COMMENT_FIELD,") =",d.Get(COMMENT_FIELD).(string))
+						if s_template_param_value != d.Get(COMMENT_FIELD).(string){
+							logger.Println("tatatatata")
+							template_handle_err = errors.New("This resource has been "+
+								"created with \""+d.Get(COMMENT_FIELD).(string)+
+								"\" template. This value can not be changed, please set it back.")
+						}
 					default:
-						if d.Get(reflect.ValueOf(template_param_name).String()) == "" {
-							logger.Println("3a : ", reflect.ValueOf(template_param_value).String())
-							d.Set(reflect.ValueOf(template_param_name).String(),
-								reflect.ValueOf(template_param_value).String())
+						if d.Get(s_template_param_name) == "" {
+							logger.Println("3a : ", s_template_param_name)
+							d.Set(s_template_param_name,
+								s_template_param_value)
 						}
 					}
 				}
 
 			case reflect.Float64:
 				logger.Println("case float 64 : ", template_param_name, " = ",
-					d.Get(reflect.ValueOf(template_param_name).String()))
+					d.Get(s_template_param_name))
 				if d.Id() == "" {
 					switch {
-					case reflect.ValueOf(template_param_name).String() == "id":
+					case s_template_param_name == "id":
 						logger.Println("2, d.Id() = ", d.Id())
 					default:
-						if d.Get(reflect.ValueOf(template_param_name).String()).(int) == 0 {
+						if d.Get(s_template_param_name).(int) == 0 {
 							logger.Println("3, val to set = ",
-								int(reflect.ValueOf(template_param_value).Interface().(float64)))
-							d.Set(reflect.ValueOf(template_param_name).String(),
-								int(reflect.ValueOf(template_param_value).Interface().(float64)))
+								int(interface_template_name.(float64)))
+							d.Set(s_template_param_name,
+								int(interface_template_name.(float64)))
 						}
 					}
 				} else {
 					switch {
-					case reflect.ValueOf(template_param_name).String() == "id":
+					case s_template_param_name == "id":
 						logger.Println("2, d.Id() = ", d.Id())
 					default:
-						if d.Get(reflect.ValueOf(template_param_name).String()) == 0 {
-							if d.Get(reflect.ValueOf(template_param_name).String()).(int) == 0 {
+						if d.Get(s_template_param_name) == 0 {
+							if d.Get(s_template_param_name).(int) == 0 {
 								logger.Println("3, val to set = ",
-									int(reflect.ValueOf(template_param_value).Interface().(float64)))
-								d.Set(reflect.ValueOf(template_param_name).String(),
-									int(reflect.ValueOf(template_param_value).Interface().(float64)))
+									int(interface_template_name.(float64)))
+								d.Set(s_template_param_name,
+									int(interface_template_name.(float64)))
 							}
 						}
 					}
 				}
 			case reflect.Int:
 				logger.Println("case Int : ", template_param_name, " = ",
-					d.Get(reflect.ValueOf(template_param_name).String()))
+					d.Get(s_template_param_name))
 				if d.Id() == "" {
 					switch {
-					case reflect.ValueOf(template_param_name).String() == "id":
+					case s_template_param_name == "id":
 						logger.Println("2")
 					default:
-						if d.Get(reflect.ValueOf(template_param_name).String()).(int) == 0 {
+						if d.Get(s_template_param_name).(int) == 0 {
 							logger.Println("3, val to set = ",
-								int(reflect.ValueOf(template_param_value).Interface().(int)))
-							d.Set(reflect.ValueOf(template_param_name).String(),
-								int(reflect.ValueOf(template_param_value).Interface().(int)))
+								int(interface_template_name.(int)))
+							d.Set(s_template_param_name,
+								int(interface_template_name.(int)))
 						}
 					}
 				} else {
 					switch {
-					case reflect.ValueOf(template_param_name).String() == "id":
+					case s_template_param_name == "id":
 						logger.Println("2")
 					default:
-						if d.Get(reflect.ValueOf(template_param_name).String()).(int) == 0 {
+						if d.Get(s_template_param_name).(int) == 0 {
 							logger.Println("3, val to set = ",
-								int(reflect.ValueOf(template_param_value).Interface().(int)))
-							d.Set(reflect.ValueOf(template_param_name).String(),
-								int(reflect.ValueOf(template_param_value).Interface().(int)))
+								int(interface_template_name.(int)))
+							d.Set(s_template_param_name,
+								int(interface_template_name.(int)))
 						}
 					}
 				}
 			case reflect.Slice:
 				logger.Println("case Slice : ", template_param_name, " = ",
-					d.Get(reflect.ValueOf(template_param_name).String()))
+					d.Get(s_template_param_name))
 				switch {
 				case template_param_name == NICS_PARAM:
 					templatesTooler.TemplatesTools.UpdateSchemaNics(d)
 				case template_param_name == DISKS_PARAM:
-					templatesTooler.TemplatesTools.UpdateSchemaDisks(d,
+					template_handle_err = templatesTooler.TemplatesTools.UpdateSchemaDisks(d,
 						template_param_value.([]interface{}))
 				default:
-					template_handle_err = errors.New("Handle_template_and_set_schema : Format of " + template_param_name + "(" +
-						reflect.TypeOf(template_param_value).Kind().String() + ") not handled.")
+					template_handle_err = errors.New("Handle_template_and_set_schema :"+
+						" Format of " + template_param_name + "(" +
+						reflect.TypeOf(template_param_value).Kind().String() +
+						") not handled.")
 				}
 				if template_handle_err != nil {
 					logger.Println(template_param_name, "=",
-						d.Get(reflect.ValueOf(template_param_name).String()),
+						d.Get(s_template_param_name),
 						"error :", template_handle_err)
 					break
 				}
@@ -190,6 +209,7 @@ func (templater Template_Templater) UpdateSchemaDisks(d *schema.ResourceData,
 	var (
 		template_name = d.Get(TEMPLATE_FIELD).(string)
 		schema_slice  []interface{}
+		disks_err error = nil
 	)
 	logger := LoggerCreate("UpdateSchemaDisks" + d.Get("name").(string) + ".log")
 	logger.Println("case disks")
@@ -230,10 +250,14 @@ func (templater Template_Templater) UpdateSchemaDisks(d *schema.ResourceData,
 			}
 		}
 	} else {
+		if len(d.Get(DISKS_PARAM).([]interface{})) != 0 {
+			disks_err = errors.New("On VM creation with template, additional disks"+
+				" are not accepted. However, they can be added after creation.")
+		}
 	}
 	logger.Println("schema_slice =", schema_slice)
 	d.Set(DISKS_PARAM, schema_slice)
-	return nil
+	return disks_err
 }
 
 func (templater Template_Templater) UpdateSchemaNics(d *schema.ResourceData) error {

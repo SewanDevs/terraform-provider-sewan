@@ -22,7 +22,7 @@ func (apier AirDrumResources_Apier) Create_resource(d *schema.ResourceData,
 	sewan *API) (error, map[string]interface{}) {
 
 	var (
-		resourceTypeErr      error = nil
+		resource_instance_creation_err      error = nil
 		create_req_err       error = nil
 		createError          error = nil
 		create_resp_body_err error = nil
@@ -39,7 +39,7 @@ func (apier AirDrumResources_Apier) Create_resource(d *schema.ResourceData,
 	}
 	req := &http.Request{}
 	resp := &http.Response{}
-	resourceTypeErr,
+	resource_instance_creation_err,
 		resourceInstance = api_tools.Api.ResourceInstanceCreate(d,
 		clientTooler,
 		templatesTooler,
@@ -47,7 +47,7 @@ func (apier AirDrumResources_Apier) Create_resource(d *schema.ResourceData,
 		sewan)
 	logger := loggerCreate("create_resource_" + instanceName + ".log")
 
-	if resourceTypeErr == nil {
+	if resource_instance_creation_err == nil {
 		logger.Println("resourceInstance = ", resourceInstance)
 		resource_json, create_req_err = json.Marshal(resourceInstance)
 		if create_req_err == nil {
@@ -84,18 +84,16 @@ func (apier AirDrumResources_Apier) Create_resource(d *schema.ResourceData,
 							"the response body is not a properly formated json :\n\r\"" +
 							resp_body_json_err.Error() + "\"")
 					default:
-						if resp.StatusCode != http.StatusCreated {
-							createError = errors.New(resp.Status + responseBody)
-						} else {
+						if resp.StatusCode == http.StatusCreated {
 							created_resource = resp_body_reader.(map[string]interface{})
-
 							for key, value := range created_resource {
 								read_value, updateError := read_element(key, value, logger)
 								if updateError == nil {
 									created_resource[key] = read_value
 								}
 							}
-
+						} else {
+							createError = errors.New(resp.Status + responseBody)
 						}
 					}
 				case "text/html":
@@ -109,11 +107,9 @@ func (apier AirDrumResources_Apier) Create_resource(d *schema.ResourceData,
 		} else {
 			createError = create_req_err
 		}
-
 	} else {
-		createError = resourceTypeErr
+		createError = resource_instance_creation_err
 	}
-
 	logger.Println("createError = ", createError,
 		"\ncreated_resource = ", created_resource)
 	return createError, created_resource
@@ -129,7 +125,7 @@ func (apier AirDrumResources_Apier) Read_resource(d *schema.ResourceData,
 	var (
 		readError        error = nil
 		read_req_err     error = nil
-		resourceTypeErr  error = nil
+		resource_instance_creation_err  error = nil
 		read_resource    map[string]interface{}
 		responseBody     string
 		resp_body_reader interface{}
@@ -139,14 +135,12 @@ func (apier AirDrumResources_Apier) Read_resource(d *schema.ResourceData,
 	req := &http.Request{}
 	resp := &http.Response{}
 	logger := loggerCreate("read_resource_" + instanceName + ".log")
-	logger.Println("--------------- ", instanceName,
-		" ( id= ", d.Id(), ") READ -----------------")
 	api_tools := APITooler{
 		Api: apier,
 	}
-	resourceTypeErr = api_tools.Api.ValidateResourceType(resourceType)
+	resource_instance_creation_err = api_tools.Api.ValidateResourceType(resourceType)
 
-	if resourceTypeErr == nil {
+	if resource_instance_creation_err == nil {
 		req, read_req_err = http.NewRequest("GET",
 			api_tools.Api.Get_resource_url(sewan, resourceType, d.Id()), nil)
 		if read_req_err == nil {
@@ -202,7 +196,7 @@ func (apier AirDrumResources_Apier) Read_resource(d *schema.ResourceData,
 			readError = read_req_err
 		}
 	} else {
-		readError = resourceTypeErr
+		readError = resource_instance_creation_err
 	}
 
 	logger.Println("readError =", readError,
@@ -219,7 +213,7 @@ func (apier AirDrumResources_Apier) Update_resource(d *schema.ResourceData,
 	sewan *API) error {
 
 	var (
-		resourceTypeErr      error = nil
+		resource_instance_creation_err      error = nil
 		updateError          error = nil
 		update_req_err       error = nil
 		update_resp_body_err error = nil
@@ -235,17 +229,15 @@ func (apier AirDrumResources_Apier) Update_resource(d *schema.ResourceData,
 	api_tools := APITooler{
 		Api: apier,
 	}
-	resourceTypeErr,
+	logger := loggerCreate("update_resource_" + instanceName + ".log")
+	resource_instance_creation_err,
 		resourceInstance = api_tools.Api.ResourceInstanceCreate(d,
 		clientTooler,
 		templatesTooler,
 		resourceType,
 		sewan)
-	logger := loggerCreate("update_resource_" + instanceName + ".log")
-	logger.Println("--------------- ", instanceName, " ( id= ",
-		d.Id(), ") UPDATE -----------------")
 
-	if resourceTypeErr == nil {
+	if resource_instance_creation_err == nil {
 
 		resource_json, update_req_err = json.Marshal(resourceInstance)
 		if update_req_err == nil {
@@ -298,7 +290,7 @@ func (apier AirDrumResources_Apier) Update_resource(d *schema.ResourceData,
 		}
 
 	} else {
-		updateError = resourceTypeErr
+		updateError = resource_instance_creation_err
 	}
 
 	logger.Println("updateError = ", updateError)
@@ -313,7 +305,7 @@ func (apier AirDrumResources_Apier) Delete_resource(d *schema.ResourceData,
 	sewan *API) error {
 
 	var (
-		resourceTypeErr          error = nil
+		resource_instance_creation_err          error = nil
 		deleteError              error = nil
 		delete_req_err           error = nil
 		delete_resp_body_err     error = nil
@@ -334,14 +326,14 @@ func (apier AirDrumResources_Apier) Delete_resource(d *schema.ResourceData,
 	api_tools := APITooler{
 		Api: apier,
 	}
-	resourceTypeErr = api_tools.Api.ValidateResourceType(resourceType)
+	resource_instance_creation_err = api_tools.Api.ValidateResourceType(resourceType)
 	req := &http.Request{}
 	resp := &http.Response{}
 	logger := loggerCreate("delete_resource_" + instanceName + ".log")
 	logger.Println("--------------- ", instanceName, " ( id= ", d.Id(),
 		") DELETE -----------------")
 
-	if resourceTypeErr == nil {
+	if resource_instance_creation_err == nil {
 
 		req, delete_req_err = http.NewRequest("DELETE",
 			api_tools.Api.Get_resource_url(sewan, resourceType, d.Id()), nil)
@@ -390,7 +382,7 @@ func (apier AirDrumResources_Apier) Delete_resource(d *schema.ResourceData,
 			deleteError = delete_req_err
 		}
 	} else {
-		deleteError = resourceTypeErr
+		deleteError = resource_instance_creation_err
 	}
 
 	logger.Println("deleteError = ", deleteError)

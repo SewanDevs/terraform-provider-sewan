@@ -2,7 +2,6 @@ package sewan
 
 import (
 	"github.com/hashicorp/terraform/helper/schema"
-	sdk "terraform-provider-sewan/sewan_go_sdk"
 )
 
 func resource_vdc_resource() *schema.Resource {
@@ -71,12 +70,15 @@ func resource_vdc_create(d *schema.ResourceData, m interface{}) error {
 	sewan := m.(*Client).sewan
 	creationError, apiCreationResponse = m.(*Client).sewan_apiTooler.Api.Create_resource(d,
 		m.(*Client).sewan_clientTooler,
-		m.(*Client).sewan_TemplatesTooler,
+		m.(*Client).sewan_templatesTooler,
+		m.(*Client).sewan_schemaTooler,
 		VDC_RESOURCE_TYPE,
 		sewan)
 
 	if creationError == nil {
-		creationError = sdk.Update_local_resource_state(apiCreationResponse, d)
+		creationError = m.(*Client).sewan_schemaTooler.SchemaTools.Update_local_resource_state(apiCreationResponse,
+			d,
+			m.(*Client).sewan_schemaTooler)
 	}
 	return creationError
 }
@@ -89,15 +91,18 @@ func resource_vdc_read(d *schema.ResourceData, m interface{}) error {
 	sewan := m.(*Client).sewan
 	readError, apiCreationResponse, resource_exists = m.(*Client).sewan_apiTooler.Api.Read_resource(d,
 		m.(*Client).sewan_clientTooler,
-		m.(*Client).sewan_TemplatesTooler,
+		m.(*Client).sewan_templatesTooler,
+		m.(*Client).sewan_schemaTooler,
 		VDC_RESOURCE_TYPE,
 		sewan)
 
 	if resource_exists == false {
-		sdk.Delete_terraform_resource(d)
+		m.(*Client).sewan_schemaTooler.SchemaTools.Delete_terraform_resource(d)
 	} else {
 		if readError == nil {
-			readError = sdk.Update_local_resource_state(apiCreationResponse, d)
+			readError = m.(*Client).sewan_schemaTooler.SchemaTools.Update_local_resource_state(apiCreationResponse,
+				d,
+				m.(*Client).sewan_schemaTooler)
 		}
 	}
 	return readError
@@ -109,7 +114,8 @@ func resource_vdc_update(d *schema.ResourceData, m interface{}) error {
 	sewan := m.(*Client).sewan
 	updateError = m.(*Client).sewan_apiTooler.Api.Update_resource(d,
 		m.(*Client).sewan_clientTooler,
-		m.(*Client).sewan_TemplatesTooler,
+		m.(*Client).sewan_templatesTooler,
+		m.(*Client).sewan_schemaTooler,
 		VDC_RESOURCE_TYPE,
 		sewan)
 	return updateError
@@ -122,11 +128,12 @@ func resource_vdc_delete(d *schema.ResourceData, m interface{}) error {
 	sewan := m.(*Client).sewan
 	deleteError = m.(*Client).sewan_apiTooler.Api.Delete_resource(d,
 		m.(*Client).sewan_clientTooler,
-		m.(*Client).sewan_TemplatesTooler,
+		m.(*Client).sewan_templatesTooler,
+		m.(*Client).sewan_schemaTooler,
 		VDC_RESOURCE_TYPE,
 		sewan)
 	if deleteError == nil {
-		sdk.Delete_terraform_resource(d)
+		m.(*Client).sewan_schemaTooler.SchemaTools.Delete_terraform_resource(d)
 	}
 	return deleteError
 }

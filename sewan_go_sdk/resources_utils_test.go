@@ -106,6 +106,9 @@ func TestResourceInstanceCreate(t *testing.T) {
 	}
 	fake_client_tooler := ClientTooler{}
 	fake_templates_tooler := TemplatesTooler{}
+	fake_schema_tooler := SchemaTooler{
+		SchemaTools: Schema_Schemaer{},
+	}
 	sewan = &API{Token: "42", URL: "42", Client: &http.Client{}}
 
 	for _, test_case := range test_cases {
@@ -114,6 +117,7 @@ func TestResourceInstanceCreate(t *testing.T) {
 		err, instance = api_tools.Api.ResourceInstanceCreate(test_case.D,
 			&fake_client_tooler,
 			&fake_templates_tooler,
+			&fake_schema_tooler,
 			test_case.Resource_type,
 			sewan)
 		switch {
@@ -340,13 +344,16 @@ func Create_test_resource_schema(id interface{}) *schema.ResourceData {
 
 func TestDelete_terraform_resource(t *testing.T) {
 	d := Create_test_resource_schema("resource to delete")
-	Delete_terraform_resource(d)
+	schemaTooler := SchemaTooler{
+		SchemaTools: Schema_Schemaer{},
+	}
+	schemaTooler.SchemaTools.Delete_terraform_resource(d)
 	if d.Id() != "" {
 		t.Errorf("Deletion of unit test resource failed.")
 	}
 }
 
-func TestUpdate_local_resource_state_AND_read_element(t *testing.T) {
+func TestUpdate_local_resource_state_AND_Read_element(t *testing.T) {
 	test_cases := []struct {
 		Id           int
 		Vm_map       map[string]interface{}
@@ -369,10 +376,14 @@ func TestUpdate_local_resource_state_AND_read_element(t *testing.T) {
 		},
 	}
 	var d *schema.ResourceData
-
+	schemaTooler := SchemaTooler{
+		SchemaTools: Schema_Schemaer{},
+	}
 	for _, test_case := range test_cases {
 		d = Create_test_resource_schema(test_case.Vm_Id_string)
-		_ = Update_local_resource_state(test_case.Vm_map, d)
+		schemaTooler.SchemaTools.Update_local_resource_state(test_case.Vm_map,
+			d,
+			&schemaTooler)
 		for key, value := range test_case.Vm_map {
 			if key != "id" {
 				if !reflect.DeepEqual(d.Get(key), value) {

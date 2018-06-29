@@ -1,15 +1,19 @@
 package sewan_go_sdk
 
 import (
+	"encoding/json"
 	"errors"
 	"github.com/hashicorp/terraform/helper/schema"
 	"io/ioutil"
-	"log"
 	"net/http"
-	"reflect"
-	"strconv"
 	"strings"
 )
+
+type Dynamic_field_struct struct {
+	Terraform_provisioned       bool          `json:"terraform_provisioned"`
+	Creation_template           string        `json:"creation_template"`
+	Disks_created_from_template []interface{} `json:"disks_created_from_template"`
+}
 
 type VDC_resource struct {
 	Resource string `json:"resource"`
@@ -62,7 +66,7 @@ type VM struct {
 	Backup_size   int           `json:"backup_size"`
 	Comment       string        `json:"comment",omitempty`
 	Outsourcing   string        `json:"outsourcing,omitempty"`
-	Dynamic_field string        `json:"dynamic_field,omitempty"`
+	Dynamic_field []byte        `json:"dynamic_field,omitempty"`
 }
 
 func vdcInstanceCreate(d *schema.ResourceData,
@@ -82,6 +86,7 @@ func vdcInstanceCreate(d *schema.ResourceData,
 func vmInstanceCreate(d *schema.ResourceData,
 	clientTooler *ClientTooler,
 	templatesTooler *TemplatesTooler,
+	schemaTools *SchemaTooler,
 	api *API) (VM, error) {
 
 	var (
@@ -93,7 +98,7 @@ func vmInstanceCreate(d *schema.ResourceData,
 		template_name                  string                 = d.Get("template").(string)
 		enterprise                     string                 = d.Get("enterprise").(string)
 	)
-	logger := LoggerCreate("vminstanceCreate"+d.Id()+".log")
+	logger := LoggerCreate("vminstanceCreate" + d.Id() + ".log")
 
 	if template_name != "" {
 		vm = VM{}
@@ -110,15 +115,17 @@ func vmInstanceCreate(d *schema.ResourceData,
 			case fetch_template_from_list_error != nil:
 				instance_creation_error = fetch_template_from_list_error
 			default:
-				instance_creation_error = templatesTooler.TemplatesTools.UpdateSchema(d,
-					template, templatesTooler)
+				instance_creation_error = templatesTooler.TemplatesTools.UpdateSchemaFromTemplate(d,
+					template,
+					templatesTooler,
+					schemaTools)
 			}
 		} else {
 			instance_creation_error = get_templates_list_error
 		}
 	}
 
-	logger.Println("instance_creation_error = ",instance_creation_error)
+	logger.Println("instance_creation_error = ", instance_creation_error)
 	if instance_creation_error == nil {
 		vm = VM{
 			Name:          d.Get("name").(string),
@@ -139,23 +146,43 @@ func vmInstanceCreate(d *schema.ResourceData,
 			Platform_name: d.Get("platform_name").(string),
 			Backup_size:   d.Get("backup_size").(int),
 			Outsourcing:   d.Get("outsourcing").(string),
-			Dynamic_field: d.Get("dynamic_field").(string),
 		}
 		if d.Id() == "" {
 			vm.Template = d.Get("template").(string)
 			vm.Comment = d.Get("template").(string)
+			dynamic_field_struct := Dynamic_field_struct{
+				Terraform_provisioned:       true,
+				Creation_template:           vm.Template,
+				Disks_created_from_template: template["disks"].([]interface{}),
+			}
+			dynamic_field_json, _ := json.Marshal(dynamic_field_struct)
+			vm.Dynamic_field = dynamic_field_json
+
+			in := []byte(`{ "votes": { "option_A": "3" } }`)
+			var raw map[string]interface{}
+			json.Unmarshal(in, &raw)
+			raw["count"] = 1
+			out, _ := json.Marshal(raw)
+			println(string(out))
+
+			//map[string]interface{}{
+			//	"terraform_provisioned":true,
+			//	"creation_template":vm.Template,
+			//	"disks_created_from_template":template["disks"],
+			//}
 		} else {
 			vm.Template = ""
 		}
 	}
-	logger.Println("vm = ",vm)
-	logger.Println("instance_creation_error = ",instance_creation_error)
+	logger.Println("vm = ", vm)
+	logger.Println("instance_creation_error = ", instance_creation_error)
 	return vm, instance_creation_error
 }
 
 func (apier AirDrumResources_Apier) ResourceInstanceCreate(d *schema.ResourceData,
 	clientTooler *ClientTooler,
 	templatesTooler *TemplatesTooler,
+	schemaTools *SchemaTooler,
 	resourceType string,
 	api *API) (error, interface{}) {
 
@@ -173,6 +200,7 @@ func (apier AirDrumResources_Apier) ResourceInstanceCreate(d *schema.ResourceDat
 		resourceInstance, instanceError = vmInstanceCreate(d,
 			clientTooler,
 			templatesTooler,
+			schemaTools,
 			api)
 	default:
 		instanceError = apier.ValidateResourceType(resourceType)
@@ -260,86 +288,4 @@ func (apier AirDrumResources_Apier) Validate_status(api *API,
 	}
 
 	return apiErr
-}
-
-func Delete_terraform_resource(d *schema.ResourceData) {
-	d.SetId("")
-}
-
-func Update_local_resource_state(resource_state map[string]interface{},
-	d *schema.ResourceData) error {
-
-	var (
-		updateError error = nil
-		read_value  interface{}
-	)
-	logger := LoggerCreate("update_local_resource_state_" +
-		d.Get("name").(string) + ".log")
-	for key, value := range resource_state {
-		read_value, updateError = read_element(key, value, logger)
-		logger.Println("Set \"", key, "\" to \"", read_value, "\"")
-		if key == "id" {
-			var s_id string = ""
-			switch {
-			case reflect.TypeOf(value).Kind() == reflect.Float64:
-				s_id = strconv.FormatFloat(value.(float64), 'f', -1, 64)
-			case reflect.TypeOf(value).Kind() == reflect.Int:
-				s_id = strconv.Itoa(value.(int))
-			case reflect.TypeOf(value).Kind() == reflect.String:
-				s_id = value.(string)
-			default:
-				updateError = errors.New("Format of " + key + "(" +
-					reflect.TypeOf(value).Kind().String() + ") not handled.")
-			}
-			d.SetId(s_id)
-		} else {
-			updateError = d.Set(key, read_value)
-		}
-		read_value = nil
-	}
-	return updateError
-}
-
-func read_element(key interface{}, value interface{},
-	logger *log.Logger) (interface{}, error) {
-
-	var (
-		readError  error = nil
-		read_value interface{}
-	)
-	switch value_type := value.(type) {
-	case string:
-		read_value = value.(string)
-	case bool:
-		read_value = value.(bool)
-	case float64:
-		read_value = int(value.(float64))
-	case int:
-		read_value = value.(int)
-	case map[string]interface{}:
-		var read_map_value map[string]interface{}
-		read_map_value = make(map[string]interface{})
-		var map_item interface{}
-		for map_key, map_value := range value_type {
-			map_item, readError = read_element(map_key, map_value, logger)
-			read_map_value[map_key] = map_item
-		}
-		read_value = read_map_value
-	case []interface{}:
-		var read_list_value []interface{}
-		var list_item interface{}
-		for list_key, list_value := range value_type {
-			list_item, readError = read_element(list_key, list_value, logger)
-			read_list_value = append(read_list_value, list_item)
-		}
-		read_value = read_list_value
-	default:
-		if value == nil {
-			read_value = nil
-		} else {
-			readError = errors.New("Format " +
-				reflect.TypeOf(value_type).Kind().String() + " not handled.")
-		}
-	}
-	return read_value, readError
 }

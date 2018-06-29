@@ -37,13 +37,13 @@ resource "sewan_clouddc_vm" "template-server" {
   name = "template-server${count.index}"
   ram = 1
   cpu = 1
-  disks=[
-    {
-      name="add disk test"
-      size=16
-      storage_class="storage_performance"
-    }
-  ]
+  //disks=[
+  //  {
+  //    name="add disk test"
+  //    size=16
+  //    storage_class="storage_performance"
+  //  }
+  //]
   nics=[
     {
       vlan="internal-2412"
@@ -56,7 +56,7 @@ resource "sewan_clouddc_vm" "template-server" {
   backup = "backup-no-backup"
   storage_class = "storage_enterprise"
   boot = "on disk"
-  dynamic_field = "test"
+  //dynamic_field = "test_dynamic_field"
 }
 
 //resource "sewan_clouddc_vm" "template-server" {

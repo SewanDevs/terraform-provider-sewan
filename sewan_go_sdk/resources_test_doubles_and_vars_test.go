@@ -599,6 +599,10 @@ func resource_vm_disk() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
+			"v_disk": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+			},
 		},
 	}
 }
@@ -624,6 +628,10 @@ func resource_vm_nic() *schema.Resource {
 
 func resource_vm() *schema.Resource {
 	return &schema.Resource{
+		Create: resource_vm_create,
+		Read:   resource_vm_read,
+		Update: resource_vm_update,
+		Delete: resource_vm_delete,
 		Schema: map[string]*schema.Schema{
 			"name": &schema.Schema{
 				Type:     schema.TypeString,
@@ -709,7 +717,7 @@ func resource_vm() *schema.Resource {
 			},
 			"dynamic_field": &schema.Schema{
 				Type:     schema.TypeString,
-				Optional: true,
+				Computed: true,
 			},
 		},
 	}
@@ -823,7 +831,7 @@ func vmInstanceNO_TEMPLATE_VM_MAP() VM {
 		Disk_image:    "",
 		Platform_name: "42",
 		Backup_size:   42,
-		Comment:       "42",
+		Comment:       "",
 		Outsourcing:   "42",
 		Dynamic_field: "42",
 	}
@@ -899,7 +907,7 @@ func Fake_vmInstance_EXISTING_TEMPLATE_WITH_ADDITIONAL_AND_MODIFIED_NICS_AND_DIS
 		Disk_image:    "",
 		Platform_name: "42",
 		Backup_size:   42,
-		Comment:       "42",
+		Comment:       "",
 		Outsourcing:   "42",
 		Dynamic_field: "42",
 	}
@@ -943,7 +951,7 @@ func Fake_vmInstance_EXISTING_TEMPLATE_WITH_MODIFIED_NIC_AND_DISK_VM_MAP() VM {
 		Disk_image:    "",
 		Platform_name: "42",
 		Backup_size:   42,
-		Comment:       "42",
+		Comment:       "",
 		Outsourcing:   "42",
 		Dynamic_field: "42",
 	}
@@ -991,7 +999,7 @@ func vmInstanceNoTemplateFake() VM {
 		Disk_image:    "Unit Test value",
 		Platform_name: "Unit Test value",
 		Backup_size:   42,
-		Comment:       "Unit Test value",
+		Comment:       "",
 		Outsourcing:   "Unit Test value",
 		Dynamic_field: "Unit Test value",
 	}
@@ -1000,7 +1008,10 @@ func vmInstanceNoTemplateFake() VM {
 func vdc_schema_init(vdc map[string]interface{}) *schema.ResourceData {
 	d := resource_vdc().TestResourceData()
 
-	Update_local_resource_state(vdc, d)
+	schemaTooler := SchemaTooler{
+		SchemaTools: Schema_Schemaer{},
+	}
+	schemaTooler.SchemaTools.Update_local_resource_state(vdc, d, &schemaTooler)
 
 	return d
 }
@@ -1008,7 +1019,10 @@ func vdc_schema_init(vdc map[string]interface{}) *schema.ResourceData {
 func vm_schema_init(vm map[string]interface{}) *schema.ResourceData {
 	d := resource_vm().TestResourceData()
 
-	Update_local_resource_state(vm, d)
+	schemaTooler := SchemaTooler{
+		SchemaTools: Schema_Schemaer{},
+	}
+	schemaTooler.SchemaTools.Update_local_resource_state(vm, d, &schemaTooler)
 
 	return d
 }

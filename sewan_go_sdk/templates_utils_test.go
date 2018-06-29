@@ -8,14 +8,14 @@ func TestFetchTemplateFromList(t *testing.T) {
 
 }
 
-func TestUpdateSchema(t *testing.T) {
+func TestUpdateSchemaFromTemplate(t *testing.T) {
 
 }
 
-func TestUpdateSchemaDisks(t *testing.T) {
+func TestUpdateSchemaDisksFromTemplateDisks(t *testing.T) {
 
 }
 
-func TestUpdateSchemaNics(t *testing.T) {
+func TestUpdateSchemaDisksFromTemplateNics(t *testing.T) {
 
 }

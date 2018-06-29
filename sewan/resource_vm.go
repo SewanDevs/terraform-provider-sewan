@@ -2,7 +2,6 @@ package sewan
 
 import (
 	"github.com/hashicorp/terraform/helper/schema"
-	sdk "terraform-provider-sewan/sewan_go_sdk"
 )
 
 func resource_vm_disk() *schema.Resource {
@@ -46,6 +45,26 @@ func resource_vm_nic() *schema.Resource {
 			"connected": &schema.Schema{
 				Type:     schema.TypeBool,
 				Required: true,
+			},
+		},
+	}
+}
+
+func resource_vm_dynamic_field() *schema.Resource {
+	return &schema.Resource{
+		Schema: map[string]*schema.Schema{
+			"terraform_provisioned": &schema.Schema{
+				Type:     schema.TypeString,
+				Required: true,
+			},
+			"creation_template": &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			"disks_created_from_template": &schema.Schema{
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem:     resource_vm_disk(),
 			},
 		},
 	}
@@ -134,15 +153,16 @@ func resource_vm() *schema.Resource {
 			},
 			"comment": &schema.Schema{
 				Type:     schema.TypeString,
-				Computed: true,
+				Optional: true,
 			},
 			"outsourcing": &schema.Schema{
 				Type:     schema.TypeString,
 				Computed: true,
 			},
 			"dynamic_field": &schema.Schema{
-				Type:     schema.TypeString,
+				Type:     schema.TypeList,
 				Optional: true,
+				Elem:     resource_vm_dynamic_field(),
 			},
 		},
 	}
@@ -156,12 +176,15 @@ func resource_vm_create(d *schema.ResourceData, m interface{}) error {
 	creationError,
 		apiCreationResponse = m.(*Client).sewan_apiTooler.Api.Create_resource(d,
 		m.(*Client).sewan_clientTooler,
-		m.(*Client).sewan_TemplatesTooler,
+		m.(*Client).sewan_templatesTooler,
+		m.(*Client).sewan_schemaTooler,
 		VM_RESOURCE_TYPE,
 		sewan)
 
 	if creationError == nil {
-		creationError = sdk.Update_local_resource_state(apiCreationResponse, d)
+		creationError = m.(*Client).sewan_schemaTooler.SchemaTools.Update_local_resource_state(apiCreationResponse,
+			d,
+			m.(*Client).sewan_schemaTooler)
 	}
 	return creationError
 }
@@ -176,15 +199,18 @@ func resource_vm_read(d *schema.ResourceData, m interface{}) error {
 		apiReadResponse,
 		resource_exists = m.(*Client).sewan_apiTooler.Api.Read_resource(d,
 		m.(*Client).sewan_clientTooler,
-		m.(*Client).sewan_TemplatesTooler,
+		m.(*Client).sewan_templatesTooler,
+		m.(*Client).sewan_schemaTooler,
 		VM_RESOURCE_TYPE,
 		sewan)
 
 	if resource_exists == false {
-		sdk.Delete_terraform_resource(d)
+		m.(*Client).sewan_schemaTooler.SchemaTools.Delete_terraform_resource(d)
 	} else {
 		if readError == nil {
-			readError = sdk.Update_local_resource_state(apiReadResponse, d)
+			readError = m.(*Client).sewan_schemaTooler.SchemaTools.Update_local_resource_state(apiReadResponse,
+				d,
+				m.(*Client).sewan_schemaTooler)
 		}
 	}
 	return readError
@@ -196,7 +222,8 @@ func resource_vm_update(d *schema.ResourceData, m interface{}) error {
 	sewan := m.(*Client).sewan
 	updateError = m.(*Client).sewan_apiTooler.Api.Update_resource(d,
 		m.(*Client).sewan_clientTooler,
-		m.(*Client).sewan_TemplatesTooler,
+		m.(*Client).sewan_templatesTooler,
+		m.(*Client).sewan_schemaTooler,
 		VM_RESOURCE_TYPE,
 		sewan)
 	return updateError
@@ -208,11 +235,12 @@ func resource_vm_delete(d *schema.ResourceData, m interface{}) error {
 	sewan := m.(*Client).sewan
 	deleteError = m.(*Client).sewan_apiTooler.Api.Delete_resource(d,
 		m.(*Client).sewan_clientTooler,
-		m.(*Client).sewan_TemplatesTooler,
+		m.(*Client).sewan_templatesTooler,
+		m.(*Client).sewan_schemaTooler,
 		VM_RESOURCE_TYPE,
 		sewan)
 	if deleteError == nil {
-		sdk.Delete_terraform_resource(d)
+		m.(*Client).sewan_schemaTooler.SchemaTools.Delete_terraform_resource(d)
 	}
 	return deleteError
 }

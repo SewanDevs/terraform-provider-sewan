@@ -25,7 +25,8 @@ type Client struct {
 	sewan                 *sdk.API
 	sewan_apiTooler       *sdk.APITooler
 	sewan_clientTooler    *sdk.ClientTooler
-	sewan_TemplatesTooler *sdk.TemplatesTooler
+	sewan_templatesTooler *sdk.TemplatesTooler
+	sewan_schemaTooler    *sdk.SchemaTooler
 }
 
 func (c *Config) Client() (*Client, error) {
@@ -38,11 +39,19 @@ func (c *Config) Client() (*Client, error) {
 	templatesTooler := sdk.TemplatesTooler{
 		TemplatesTools: sdk.Template_Templater{},
 	}
+	schemaTooler := sdk.SchemaTooler{
+		SchemaTools: sdk.Schema_Schemaer{},
+	}
 	api := apiTooler.New(
 		c.Api_token,
 		c.Api_url,
 	)
 	err := apiTooler.CheckStatus(api)
 
-	return &Client{api, &apiTooler, &clientTooler, &templatesTooler}, err
+	return &Client{api,
+			&apiTooler,
+			&clientTooler,
+			&templatesTooler,
+			&schemaTooler},
+		err
 }

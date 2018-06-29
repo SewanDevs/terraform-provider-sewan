@@ -19,6 +19,7 @@ type Clienter interface {
 	HandleResponse(resp *http.Response,
 		expectedCode int,
 		expectedBodyFormat string) (interface{}, error)
+	//UpdateDynamic_Field()
 }
 type HttpClienter struct{}
 

@@ -108,6 +108,9 @@ func TestCreate_resource(t *testing.T) {
 	fake_templates_tooler := TemplatesTooler{
 		TemplatesTools: Template_Templater{},
 	}
+	fake_schema_tooler := SchemaTooler{
+		SchemaTools: Schema_Schemaer{},
+	}
 
 	for _, test_case := range test_cases {
 		resource_res = resource(test_case.ResourceType)
@@ -118,6 +121,7 @@ func TestCreate_resource(t *testing.T) {
 		err, resp_creation_map = apier.Create_resource(d,
 			&fake_client_tooler,
 			&fake_templates_tooler,
+			&fake_schema_tooler,
 			test_case.ResourceType,
 			sewan)
 
@@ -265,6 +269,9 @@ func TestRead_resource(t *testing.T) {
 	fake_templates_tooler := TemplatesTooler{
 		TemplatesTools: Template_Templater{},
 	}
+	fake_schema_tooler := SchemaTooler{
+		SchemaTools: Schema_Schemaer{},
+	}
 
 	for _, test_case := range test_cases {
 		resource_res = resource(test_case.ResourceType)
@@ -275,6 +282,7 @@ func TestRead_resource(t *testing.T) {
 		err, resp_creation_map, res_exists = Apier.Read_resource(d,
 			&fake_client_tooler,
 			&fake_templates_tooler,
+			&fake_schema_tooler,
 			test_case.ResourceType,
 			sewan)
 
@@ -406,6 +414,9 @@ func TestUpdate_resource(t *testing.T) {
 	fake_templates_tooler := TemplatesTooler{
 		TemplatesTools: Template_Templater{},
 	}
+	fake_schema_tooler := SchemaTooler{
+		SchemaTools: Schema_Schemaer{},
+	}
 
 	for _, test_case := range test_cases {
 		resource_res = resource(test_case.ResourceType)
@@ -416,6 +427,7 @@ func TestUpdate_resource(t *testing.T) {
 		err = Apier.Update_resource(d,
 			&fake_client_tooler,
 			&fake_templates_tooler,
+			&fake_schema_tooler,
 			test_case.ResourceType,
 			sewan)
 
@@ -526,6 +538,9 @@ func TestDelete_resource(t *testing.T) {
 	fake_templates_tooler := TemplatesTooler{
 		TemplatesTools: Template_Templater{},
 	}
+	fake_schema_tooler := SchemaTooler{
+		SchemaTools: Schema_Schemaer{},
+	}
 
 	for _, test_case := range test_cases {
 		resource_res = resource(test_case.ResourceType)
@@ -536,6 +551,7 @@ func TestDelete_resource(t *testing.T) {
 		err = Apier.Delete_resource(d,
 			&fake_client_tooler,
 			&fake_templates_tooler,
+			&fake_schema_tooler,
 			test_case.ResourceType,
 			sewan)
 

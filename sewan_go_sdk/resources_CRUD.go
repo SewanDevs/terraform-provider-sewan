@@ -18,21 +18,21 @@ const (
 func (apier AirDrumResources_Apier) Create_resource(d *schema.ResourceData,
 	clientTooler *ClientTooler,
 	templatesTooler *TemplatesTooler,
+	schemaTools *SchemaTooler,
 	resourceType string,
 	sewan *API) (error, map[string]interface{}) {
-
 	var (
-		resource_instance_creation_err      error = nil
-		create_req_err       error = nil
-		createError          error = nil
-		create_resp_body_err error = nil
-		created_resource     map[string]interface{}
-		resourceInstance     interface{}
-		responseBody         string
-		instanceName         string = d.Get("name").(string)
-		resource_json        []byte
-		resp_body_reader     interface{}
-		bodyBytes            []byte
+		resource_instance_creation_err error = nil
+		create_req_err                 error = nil
+		createError                    error = nil
+		create_resp_body_err           error = nil
+		created_resource               map[string]interface{}
+		resourceInstance               interface{}
+		responseBody                   string
+		instanceName                   string = d.Get("name").(string)
+		resource_json                  []byte
+		resp_body_reader               interface{}
+		bodyBytes                      []byte
 	)
 	api_tools := APITooler{
 		Api: apier,
@@ -43,6 +43,7 @@ func (apier AirDrumResources_Apier) Create_resource(d *schema.ResourceData,
 		resourceInstance = api_tools.Api.ResourceInstanceCreate(d,
 		clientTooler,
 		templatesTooler,
+		schemaTools,
 		resourceType,
 		sewan)
 	logger := loggerCreate("create_resource_" + instanceName + ".log")
@@ -87,7 +88,10 @@ func (apier AirDrumResources_Apier) Create_resource(d *schema.ResourceData,
 						if resp.StatusCode == http.StatusCreated {
 							created_resource = resp_body_reader.(map[string]interface{})
 							for key, value := range created_resource {
-								read_value, updateError := read_element(key, value, logger)
+								read_value,
+									updateError := schemaTools.SchemaTools.Read_element(key,
+									value,
+									logger)
 								if updateError == nil {
 									created_resource[key] = read_value
 								}
@@ -119,18 +123,19 @@ func (apier AirDrumResources_Apier) Create_resource(d *schema.ResourceData,
 func (apier AirDrumResources_Apier) Read_resource(d *schema.ResourceData,
 	clientTooler *ClientTooler,
 	templatesTooler *TemplatesTooler,
+	schemaTools *SchemaTooler,
 	resourceType string,
 	sewan *API) (error, map[string]interface{}, bool) {
 
 	var (
-		readError        error = nil
-		read_req_err     error = nil
-		resource_instance_creation_err  error = nil
-		read_resource    map[string]interface{}
-		responseBody     string
-		resp_body_reader interface{}
-		resource_exists  bool   = true
-		instanceName     string = d.Get("name").(string)
+		readError                      error = nil
+		read_req_err                   error = nil
+		resource_instance_creation_err error = nil
+		read_resource                  map[string]interface{}
+		responseBody                   string
+		resp_body_reader               interface{}
+		resource_exists                bool   = true
+		instanceName                   string = d.Get("name").(string)
 	)
 	req := &http.Request{}
 	resp := &http.Response{}
@@ -173,7 +178,10 @@ func (apier AirDrumResources_Apier) Read_resource(d *schema.ResourceData,
 							read_resource = resp_body_reader.(map[string]interface{})
 
 							for key, value := range read_resource {
-								read_value, updateError := read_element(key, value, logger)
+								read_value,
+									updateError := schemaTools.SchemaTools.Read_element(key,
+									value,
+									logger)
 								if updateError == nil {
 									read_resource[key] = read_value
 								}
@@ -209,20 +217,21 @@ func (apier AirDrumResources_Apier) Read_resource(d *schema.ResourceData,
 func (apier AirDrumResources_Apier) Update_resource(d *schema.ResourceData,
 	clientTooler *ClientTooler,
 	templatesTooler *TemplatesTooler,
+	schemaTools *SchemaTooler,
 	resourceType string,
 	sewan *API) error {
 
 	var (
-		resource_instance_creation_err      error = nil
-		updateError          error = nil
-		update_req_err       error = nil
-		update_resp_body_err error = nil
-		resourceInstance     interface{}
-		responseBody         string
-		instanceName         string = d.Get("name").(string)
-		resource_json        []byte
-		resp_body_reader     interface{}
-		bodyBytes            []byte
+		resource_instance_creation_err error = nil
+		updateError                    error = nil
+		update_req_err                 error = nil
+		update_resp_body_err           error = nil
+		resourceInstance               interface{}
+		responseBody                   string
+		instanceName                   string = d.Get("name").(string)
+		resource_json                  []byte
+		resp_body_reader               interface{}
+		bodyBytes                      []byte
 	)
 	req := &http.Request{}
 	resp := &http.Response{}
@@ -234,6 +243,7 @@ func (apier AirDrumResources_Apier) Update_resource(d *schema.ResourceData,
 		resourceInstance = api_tools.Api.ResourceInstanceCreate(d,
 		clientTooler,
 		templatesTooler,
+		schemaTools,
 		resourceType,
 		sewan)
 
@@ -301,19 +311,20 @@ func (apier AirDrumResources_Apier) Update_resource(d *schema.ResourceData,
 func (apier AirDrumResources_Apier) Delete_resource(d *schema.ResourceData,
 	clientTooler *ClientTooler,
 	templatesTooler *TemplatesTooler,
+	schemaTools *SchemaTooler,
 	resourceType string,
 	sewan *API) error {
 
 	var (
-		resource_instance_creation_err          error = nil
-		deleteError              error = nil
-		delete_req_err           error = nil
-		delete_resp_body_err     error = nil
-		responseBody             string
-		resp_body_reader         interface{}
-		bodyBytes                []byte
-		resource_destroy_failure string
-		instanceName             string = d.Get("name").(string)
+		resource_instance_creation_err error = nil
+		deleteError                    error = nil
+		delete_req_err                 error = nil
+		delete_resp_body_err           error = nil
+		responseBody                   string
+		resp_body_reader               interface{}
+		bodyBytes                      []byte
+		resource_destroy_failure       string
+		instanceName                   string = d.Get("name").(string)
 	)
 	switch resourceType {
 	case "vdc":

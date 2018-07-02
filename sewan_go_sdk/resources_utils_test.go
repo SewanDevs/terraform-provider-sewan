@@ -94,6 +94,15 @@ func TestResourceInstanceCreate(t *testing.T) {
 			errors.New("GetTemplatesList() error"),
 			VM{},
 		},
+		{
+			9,
+			vm_schema_init(EXISTING_TEMPLATE_WITH_DELETED_DISK_VM_MAP),
+			GetTemplatesList_Success_HttpClienterFake{},
+			EXISTING_TEMPLATE_WITH_DELETED_DISK_VM_MAP_TemplaterFake{},
+			VM_RESOURCE_TYPE,
+			nil,
+			Fake_vmInstance_EXISTING_TEMPLATE_WITH_DELETED_DISK_VM_MAP(),
+		},
 	}
 
 	var (

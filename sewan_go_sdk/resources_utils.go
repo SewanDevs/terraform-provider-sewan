@@ -40,8 +40,8 @@ type VM_DISK struct {
 	Size          int    `json:"size"`
 	Storage_class string `json:"storage_class"`
 	Slug          string `json:"slug"`
-	V_disk        string `json:"v_disk"`
-	Deletion	bool `json:"deletion"`
+	V_disk        string `json:"v_disk,omitempty"`
+	Deletion	bool `json:"deletion,omitempty"`
 }
 
 type VM_NIC struct {
@@ -151,14 +151,17 @@ func vmInstanceCreate(d *schema.ResourceData,
 			Platform_name: d.Get("platform_name").(string),
 			Backup_size:   d.Get("backup_size").(int),
 			Outsourcing:   d.Get("outsourcing").(string),
+			Dynamic_field:   d.Get("dynamic_field").(string),
 		}
 		if d.Id() == "" {
 			vm.Template = d.Get("template").(string)
-			vm.Comment = d.Get("template").(string)
 			dynamic_field_struct := Dynamic_field_struct{
 				Terraform_provisioned:       true,
 				Creation_template:           vm.Template,
-				Disks_created_from_template: template["disks"].([]interface{}),
+				Disks_created_from_template: nil,
+			}
+			if template != nil {
+				dynamic_field_struct.Disks_created_from_template = template["disks"].([]interface{})
 			}
 			dynamic_field_json, _ := json.Marshal(dynamic_field_struct)
 			vm.Dynamic_field = string(dynamic_field_json)

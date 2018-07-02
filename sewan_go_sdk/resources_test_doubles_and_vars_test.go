@@ -125,8 +125,6 @@ var (
 		"platform_name": "42",
 		"backup_size":   42,
 		"comment":       "42",
-		"outsourcing":   "42",
-		"dynamic_field": "42",
 	}
 	EXISTING_TEMPLATE_NO_ADDITIONAL_DISK_VM_MAP = map[string]interface{}{
 		"name":          "Unit test template no disc add on vm resource",
@@ -177,8 +175,6 @@ var (
 		"platform_name": "42",
 		"backup_size":   42,
 		"comment":       "42",
-		"outsourcing":   "42",
-		"dynamic_field": "42",
 	}
 	EXISTING_TEMPLATE_WITH_MODIFIED_NIC_AND_DISK_VM_MAP = map[string]interface{}{
 		"name":       "EXISTING_TEMPLATE_WITH_MODIFIED_NIC_AND_DISK_VM_MAP",
@@ -218,8 +214,41 @@ var (
 		"platform_name": "42",
 		"backup_size":   42,
 		"comment":       "42",
-		"outsourcing":   "42",
-		"dynamic_field": "42",
+	}
+	EXISTING_TEMPLATE_WITH_DELETED_DISK_VM_MAP = map[string]interface{}{
+		"id":"EXISTING_TEMPLATE_AND_VM_INSTANCE_WITH_DELETED_DISK_VM_MAP",
+		"name":       "EXISTING_TEMPLATE_WITH_DELETED_DISK_VM_MAP",
+		"enterprise": "sewan-rd-cloud-beta",
+		"template":   "centos7-rd-DC1",
+		"state":      "UP",
+		"os":         "Debian",
+		"ram":        8,
+		"cpu":        4,
+		"disks": []interface{}{
+			map[string]interface{}{
+				"name":          "disk-centos7-rd-DC1-1",
+				"size":          24,
+				"storage_class": "storage_class",
+				"deletion":true,
+			},
+			map[string]interface{}{
+				"name":          "disk 1",
+				"size":          24,
+				"storage_class": "storage_class",
+			},
+		},
+		"nics": []interface{}{},
+		"vdc":           "vdc",
+		"boot":          "on disk",
+		"storage_class": "storage_enterprise",
+		"slug":          "42",
+		"token":         "424242",
+		"backup":        "backup_no_backup",
+		"disk_image":    "",
+		"platform_name": "42",
+		"backup_size":   42,
+		"comment":       "42",
+		"dynamic_field": "{\"terraform_provisioned\":true,\"creation_template\":\"centos7-rd-DC1\",\"disks_created_from_template\":null}",
 	}
 	NON_EXISTING_TEMPLATE_VM_MAP = map[string]interface{}{
 		"name":          "windows95 vm",
@@ -413,12 +442,16 @@ var (
 				"size":          42,
 				"storage_class": "storage_class update",
 				"slug":          "slug update",
+				"v_disk":"",
+				"deletion":false,
 			},
 			map[string]interface{}{
 				"name":          "disk 2 update",
 				"size":          42,
 				"storage_class": "storage_class update",
 				"slug":          "slug update",
+				"v_disk":"",
+				"deletion":false,
 			},
 		},
 		"nics": []interface{}{
@@ -438,8 +471,6 @@ var (
 		"platform_name": "",
 		"backup_size":   42,
 		"comment":       "",
-		"outsourcing":   "42 update",
-		"dynamic_field": "42 update",
 	}
 	TEST_UPDATE_VM_MAP_INTID = map[string]interface{}{
 		"id":    1212,
@@ -454,12 +485,16 @@ var (
 				"size":          42,
 				"storage_class": "storage_class update",
 				"slug":          "slug update",
+				"v_disk":"",
+				"deletion":false,
 			},
 			map[string]interface{}{
 				"name":          "disk 2 update",
 				"size":          42,
 				"storage_class": "storage_class update",
 				"slug":          "slug update",
+				"v_disk":"",
+				"deletion":false,
 			},
 		},
 		"nics": []interface{}{
@@ -479,8 +514,6 @@ var (
 		"platform_name": "",
 		"backup_size":   43,
 		"comment":       "",
-		"outsourcing":   "42 update",
-		"dynamic_field": "42 update",
 	}
 	TEST_UPDATE_VM_MAP_FLOATID = map[string]interface{}{
 		"id":    121212.12,
@@ -495,12 +528,16 @@ var (
 				"size":          42,
 				"storage_class": "storage_class update",
 				"slug":          "slug update",
+				"v_disk":"",
+				"deletion":false,
 			},
 			map[string]interface{}{
 				"name":          "disk 2 update",
 				"size":          42,
 				"storage_class": "storage_class update",
 				"slug":          "slug update",
+				"v_disk":"",
+				"deletion":false,
 			},
 		},
 		"nics": []interface{}{
@@ -520,8 +557,6 @@ var (
 		"platform_name": "",
 		"backup_size":   42,
 		"comment":       "",
-		"outsourcing":   "42 update",
-		"dynamic_field": "42 update",
 	}
 )
 
@@ -589,11 +624,11 @@ func resource_vm_disk() *schema.Resource {
 			},
 			"size": &schema.Schema{
 				Type:     schema.TypeInt,
-				Required: true,
+				Optional: true,
 			},
 			"storage_class": &schema.Schema{
 				Type:     schema.TypeString,
-				Required: true,
+				Optional: true,
 			},
 			"slug": &schema.Schema{
 				Type:     schema.TypeString,
@@ -602,6 +637,10 @@ func resource_vm_disk() *schema.Resource {
 			"v_disk": &schema.Schema{
 				Type:     schema.TypeString,
 				Computed: true,
+			},
+			"deletion": &schema.Schema{
+				Type:     schema.TypeBool,
+				Optional: true,
 			},
 		},
 	}
@@ -628,10 +667,6 @@ func resource_vm_nic() *schema.Resource {
 
 func resource_vm() *schema.Resource {
 	return &schema.Resource{
-		Create: resource_vm_create,
-		Read:   resource_vm_read,
-		Update: resource_vm_update,
-		Delete: resource_vm_delete,
 		Schema: map[string]*schema.Schema{
 			"name": &schema.Schema{
 				Type:     schema.TypeString,
@@ -716,7 +751,7 @@ func resource_vm() *schema.Resource {
 				Computed: true,
 			},
 			"dynamic_field": &schema.Schema{
-				Type:     schema.TypeString,
+				Type: schema.TypeString,
 				Computed: true,
 			},
 		},
@@ -808,6 +843,8 @@ func vmInstanceNO_TEMPLATE_VM_MAP() VM {
 				"size":          24,
 				"storage_class": "storage_class",
 				"slug":          "",
+				"v_disk":"",
+				"deletion":false,
 			},
 		},
 		Nics: []interface{}{
@@ -832,8 +869,7 @@ func vmInstanceNO_TEMPLATE_VM_MAP() VM {
 		Platform_name: "42",
 		Backup_size:   42,
 		Comment:       "",
-		Outsourcing:   "42",
-		Dynamic_field: "42",
+		Dynamic_field:  "{\"terraform_provisioned\":true,\"creation_template\":\"\",\"disks_created_from_template\":null}",
 	}
 }
 
@@ -851,6 +887,8 @@ func Fake_vmInstance_EXISTING_TEMPLATE_NO_ADDITIONAL_DISK_VM_MAP() VM {
 				"size":          20,
 				"storage_class": "storage_enterprise",
 				"slug":          "disk-centos7-rd-dc1-1",
+				"v_disk":"",
+				"deletion":false,
 			},
 		},
 		Nics:          []interface{}{},
@@ -860,6 +898,7 @@ func Fake_vmInstance_EXISTING_TEMPLATE_NO_ADDITIONAL_DISK_VM_MAP() VM {
 		Slug:          "42",
 		Token:         "424242",
 		Backup:        "backup_no_backup",
+		Dynamic_field:"{\"terraform_provisioned\":true,\"creation_template\":\"centos7-rd-DC1\",\"disks_created_from_template\":[{\"name\":\"disk-centos7-rd-DC1-1\",\"size\":20,\"slug\":\"disk-centos7-rd-dc1-1\",\"storage_class\":\"storage_enterprise\"}]}",
 	}
 }
 
@@ -878,12 +917,16 @@ func Fake_vmInstance_EXISTING_TEMPLATE_WITH_ADDITIONAL_AND_MODIFIED_NICS_AND_DIS
 				"size":          24,
 				"storage_class": "storage_enterprise",
 				"slug":          "",
+				"v_disk":"",
+				"deletion":false,
 			},
 			map[string]interface{}{
 				"name":          "disk-centos7-rd-DC1-1",
 				"size":          25,
 				"storage_class": "storage_enterprise",
 				"slug":          "disk-centos7-rd-dc1-1",
+				"v_disk":"",
+				"deletion":false,
 			},
 		},
 		Nics: []interface{}{
@@ -908,8 +951,7 @@ func Fake_vmInstance_EXISTING_TEMPLATE_WITH_ADDITIONAL_AND_MODIFIED_NICS_AND_DIS
 		Platform_name: "42",
 		Backup_size:   42,
 		Comment:       "",
-		Outsourcing:   "42",
-		Dynamic_field: "42",
+		Dynamic_field: "{\"terraform_provisioned\":true,\"creation_template\":\"centos7-rd-DC1\",\"disks_created_from_template\":[{\"name\":\"disk-centos7-rd-DC1-1\",\"size\":20,\"slug\":\"disk-centos7-rd-dc1-1\",\"storage_class\":\"storage_enterprise\"}]}",
 	}
 }
 
@@ -928,6 +970,8 @@ func Fake_vmInstance_EXISTING_TEMPLATE_WITH_MODIFIED_NIC_AND_DISK_VM_MAP() VM {
 				"size":          24,
 				"storage_class": "storage_class",
 				"slug":          "disk-centos7-rd-dc1-1",
+				"v_disk":"",
+				"deletion":false,
 			},
 		},
 		Nics: []interface{}{
@@ -952,8 +996,41 @@ func Fake_vmInstance_EXISTING_TEMPLATE_WITH_MODIFIED_NIC_AND_DISK_VM_MAP() VM {
 		Platform_name: "42",
 		Backup_size:   42,
 		Comment:       "",
-		Outsourcing:   "42",
-		Dynamic_field: "42",
+		Dynamic_field: "{\"terraform_provisioned\":true,\"creation_template\":\"centos7-rd-DC1\",\"disks_created_from_template\":null}",
+	}
+}
+
+func Fake_vmInstance_EXISTING_TEMPLATE_WITH_DELETED_DISK_VM_MAP() VM {
+	return VM{
+		Name:       "EXISTING_TEMPLATE_WITH_DELETED_DISK_VM_MAP",
+		Enterprise: "sewan-rd-cloud-beta",
+		Template:   "",
+		State:      "UP",
+		OS:         "Debian",
+		RAM:        8,
+		CPU:        4,
+		Disks: []interface{}{
+			map[string]interface{}{
+				"name":          "disk 1",
+				"size":          24,
+				"storage_class": "storage_enterprise",
+				"slug":          "",
+				"v_disk":"",
+				"deletion":false,
+			},
+		},
+		Nics: []interface{}{},
+		Vdc:           "vdc",
+		Boot:          "on disk",
+		Storage_class: "storage_enterprise",
+		Slug:          "42",
+		Token:         "424242",
+		Backup:        "backup_no_backup",
+		Disk_image:    "",
+		Platform_name: "42",
+		Backup_size:   42,
+		Comment:       "",
+		Dynamic_field: "{\"terraform_provisioned\":true,\"creation_template\":\"centos7-rd-DC1\",\"disks_created_from_template\":null}",
 	}
 }
 
@@ -1000,8 +1077,6 @@ func vmInstanceNoTemplateFake() VM {
 		Platform_name: "Unit Test value",
 		Backup_size:   42,
 		Comment:       "",
-		Outsourcing:   "Unit Test value",
-		Dynamic_field: "Unit Test value",
 	}
 }
 

@@ -64,6 +64,8 @@ type VM_successfull_CRUD_operations_AirDrumAPIer struct{}
 
 func (apier VM_successfull_CRUD_operations_AirDrumAPIer) Create_resource(d *schema.ResourceData,
 	clientTooler *sdk.ClientTooler,
+	templatesTooler *sdk.TemplatesTooler,
+	schemaTools *sdk.SchemaTooler,
 	resourceType string,
 	sewan *sdk.API) (error, map[string]interface{}) {
 
@@ -71,6 +73,8 @@ func (apier VM_successfull_CRUD_operations_AirDrumAPIer) Create_resource(d *sche
 }
 func (apier VM_successfull_CRUD_operations_AirDrumAPIer) Read_resource(d *schema.ResourceData,
 	clientTooler *sdk.ClientTooler,
+	templatesTooler *sdk.TemplatesTooler,
+	schemaTools *sdk.SchemaTooler,
 	resourceType string,
 	sewan *sdk.API) (error, map[string]interface{}, bool) {
 
@@ -78,6 +82,8 @@ func (apier VM_successfull_CRUD_operations_AirDrumAPIer) Read_resource(d *schema
 }
 func (apier VM_successfull_CRUD_operations_AirDrumAPIer) Update_resource(d *schema.ResourceData,
 	clientTooler *sdk.ClientTooler,
+	templatesTooler *sdk.TemplatesTooler,
+	schemaTools *sdk.SchemaTooler,
 	resourceType string,
 	sewan *sdk.API) error {
 
@@ -85,6 +91,8 @@ func (apier VM_successfull_CRUD_operations_AirDrumAPIer) Update_resource(d *sche
 }
 func (apier VM_successfull_CRUD_operations_AirDrumAPIer) Delete_resource(d *schema.ResourceData,
 	clientTooler *sdk.ClientTooler,
+	templatesTooler *sdk.TemplatesTooler,
+	schemaTools *sdk.SchemaTooler,
 	resourceType string,
 	sewan *sdk.API) error {
 
@@ -111,6 +119,8 @@ func (apier VM_successfull_CRUD_operations_AirDrumAPIer) Validate_status(api *sd
 }
 func (apier VM_successfull_CRUD_operations_AirDrumAPIer) ResourceInstanceCreate(d *schema.ResourceData,
 	clientTooler *sdk.ClientTooler,
+	templatesTooler *sdk.TemplatesTooler,
+	schemaTools *sdk.SchemaTooler,
 	resourceType string,
 	api *sdk.API) (error,
 	interface{}) {
@@ -122,6 +132,8 @@ type VM_failure_CRUD_operations_AirDrumAPIer struct{}
 
 func (apier VM_failure_CRUD_operations_AirDrumAPIer) Create_resource(d *schema.ResourceData,
 	clientTooler *sdk.ClientTooler,
+	templatesTooler *sdk.TemplatesTooler,
+	schemaTools *sdk.SchemaTooler,
 	resourceType string,
 	sewan *sdk.API) (error, map[string]interface{}) {
 
@@ -129,6 +141,8 @@ func (apier VM_failure_CRUD_operations_AirDrumAPIer) Create_resource(d *schema.R
 }
 func (apier VM_failure_CRUD_operations_AirDrumAPIer) Read_resource(d *schema.ResourceData,
 	clientTooler *sdk.ClientTooler,
+	templatesTooler *sdk.TemplatesTooler,
+	schemaTools *sdk.SchemaTooler,
 	resourceType string,
 	sewan *sdk.API) (error, map[string]interface{}, bool) {
 
@@ -136,6 +150,8 @@ func (apier VM_failure_CRUD_operations_AirDrumAPIer) Read_resource(d *schema.Res
 }
 func (apier VM_failure_CRUD_operations_AirDrumAPIer) Update_resource(d *schema.ResourceData,
 	clientTooler *sdk.ClientTooler,
+	templatesTooler *sdk.TemplatesTooler,
+	schemaTools *sdk.SchemaTooler,
 	resourceType string,
 	sewan *sdk.API) error {
 
@@ -143,6 +159,8 @@ func (apier VM_failure_CRUD_operations_AirDrumAPIer) Update_resource(d *schema.R
 }
 func (apier VM_failure_CRUD_operations_AirDrumAPIer) Delete_resource(d *schema.ResourceData,
 	clientTooler *sdk.ClientTooler,
+	templatesTooler *sdk.TemplatesTooler,
+	schemaTools *sdk.SchemaTooler,
 	resourceType string,
 	sewan *sdk.API) error {
 
@@ -169,6 +187,8 @@ func (apier VM_failure_CRUD_operations_AirDrumAPIer) Validate_status(api *sdk.AP
 }
 func (apier VM_failure_CRUD_operations_AirDrumAPIer) ResourceInstanceCreate(d *schema.ResourceData,
 	clientTooler *sdk.ClientTooler,
+	templatesTooler *sdk.TemplatesTooler,
+	schemaTools *sdk.SchemaTooler,
 	resourceType string,
 	api *sdk.API) (error,
 	interface{}) {
@@ -180,6 +200,8 @@ type VM_readfailure_CRUD_operations_AirDrumAPIer struct{}
 
 func (apier VM_readfailure_CRUD_operations_AirDrumAPIer) Create_resource(d *schema.ResourceData,
 	clientTooler *sdk.ClientTooler,
+	templatesTooler *sdk.TemplatesTooler,
+	schemaTools *sdk.SchemaTooler,
 	resourceType string,
 	sewan *sdk.API) (error, map[string]interface{}) {
 
@@ -187,6 +209,8 @@ func (apier VM_readfailure_CRUD_operations_AirDrumAPIer) Create_resource(d *sche
 }
 func (apier VM_readfailure_CRUD_operations_AirDrumAPIer) Read_resource(d *schema.ResourceData,
 	clientTooler *sdk.ClientTooler,
+	templatesTooler *sdk.TemplatesTooler,
+	schemaTools *sdk.SchemaTooler,
 	resourceType string,
 	sewan *sdk.API) (error, map[string]interface{}, bool) {
 
@@ -194,6 +218,8 @@ func (apier VM_readfailure_CRUD_operations_AirDrumAPIer) Read_resource(d *schema
 }
 func (apier VM_readfailure_CRUD_operations_AirDrumAPIer) Update_resource(d *schema.ResourceData,
 	clientTooler *sdk.ClientTooler,
+	templatesTooler *sdk.TemplatesTooler,
+	schemaTools *sdk.SchemaTooler,
 	resourceType string,
 	sewan *sdk.API) error {
 
@@ -201,6 +227,8 @@ func (apier VM_readfailure_CRUD_operations_AirDrumAPIer) Update_resource(d *sche
 }
 func (apier VM_readfailure_CRUD_operations_AirDrumAPIer) Delete_resource(d *schema.ResourceData,
 	clientTooler *sdk.ClientTooler,
+	templatesTooler *sdk.TemplatesTooler,
+	schemaTools *sdk.SchemaTooler,
 	resourceType string,
 	sewan *sdk.API) error {
 
@@ -227,6 +255,8 @@ func (apier VM_readfailure_CRUD_operations_AirDrumAPIer) Validate_status(api *sd
 }
 func (apier VM_readfailure_CRUD_operations_AirDrumAPIer) ResourceInstanceCreate(d *schema.ResourceData,
 	clientTooler *sdk.ClientTooler,
+	templatesTooler *sdk.TemplatesTooler,
+	schemaTools *sdk.SchemaTooler,
 	resourceType string,
 	api *sdk.API) (error,
 	interface{}) {
@@ -264,11 +294,21 @@ func TestResource_vm_create(t *testing.T) {
 	clientTooler := sdk.ClientTooler{
 		Client: sdk.HttpClienter{},
 	}
+	templatesTooler := sdk.TemplatesTooler{
+		TemplatesTools: sdk.Template_Templater{},
+	}
+	schemaTooler := sdk.SchemaTooler{
+		SchemaTools: sdk.Schema_Schemaer{},
+	}
 	api := apiTooler.New(
 		config.Api_token,
 		config.Api_url,
 	)
-	m_struct := &Client{api, &apiTooler, &clientTooler}
+	m_struct := &Client{api,
+			&apiTooler,
+			&clientTooler,
+			&templatesTooler,
+			&schemaTooler}
 	var err error
 
 	for _, test_case := range test_cases {
@@ -324,11 +364,21 @@ func TestResource_vm_read(t *testing.T) {
 	clientTooler := sdk.ClientTooler{
 		Client: sdk.HttpClienter{},
 	}
+	templatesTooler := sdk.TemplatesTooler{
+		TemplatesTools: sdk.Template_Templater{},
+	}
+	schemaTooler := sdk.SchemaTooler{
+		SchemaTools: sdk.Schema_Schemaer{},
+	}
 	api := apiTooler.New(
 		config.Api_token,
 		config.Api_url,
 	)
-	m_struct := &Client{api, &apiTooler, &clientTooler}
+	m_struct := &Client{api,
+			&apiTooler,
+			&clientTooler,
+			&templatesTooler,
+			&schemaTooler}
 	var err error
 
 	for _, test_case := range test_cases {
@@ -375,11 +425,21 @@ func TestResource_vm_update(t *testing.T) {
 	clientTooler := sdk.ClientTooler{
 		Client: sdk.HttpClienter{},
 	}
+	templatesTooler := sdk.TemplatesTooler{
+		TemplatesTools: sdk.Template_Templater{},
+	}
+	schemaTooler := sdk.SchemaTooler{
+		SchemaTools: sdk.Schema_Schemaer{},
+	}
 	api := apiTooler.New(
 		config.Api_token,
 		config.Api_url,
 	)
-	m_struct := &Client{api, &apiTooler, &clientTooler}
+	m_struct := &Client{api,
+			&apiTooler,
+			&clientTooler,
+			&templatesTooler,
+			&schemaTooler}
 	var err error
 
 	for _, test_case := range test_cases {
@@ -426,11 +486,21 @@ func TestResource_vm_delete(t *testing.T) {
 	clientTooler := sdk.ClientTooler{
 		Client: sdk.HttpClienter{},
 	}
+	templatesTooler := sdk.TemplatesTooler{
+		TemplatesTools: sdk.Template_Templater{},
+	}
+	schemaTooler := sdk.SchemaTooler{
+		SchemaTools: sdk.Schema_Schemaer{},
+	}
 	api := apiTooler.New(
 		config.Api_token,
 		config.Api_url,
 	)
-	m_struct := &Client{api, &apiTooler, &clientTooler}
+	m_struct := &Client{api,
+			&apiTooler,
+			&clientTooler,
+			&templatesTooler,
+			&schemaTooler}
 	var err error
 
 	for _, test_case := range test_cases {

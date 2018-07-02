@@ -66,7 +66,8 @@ type VM struct {
 	Backup_size   int           `json:"backup_size"`
 	Comment       string        `json:"comment",omitempty`
 	Outsourcing   string        `json:"outsourcing,omitempty"`
-	Dynamic_field []byte        `json:"dynamic_field,omitempty"`
+	//Dynamic_field []byte        `json:"dynamic_field,omitempty"`
+	Dynamic_field string        `json:"dynamic_field"`
 }
 
 func vdcInstanceCreate(d *schema.ResourceData,
@@ -150,26 +151,16 @@ func vmInstanceCreate(d *schema.ResourceData,
 		if d.Id() == "" {
 			vm.Template = d.Get("template").(string)
 			vm.Comment = d.Get("template").(string)
+
+
 			dynamic_field_struct := Dynamic_field_struct{
 				Terraform_provisioned:       true,
 				Creation_template:           vm.Template,
 				Disks_created_from_template: template["disks"].([]interface{}),
 			}
 			dynamic_field_json, _ := json.Marshal(dynamic_field_struct)
-			vm.Dynamic_field = dynamic_field_json
+			vm.Dynamic_field = string(dynamic_field_json)
 
-			in := []byte(`{ "votes": { "option_A": "3" } }`)
-			var raw map[string]interface{}
-			json.Unmarshal(in, &raw)
-			raw["count"] = 1
-			out, _ := json.Marshal(raw)
-			println(string(out))
-
-			//map[string]interface{}{
-			//	"terraform_provisioned":true,
-			//	"creation_template":vm.Template,
-			//	"disks_created_from_template":template["disks"],
-			//}
 		} else {
 			vm.Template = ""
 		}

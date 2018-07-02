@@ -50,25 +50,25 @@ func resource_vm_nic() *schema.Resource {
 	}
 }
 
-func resource_vm_dynamic_field() *schema.Resource {
-	return &schema.Resource{
-		Schema: map[string]*schema.Schema{
-			"terraform_provisioned": &schema.Schema{
-				Type:     schema.TypeString,
-				Required: true,
-			},
-			"creation_template": &schema.Schema{
-				Type:     schema.TypeString,
-				Computed: true,
-			},
-			"disks_created_from_template": &schema.Schema{
-				Type:     schema.TypeList,
-				Optional: true,
-				Elem:     resource_vm_disk(),
-			},
-		},
-	}
-}
+//func resource_vm_dynamic_field() *schema.Resource {
+//	return &schema.Resource{
+//		Schema: map[string]*schema.Schema{
+//			"terraform_provisioned": &schema.Schema{
+//				Type:     schema.TypeString,
+//				Required: true,
+//			},
+//			"creation_template": &schema.Schema{
+//				Type:     schema.TypeString,
+//				Computed: true,
+//			},
+//			"disks_created_from_template": &schema.Schema{
+//				Type:     schema.TypeList,
+//				Optional: true,
+//				Elem:     resource_vm_disk(),
+//			},
+//		},
+//	}
+//}
 
 func resource_vm() *schema.Resource {
 	return &schema.Resource{
@@ -160,9 +160,10 @@ func resource_vm() *schema.Resource {
 				Computed: true,
 			},
 			"dynamic_field": &schema.Schema{
-				Type:     schema.TypeList,
-				Optional: true,
-				Elem:     resource_vm_dynamic_field(),
+				//Type:     schema.TypeList,
+				Type: schema.TypeString,
+				Computed: true,
+				//Elem:     resource_vm_dynamic_field(),
 			},
 		},
 	}

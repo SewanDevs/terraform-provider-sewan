@@ -2,6 +2,7 @@ package sewan_go_sdk
 
 import (
 	"bytes"
+	"reflect"
 	"encoding/json"
 	"errors"
 	"github.com/hashicorp/terraform/helper/schema"
@@ -209,7 +210,13 @@ func (apier AirDrumResources_Apier) Read_resource(d *schema.ResourceData,
 
 	logger.Println("readError =", readError,
 		"\nread_resource =", read_resource,
-		"\nresource_exists =", resource_exists)
+		"\nresource_exists =", resource_exists,
+		"\ndynamic_field infos :",
+		"\nreflect.TypeOf(d.Get\"dynamic_field\") : ",
+			reflect.TypeOf(d.Get("dynamic_field")),
+		"\nreflect.ValueOf(d.Get\"dynamic_field\") : ",
+			reflect.ValueOf(d.Get("dynamic_field")),
+		)
 	return readError, read_resource, resource_exists
 }
 

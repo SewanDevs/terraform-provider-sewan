@@ -1,5 +1,5 @@
 provider "sewan" {
-  api_token = "e2308a64707cb593f9a078990ca9d0e3e14cf432"
+  api_token = "bb5bb501371090a55e7a0f8ca03a8361232e8111"
   api_url = "https://next.cloud-datacenter.fr/api/clouddc/"
 }
 
@@ -33,10 +33,10 @@ resource "sewan_clouddc_vdc" "terraform-vdc" {
 
 resource "sewan_clouddc_vm" "template-server" {
   depends_on = ["sewan_clouddc_vdc.terraform-vdc"]
-  count = 1
+  count = 2
   name = "template-server${count.index}"
   ram = 1
-  cpu = 1
+  cpu = 2
   //disks=[
   //  {
   //    name="add disk test"

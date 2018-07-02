@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/hashicorp/terraform/helper/schema"
 	"reflect"
+	"encoding/json"
 )
 
 const (
@@ -13,7 +14,6 @@ const (
 	NAME_FIELD     = "name"
 	OS_FIELD       = "os"
 	ID_FIELD       = "id"
-	COMMENT_FIELD  = "comment"
 	DYNAMIC_FIELD  = "dynamic_field"
 )
 
@@ -102,20 +102,28 @@ func (templater Template_Templater) UpdateSchemaFromTemplate(d *schema.ResourceD
 				} else {
 					switch {
 					case s_template_param_name == NAME_FIELD:
-						logger.Println("Case template name",
-							"\ns_template_param_value =", s_template_param_value,
-							"\nd.Get(", COMMENT_FIELD, ") =", d.Get(COMMENT_FIELD).(string))
-						if s_template_param_value != d.Get(COMMENT_FIELD).(string) {
-							logger.Println("tatatatata")
-							if d.Get(COMMENT_FIELD).(string) != "" {
-								template_handle_err = errors.New("This resource has not been " +
-									"created with a template. Please remove template field from" +
-									"the configuration file.")
-							} else {
-								template_handle_err = errors.New("This resource has been " +
-									"created with \"" + d.Get(COMMENT_FIELD).(string) +
-									"\" template. This value can not be changed, please set it back.")
+						logger.Println("Case template name")
+
+						data := &Dynamic_field_struct{}
+						dynamicfield_read_err := json.Unmarshal([]byte(d.Get(DYNAMIC_FIELD).(string)), data)
+
+						if dynamicfield_read_err == nil {
+							if s_template_param_value != data.Creation_template {
+								if data.Creation_template == "" {
+									template_handle_err = errors.New("This resource has not been " +
+										"created with a template. Please remove template field from" +
+										"the configuration file.")
+								} else {
+									template_handle_err = errors.New("This resource has been " +
+										"created with \"" + data.Creation_template +
+										"\" template. This value can not be changed, please set it back.")
+								}
 							}
+						} else {
+							template_handle_err = errors.New(d.Get("name").(string)+
+							"'s resource dynamic field is not a valid json, please make sure"+
+							" this resource is modified only by a terraform session, \n"+
+							"json error :"+dynamicfield_read_err.Error())
 						}
 					default:
 						if d.Get(s_template_param_name) == "" {

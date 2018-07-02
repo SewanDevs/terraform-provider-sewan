@@ -9,6 +9,10 @@ import (
 	"strings"
 )
 
+const (
+	DELETION_FIELD = "deletion"
+)
+
 type Dynamic_field_struct struct {
 	Terraform_provisioned       bool          `json:"terraform_provisioned"`
 	Creation_template           string        `json:"creation_template"`
@@ -37,6 +41,7 @@ type VM_DISK struct {
 	Storage_class string `json:"storage_class"`
 	Slug          string `json:"slug"`
 	V_disk        string `json:"v_disk"`
+	Deletion	bool `json:"deletion"`
 }
 
 type VM_NIC struct {
@@ -66,7 +71,6 @@ type VM struct {
 	Backup_size   int           `json:"backup_size"`
 	Comment       string        `json:"comment",omitempty`
 	Outsourcing   string        `json:"outsourcing,omitempty"`
-	//Dynamic_field []byte        `json:"dynamic_field,omitempty"`
 	Dynamic_field string        `json:"dynamic_field"`
 }
 
@@ -151,8 +155,6 @@ func vmInstanceCreate(d *schema.ResourceData,
 		if d.Id() == "" {
 			vm.Template = d.Get("template").(string)
 			vm.Comment = d.Get("template").(string)
-
-
 			dynamic_field_struct := Dynamic_field_struct{
 				Terraform_provisioned:       true,
 				Creation_template:           vm.Template,
@@ -163,6 +165,13 @@ func vmInstanceCreate(d *schema.ResourceData,
 
 		} else {
 			vm.Template = ""
+			var update_disks_slices []interface{} = []interface{}{}
+			for _,disk := range d.Get(DISKS_PARAM).([]interface{}){
+				if disk.(map[string]interface{})[DELETION_FIELD] != true {
+					update_disks_slices = append(update_disks_slices,disk)
+				}
+			}
+			vm.Disks = update_disks_slices
 		}
 	}
 	logger.Println("vm = ", vm)

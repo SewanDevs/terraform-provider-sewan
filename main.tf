@@ -37,13 +37,22 @@ resource "sewan_clouddc_vm" "template-server" {
   name = "template-server${count.index}"
   ram = 1
   cpu = 2
-  //disks=[
-  //  {
-  //    name="add disk test"
-  //    size=16
-  //    storage_class="storage_performance"
-  //  }
-  //]
+  disks=[
+  {
+    name= "disk-centos7-rd-DC1-1",
+    storage_class="storage_enterprise"
+    deletion= true,
+  },
+  {
+    name="add disk test"
+    size=16
+    storage_class="storage_enterprise"
+  },
+  ]
+  //size: 20,
+  //storage_class: "storage_enterprise",
+  //slug: "terraform-vdc-template-server1-disk-centos7-rd-dc1-1",
+  //v_disk: "terraform-vdc-sewan-rd-cloud-beta-mono-storage_enterprise"
   nics=[
     {
       vlan="internal-2412"

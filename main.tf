@@ -10,11 +10,11 @@ resource "sewan_clouddc_vdc" "terraform-vdc" {
   vdc_resources=[
   {
     resource="sewan-rd-cloud-beta-mono-ram"
-    total=8
+    total=10
   },
   {
     resource="sewan-rd-cloud-beta-mono-cpu"
-    total=8
+    total=10
   },
   {
     resource="sewan-rd-cloud-beta-mono-storage_enterprise"
@@ -31,6 +31,9 @@ resource "sewan_clouddc_vdc" "terraform-vdc" {
   ]
 }
 
+//
+// RESOURCES CREATED FROM TEMPLATE
+//
 resource "sewan_clouddc_vm" "template-server" {
   depends_on = ["sewan_clouddc_vdc.terraform-vdc"]
   count = 2
@@ -39,20 +42,22 @@ resource "sewan_clouddc_vm" "template-server" {
   cpu = 2
   disks=[
   {
-    name= "disk-centos7-rd-DC1-1",
+    name= "disk-centos7-rd-DC1-1"
     storage_class="storage_enterprise"
-    deletion= true,
+    size=16
+    deletion= false
   },
   {
     name="add disk test"
     size=16
     storage_class="storage_enterprise"
   },
+  {
+    name="add disk test2"
+    size=0
+    storage_class="storage_enterprise"
+  },
   ]
-  //size: 20,
-  //storage_class: "storage_enterprise",
-  //slug: "terraform-vdc-template-server1-disk-centos7-rd-dc1-1",
-  //v_disk: "terraform-vdc-sewan-rd-cloud-beta-mono-storage_enterprise"
   nics=[
     {
       vlan="internal-2412"
@@ -65,33 +70,38 @@ resource "sewan_clouddc_vm" "template-server" {
   backup = "backup-no-backup"
   storage_class = "storage_enterprise"
   boot = "on disk"
-  //dynamic_field = "test_dynamic_field"
 }
 
-//resource "sewan_clouddc_vm" "template-server" {
-//  depends_on = ["sewan_clouddc_vdc.terraform-vdc"]
-//  count = 1
-//  name = "template-server${count.index}"
-//  template = "centos7-rd-DC1"
-//  disks=[
-//    {
-//      name="centos dc1"
-//      size=15
-//      storage_class="storage_enterprise"
-//      delete = true
-//    }
-//  ]
-//  nics=[
-//    {
-//      vlan="internal-2410"
-//      connected=true
-//    },
-//    {
-//      vlan="internal-2410"
-//      connected=true
-//    },
-//  ]
-//  vdc = "${sewan_clouddc_vdc.terraform-vdc.slug}"
-//  backup = "backup-no-backup"
-//  storage_class = "storage_enterprise"
-//}
+//
+// TEMPLATE-LESS RESOURCES
+//
+resource "sewan_clouddc_vm" "server" {
+  depends_on = ["sewan_clouddc_vdc.terraform-vdc"]
+  count = 5
+  ram = 1
+  cpu = 1
+  os = "CentOS"
+  name = "server${count.index}"
+  disks=[
+    {
+      name="disk 1"
+      size=1
+      storage_class="storage_enterprise"
+    },
+    {
+      name="disk 2"
+      size=2
+      storage_class="storage_enterprise"
+    },
+  ]
+  nics=[
+    {
+      vlan="internal-2410"
+      connected=true
+    },
+  ]
+  vdc = "${sewan_clouddc_vdc.terraform-vdc.slug}"
+  storage_class="storage_enterprise"
+  backup = "backup-no-backup"
+  boot = "on disk"
+}

@@ -13,7 +13,7 @@ import (
 var (
 	TEST_VDC_MAP = map[string]interface{}{
 		"name":       "Unit test vdc resource",
-		"enterprise": "sewan-rd-cloud-beta",
+		"enterprise": "unit test enterprise",
 		"datacenter": "dc1",
 		"vdc_resources": []interface{}{
 			map[string]interface{}{

@@ -5,27 +5,27 @@ provider "sewan" {
 
 resource "sewan_clouddc_vdc" "terraform-vdc" {
   name = "terraform-vdc"
-  enterprise = "sewan-rd-cloud-beta"
+  enterprise = "unit test enterprise"
   datacenter = "dc1"
   vdc_resources=[
   {
-    resource="sewan-rd-cloud-beta-mono-ram"
+    resource="unit test enterprise-mono-ram"
     total=10
   },
   {
-    resource="sewan-rd-cloud-beta-mono-cpu"
+    resource="unit test enterprise-mono-cpu"
     total=10
   },
   {
-    resource="sewan-rd-cloud-beta-mono-storage_enterprise"
+    resource="unit test enterprise-mono-storage_enterprise"
     total=80
   },
   {
-    resource="sewan-rd-cloud-beta-mono-storage_performance"
+    resource="unit test enterprise-mono-storage_performance"
     total=20
   },
   {
-    resource="sewan-rd-cloud-beta-mono-storage_high_performance"
+    resource="unit test enterprise-mono-storage_high_performance"
     total=10
   },
   ]

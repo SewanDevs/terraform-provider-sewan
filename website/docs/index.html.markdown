@@ -22,7 +22,7 @@ provider "sewan" {
 
 resource "sewan_clouddc_vm" "server_resource_name" {
   name = "server_name"
-  vdc = "sewan-rd-cloud-beta-dc1-terraf"
+  vdc = "unit test enterprise-dc1-terraf"
   os = "CentOS"
   ram  = "2"
   cpu = "2"
@@ -39,24 +39,24 @@ resource "sewan_clouddc_vm" "server_resource_name" {
   ]
   disks=[
     {
-      name="disk-centos7-rd-DC1-1"
+      name="template1 disk1"
       size=20
-      v_disk="sewan-rd-cloud-beta-dc1-terraf-storage_enterprise"
+      v_disk="unit test enterprise-dc1-terraf-storage_enterprise"
     },
     {
-      name="disk-centos7-rd-DC1-2"
+      name="disk-template1-2"
       size=20
-      v_disk="sewan-rd-cloud-beta-dc1-terraf-storage_enterprise"
+      v_disk="unit test enterprise-dc1-terraf-storage_enterprise"
     }
   ]
   boot = "on disk"
-  storage_class = "sewan-rd-cloud-beta-dc1-terraf-storage_enterprise"
+  storage_class = "unit test enterprise-dc1-terraf-storage_enterprise"
   backup = "backup-no-backup"
 }
 
 resource "sewan_clouddc_vm" "client_resource_name" {
   name = "client_name"
-  vdc = "sewan-rd-cloud-beta-dc1-terraf"
+  vdc = "unit test enterprise-dc1-terraf"
   os = "CentOS"
   ram  = "1"
   cpu = "1"
@@ -69,13 +69,13 @@ resource "sewan_clouddc_vm" "client_resource_name" {
   ]
   disks=[
     {
-      name="disk-centos7-rd-DC1-1"
+      name="template1 disk1"
       size=20
-      v_disk="sewan-rd-cloud-beta-dc1-terraf-storage_enterprise"
+      v_disk="unit test enterprise-dc1-terraf-storage_enterprise"
     },
   ]
   boot = "on disk"
-  storage_class = "sewan-rd-cloud-beta-dc1-terraf-storage_enterprise"
+  storage_class = "unit test enterprise-dc1-terraf-storage_enterprise"
   backup = "backup-no-backup"
 }
 ```

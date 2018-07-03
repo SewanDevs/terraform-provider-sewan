@@ -13,7 +13,7 @@ import (
 var (
 	NO_TEMPLATE_VM_MAP = map[string]interface{}{
 		"name":       "Unit test vm",
-		"enterprise": "sewan-rd-cloud-beta",
+		"enterprise": "unit test enterprise",
 		"state":      "UP",
 		"os":         "Debian",
 		"ram":        8,

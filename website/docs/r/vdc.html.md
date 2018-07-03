@@ -18,7 +18,7 @@ It creates 10 instance of the described vdc with a dynamic name field.
 resource "sewan_clouddc_vdc" "terraform-built-vdc" {
   count = 10
   name = "terraform-vdc-charge-test${count.index}"
-  enterprise = "sewan-rd-cloud-beta"
+  enterprise = "unit test enterprise"
   datacenter = "dc1"
   vdc_resources=[
   {

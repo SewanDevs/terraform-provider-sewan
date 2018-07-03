@@ -7,15 +7,15 @@ import (
 )
 
 const (
-	RIGHT_API_URL             = "https://next.cloud-datacenter.fr/api/clouddc/"
-	RIGHT_VM_CREATION_API_URL = "https://next.cloud-datacenter.fr/api/clouddc/vm/"
-	RIGHT_VM_URL_PATATE       = "https://next.cloud-datacenter.fr/api/clouddc/vm/PATATE/"
-	RIGHT_VM_URL_42           = "https://next.cloud-datacenter.fr/api/clouddc/vm/42/"
+	RIGHT_API_URL             = "https://api_url/api/bonjour/"
+	RIGHT_VM_CREATION_API_URL = "https://api_url/api/bonjour/vm/"
+	RIGHT_VM_URL_PATATE       = "https://api_url/api/bonjour/vm/PATATE/"
+	RIGHT_VM_URL_42           = "https://api_url/api/bonjour/vm/42/"
 	WRONG_API_URL             = "a wrong url"
 	WRONG_API_URL_ERROR       = "Wrong api url msg"
 	NO_RESP_API_URL           = "https://NO_RESP_API_URL.fr"
 	NO_RESP_BODY_API_URL      = "https://NO_BODY_API_URL.org"
-	NOT_JSON_RESP_API_URL     = "https://next.cloud-datacenter.fr"
+	NOT_JSON_RESP_API_URL     = "https://tata.fr"
 	RIGHT_API_TOKEN           = "42424242424242424242424242424242"
 	WRONG_API_TOKEN           = "a wrong token"
 	WRONG_TOKEN_ERROR         = "Wrong api token msg"

@@ -41,16 +41,16 @@ resource "sewan_clouddc_vm" "server_resource_name" {
     {
       name="disk-centos7-rd-DC1-1"
       size=20
-      v_disk="sewan-rd-cloud-beta-dc1-terraf-sewan-rd-cloud-beta-mono-storage_enterprise"
+      v_disk="sewan-rd-cloud-beta-dc1-terraf-storage_enterprise"
     },
     {
       name="disk-centos7-rd-DC1-2"
       size=20
-      v_disk="sewan-rd-cloud-beta-dc1-terraf-sewan-rd-cloud-beta-mono-storage_enterprise"
+      v_disk="sewan-rd-cloud-beta-dc1-terraf-storage_enterprise"
     }
   ]
   boot = "on disk"
-  vdc_resource_disk = "sewan-rd-cloud-beta-dc1-terraf-sewan-rd-cloud-beta-mono-storage_enterprise"
+  storage_class = "sewan-rd-cloud-beta-dc1-terraf-storage_enterprise"
   backup = "backup-no-backup"
 }
 
@@ -71,11 +71,11 @@ resource "sewan_clouddc_vm" "client_resource_name" {
     {
       name="disk-centos7-rd-DC1-1"
       size=20
-      v_disk="sewan-rd-cloud-beta-dc1-terraf-sewan-rd-cloud-beta-mono-storage_enterprise"
+      v_disk="sewan-rd-cloud-beta-dc1-terraf-storage_enterprise"
     },
   ]
   boot = "on disk"
-  vdc_resource_disk = "sewan-rd-cloud-beta-dc1-terraf-sewan-rd-cloud-beta-mono-storage_enterprise"
+  storage_class = "sewan-rd-cloud-beta-dc1-terraf-storage_enterprise"
   backup = "backup-no-backup"
 }
 ```

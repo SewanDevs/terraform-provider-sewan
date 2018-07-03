@@ -1,16 +1,11 @@
 package sewan_go_sdk
 
 import (
-	"bytes"
-	"encoding/json"
 	"errors"
-	"github.com/hashicorp/terraform/helper/schema"
-	"io/ioutil"
 	"net/http"
 	"testing"
 )
 
-//------------------------------------------------------------------------------
 const (
 	RIGHT_API_URL             = "https://next.cloud-datacenter.fr/api/clouddc/"
 	RIGHT_VM_CREATION_API_URL = "https://next.cloud-datacenter.fr/api/clouddc/vm/"
@@ -25,105 +20,6 @@ const (
 	WRONG_API_TOKEN           = "a wrong token"
 	WRONG_TOKEN_ERROR         = "Wrong api token msg"
 )
-
-type FakeAirDrumResource_APIer struct{}
-
-func (apier FakeAirDrumResource_APIer) Validate_status(api *API,
-	resourceType string,
-	client ClientTooler) error {
-
-	var err error
-	switch {
-	case api.URL != RIGHT_API_URL:
-		err = errors.New(WRONG_API_URL_ERROR)
-	case api.Token != RIGHT_API_TOKEN:
-		err = errors.New(WRONG_TOKEN_ERROR)
-	default:
-		err = nil
-	}
-	return err
-}
-
-func (apier FakeAirDrumResource_APIer) Get_resource_creation_url(api *API,
-	resourceType string) string {
-
-	return ""
-}
-
-func (apier FakeAirDrumResource_APIer) Get_resource_url(api *API,
-	resourceType string,
-	id string) string {
-
-	return ""
-}
-
-func (apier FakeAirDrumResource_APIer) Create_resource(d *schema.ResourceData,
-	clientTooler *ClientTooler,
-	resourceType string,
-	sewan *API) (error, map[string]interface{}) {
-
-	return nil, nil
-}
-func (apier FakeAirDrumResource_APIer) Read_resource(d *schema.ResourceData,
-	clientTooler *ClientTooler,
-	resourceType string,
-	sewan *API) (error, map[string]interface{}, bool) {
-
-	return nil, nil, true
-}
-func (apier FakeAirDrumResource_APIer) Update_resource(d *schema.ResourceData,
-	clientTooler *ClientTooler,
-	resourceType string,
-	sewan *API) error {
-
-	return nil
-}
-func (apier FakeAirDrumResource_APIer) Delete_resource(d *schema.ResourceData,
-	clientTooler *ClientTooler,
-	resourceType string,
-	sewan *API) error {
-
-	return nil
-}
-
-type FakeHttpClienter struct{}
-
-func (client FakeHttpClienter) Do(api *API, req *http.Request) (*http.Response, error) {
-	var err error
-	err = nil
-	type body struct {
-		detail string `json:"detail"`
-	}
-	resp := http.Response{}
-
-	if api.URL != NO_RESP_API_URL {
-		resp.Status = "200 OK"
-		resp.StatusCode = http.StatusOK
-		switch {
-		case api.URL == WRONG_API_URL || api.URL == NOT_JSON_RESP_API_URL:
-			resp.Header = map[string][]string{"Content-Type": {"text/plain; charset=utf-8"}}
-			resp.Body = ioutil.NopCloser(bytes.NewBufferString("A plain text."))
-		case api.URL == RIGHT_API_URL:
-			if api.Token != RIGHT_API_TOKEN {
-				resp.Status = "401 Unauthorized"
-				resp.StatusCode = http.StatusUnauthorized
-				resp.Body = ioutil.NopCloser(bytes.NewBufferString("{\"detail\":\"Invalid token.\"}"))
-			} else {
-				resp.Header = map[string][]string{"Content-Type": {"application/json"}}
-				body_json, _ := json.Marshal(body{detail: ""})
-				resp.Body = ioutil.NopCloser(bytes.NewBuffer(body_json))
-			}
-		}
-	} else {
-		err = errors.New("No response error.")
-	}
-	return &resp, err
-}
-
-//------------------------------------------------------------------------------
-func TestDo(t *testing.T) {
-	//Not tested, ref=TD-35489-UT-35737-1
-}
 
 //------------------------------------------------------------------------------
 func TestNew(t *testing.T) {
@@ -168,11 +64,11 @@ func TestNew(t *testing.T) {
 
 		switch {
 		case api.Token != test_case.Output_api.Token:
-			t.Errorf("TC %d : API token error was incorrect,"+
+			t.Errorf("\n\nTC %d : API token error was incorrect,"+
 				"\n\rgot: \"%s\"\n\rwant: \"%s\"",
 				test_case.Id, api.Token, test_case.Output_api.Token)
 		case api.URL != test_case.Output_api.URL:
-			t.Errorf("TC %d : API token error was incorrect,"+
+			t.Errorf("\n\nTC %d : API token error was incorrect,"+
 				"\n\rgot: \"%s\"\n\rwant: \"%s\"",
 				test_case.Id, api.URL, test_case.Output_api.URL)
 		}
@@ -229,12 +125,12 @@ func TestCheckStatus(t *testing.T) {
 		switch {
 		case err == nil || test_case.Err == nil:
 			if !(err == nil && test_case.Err == nil) {
-				t.Errorf("TC %d : Check API error was incorrect,"+
+				t.Errorf("\n\nTC %d : Check API error was incorrect,"+
 					"\n\rgot: \"%s\"\n\rwant: \"%s\"",
 					test_case.Id, err, test_case.Err)
 			}
 		case err.Error() != test_case.Err.Error():
-			t.Errorf("TC %d : Check API error was incorrect,"+
+			t.Errorf("\n\nTC %d : Check API error was incorrect,"+
 				"\n\rgot: \"%s\"\n\rwant: \"%s\"",
 				test_case.Id, err.Error(), test_case.Err.Error())
 		}

@@ -22,23 +22,23 @@ resource "sewan_clouddc_vdc" "terraform-built-vdc" {
   datacenter = "dc1"
   vdc_resources=[
   {
-    resource="sewan-rd-cloud-beta-mono-ram"
+    resource="ram"
     total=1
   },
   {
-    resource="sewan-rd-cloud-beta-mono-cpu"
+    resource="cpu"
     total=1
   },
   {
-    resource="sewan-rd-cloud-beta-mono-storage_enterprise"
+    resource="storage_enterprise"
     total=1
   },
   {
-    resource="sewan-rd-cloud-beta-mono-storage_performance"
+    resource="storage_performance"
     total=1
   },
   {
-    resource="sewan-rd-cloud-beta-mono-storage_high_performance"
+    resource="storage_high_performance"
     total=1
   },
   ]

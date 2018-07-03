@@ -23,40 +23,46 @@ type APIer interface {
 	Get_resource_url(api *API,
 		resourceType string,
 		id string) string
+	ValidateResourceType(resourceType string) error
 	Validate_status(api *API,
 		resourceType string,
 		client ClientTooler) error
+	ResourceInstanceCreate(d *schema.ResourceData,
+		clientTooler *ClientTooler,
+		templatesTooler *TemplatesTooler,
+		schemaTools *SchemaTooler,
+		resourceType string,
+		api *API) (error,
+		interface{})
 	Create_resource(d *schema.ResourceData,
 		clientTooler *ClientTooler,
+		templatesTooler *TemplatesTooler,
+		schemaTools *SchemaTooler,
 		resourceType string,
-		sewan *API) (error, map[string]interface{})
+		sewan *API) (error,
+		map[string]interface{})
 	Read_resource(d *schema.ResourceData,
 		clientTooler *ClientTooler,
+		templatesTooler *TemplatesTooler,
+		schemaTools *SchemaTooler,
 		resourceType string,
-		sewan *API) (error, map[string]interface{}, bool)
+		sewan *API) (error,
+		map[string]interface{},
+		bool)
 	Update_resource(d *schema.ResourceData,
 		clientTooler *ClientTooler,
+		templatesTooler *TemplatesTooler,
+		schemaTools *SchemaTooler,
 		resourceType string,
 		sewan *API) error
 	Delete_resource(d *schema.ResourceData,
 		clientTooler *ClientTooler,
+		templatesTooler *TemplatesTooler,
+		schemaTools *SchemaTooler,
 		resourceType string,
 		sewan *API) error
 }
 type AirDrumResources_Apier struct{}
-
-type ClientTooler struct {
-	Client Clienter
-}
-type Clienter interface {
-	Do(api *API, req *http.Request) (*http.Response, error)
-}
-type HttpClienter struct{}
-
-func (client HttpClienter) Do(api *API, req *http.Request) (*http.Response, error) {
-	resp, err := api.Client.Do(req)
-	return resp, err
-}
 
 func (api_tools *APITooler) New(token string, url string) *API {
 	return &API{

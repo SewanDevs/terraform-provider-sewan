@@ -8,7 +8,6 @@ terraform.tfplan
 terraform.tfstate
 bin/
 modules-dev/
-/pkg/
 website/.vagrant
 website/.bundle
 website/build
@@ -36,11 +35,6 @@ website/vendor
 !command/test-fixtures/**/*.tfstate
 !command/test-fixtures/**/.terraform/
 
-# sewan provider binary
-*terraform-provider-sewan
-
 # sdk logs folder
 sdk-logs/
 
-# local main.tf
-main.tf

@@ -13,7 +13,7 @@ Provides a clouddc virtual machine in a specific virtual data center (VDC).
 ## Example Usage
 
 ```hcl
-resource "sewan_clouddc_vm" "vm_resource_name" {
+resource "sewan_clouddc_vm" "vm_name" {
   name = "<vm_name>"
   vdc = "<vm's vdc name>"
   os = "Debian"
@@ -64,7 +64,7 @@ The following vm creation arguments are supported :
   * `connected` - (Optional, boolean) nic status
 * `vdc` - (Required, string) vm's virtual data center name
 * `boot` - (Optional, string) boot mode (accepted values : "", "on disk")
-* `vdc_resource_disk` - (Required, string) vdc resource disk
+* `storage_class` - (Required, string) vdc resource disk
 * `backup` - (Required, string) backup mode (accepted values : "backup-no-backup", "backup-7-days", "backup-31-days")
 * `disk_image` - (Optional, string)
 * `comment` - (Optional, string)

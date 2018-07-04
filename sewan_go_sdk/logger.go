@@ -39,7 +39,8 @@ func loggerCreate(logFile string) *log.Logger {
 	if logFileErr != nil {
 		log.Fatalln("Failed to open log file :", logFileErr)
 	}
-	logWriter = io.MultiWriter(logFileObject, os.Stdout)
+	//logWriter = io.MultiWriter(logFileObject, os.Stdout)
+	logWriter = io.MultiWriter(logFileObject)
 	logger = log.New(logWriter, "Sewan Provider : ", log.Ldate|log.Ltime)
 
 	return logger

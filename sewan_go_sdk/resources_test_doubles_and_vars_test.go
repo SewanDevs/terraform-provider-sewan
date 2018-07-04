@@ -298,7 +298,7 @@ var (
 			"enterprise": "unit test enterprise",
 			"disks": []interface{}{
 				map[string]interface{}{
-					"name": "unit test disk template1",
+					"name":          "unit test disk template1",
 					"size":          20,
 					"storage_class": "storage_enterprise",
 					"slug":          "unit test disk slug",

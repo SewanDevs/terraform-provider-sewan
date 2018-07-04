@@ -1,8 +1,8 @@
 package sewan
 
 import (
+	sdk "github.com/SewanDevs/sewan_go_sdk"
 	"net/http"
-	sdk "terraform-provider-sewan/sewan_go_sdk"
 )
 
 const (

@@ -131,13 +131,13 @@ func (apier AirDrumResources_Apier) Read_resource(d *schema.ResourceData,
 		readError                      error = nil
 		read_req_err                   error = nil
 		resource_instance_creation_err error = nil
-		read_resp_body_err error = nil
+		read_resp_body_err             error = nil
 		read_resource                  map[string]interface{}
 		responseBody                   string
 		resp_body_reader               interface{}
 		resource_exists                bool   = true
 		instanceName                   string = d.Get("name").(string)
-		bodyBytes []byte
+		bodyBytes                      []byte
 	)
 	req := &http.Request{}
 	resp := &http.Response{}
@@ -381,11 +381,11 @@ func (apier AirDrumResources_Apier) Delete_resource(d *schema.ResourceData,
 						default:
 							resp_body_json_err := json.Unmarshal(bodyBytes, &resp_body_reader)
 							switch {
-							case resp_body_json_err != nil :
-									deleteError = errors.New("Read of \"" + instanceName +
-										"\" failed, response body json error :\n\r\"" +
-										resp_body_json_err.Error())
-							default :
+							case resp_body_json_err != nil:
+								deleteError = errors.New("Read of \"" + instanceName +
+									"\" failed, response body json error :\n\r\"" +
+									resp_body_json_err.Error())
+							default:
 								deleteError = errors.New(resp.Status + responseBody)
 							}
 						}
@@ -397,7 +397,7 @@ func (apier AirDrumResources_Apier) Delete_resource(d *schema.ResourceData,
 							"\nPlease validate the configuration api url.")
 					}
 				}
-				}
+			}
 		} else {
 			deleteError = delete_req_err
 		}

@@ -2,8 +2,8 @@ package sewan
 
 import (
 	"errors"
+	sdk "github.com/SewanDevs/sewan_go_sdk"
 	"github.com/hashicorp/terraform/helper/schema"
-	sdk "terraform-provider-sewan/sewan_go_sdk"
 	"testing"
 )
 

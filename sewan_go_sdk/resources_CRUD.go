@@ -7,12 +7,6 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 	"io/ioutil"
 	"net/http"
-	"reflect"
-)
-
-const (
-	VM_DESTROY_FAILURE  = "{\"detail\":\"Destroying the VM now\"}"
-	VDC_DESTROY_FAILURE = "{\"detail\":\"Destroying the VDC now\"}"
 )
 
 //------------------------------------------------------------------------------
@@ -69,10 +63,15 @@ func (apier AirDrumResources_Apier) Create_resource(d *schema.ResourceData,
 				createError = errors.New("Creation of \"" + instanceName +
 					"\" failed, response reception error : " + create_req_err.Error())
 			} else {
-				defer resp.Body.Close()
-				bodyBytes, create_resp_body_err = ioutil.ReadAll(resp.Body)
-				responseBody = string(bodyBytes)
-
+				if resp.Body != nil {
+					defer resp.Body.Close()
+					bodyBytes, create_resp_body_err = ioutil.ReadAll(resp.Body)
+					responseBody = string(bodyBytes)
+				} else {
+					bodyBytes = []byte{}
+					create_resp_body_err = nil
+					responseBody = ""
+				}
 				switch resp.Header.Get("Content-Type") {
 				case "application/json":
 					resp_body_json_err := json.Unmarshal(bodyBytes, &resp_body_reader)
@@ -132,11 +131,13 @@ func (apier AirDrumResources_Apier) Read_resource(d *schema.ResourceData,
 		readError                      error = nil
 		read_req_err                   error = nil
 		resource_instance_creation_err error = nil
+		read_resp_body_err error = nil
 		read_resource                  map[string]interface{}
 		responseBody                   string
 		resp_body_reader               interface{}
 		resource_exists                bool   = true
 		instanceName                   string = d.Get("name").(string)
+		bodyBytes []byte
 	)
 	req := &http.Request{}
 	resp := &http.Response{}
@@ -159,10 +160,15 @@ func (apier AirDrumResources_Apier) Read_resource(d *schema.ResourceData,
 				readError = errors.New("Read of \"" + instanceName +
 					"\" state failed, response reception error : " + read_req_err.Error())
 			} else {
-				defer resp.Body.Close()
-				bodyBytes, read_resp_body_err := ioutil.ReadAll(resp.Body)
-				responseBody = string(bodyBytes)
-
+				if resp.Body != nil {
+					defer resp.Body.Close()
+					bodyBytes, read_resp_body_err = ioutil.ReadAll(resp.Body)
+					responseBody = string(bodyBytes)
+				} else {
+					bodyBytes = []byte{}
+					read_resp_body_err = nil
+					responseBody = ""
+				}
 				switch resp.Header.Get("Content-Type") {
 				case "application/json":
 					switch {
@@ -211,11 +217,6 @@ func (apier AirDrumResources_Apier) Read_resource(d *schema.ResourceData,
 	logger.Println("readError =", readError,
 		"\nread_resource =", read_resource,
 		"\nresource_exists =", resource_exists,
-		"\ndynamic_field infos :",
-		"\nreflect.TypeOf(d.Get\"dynamic_field\") : ",
-		reflect.TypeOf(d.Get("dynamic_field")),
-		"\nreflect.ValueOf(d.Get\"dynamic_field\") : ",
-		reflect.ValueOf(d.Get("dynamic_field")),
 	)
 	return readError, read_resource, resource_exists
 }
@@ -274,10 +275,15 @@ func (apier AirDrumResources_Apier) Update_resource(d *schema.ResourceData,
 				updateError = errors.New("Update of \"" + instanceName +
 					"\" state failed, response reception error : " + update_req_err.Error())
 			} else {
-				defer resp.Body.Close()
-				bodyBytes, update_resp_body_err = ioutil.ReadAll(resp.Body)
-				responseBody = string(bodyBytes)
-
+				if resp.Body != nil {
+					defer resp.Body.Close()
+					bodyBytes, update_resp_body_err = ioutil.ReadAll(resp.Body)
+					responseBody = string(bodyBytes)
+				} else {
+					bodyBytes = []byte{}
+					update_resp_body_err = nil
+					responseBody = ""
+				}
 				switch resp.Header.Get("Content-Type") {
 				case "application/json":
 					switch {
@@ -330,17 +336,8 @@ func (apier AirDrumResources_Apier) Delete_resource(d *schema.ResourceData,
 		responseBody                   string
 		resp_body_reader               interface{}
 		bodyBytes                      []byte
-		resource_destroy_failure       string
 		instanceName                   string = d.Get("name").(string)
 	)
-	switch resourceType {
-	case "vdc":
-		resource_destroy_failure = VDC_DESTROY_FAILURE
-	case "vm":
-		resource_destroy_failure = VM_DESTROY_FAILURE
-	default:
-		resource_destroy_failure = ""
-	}
 	api_tools := APITooler{
 		Api: apier,
 	}
@@ -365,37 +362,42 @@ func (apier AirDrumResources_Apier) Delete_resource(d *schema.ResourceData,
 				deleteError = errors.New("Deletion of \"" + instanceName +
 					"\" state failed, response reception error : " + delete_req_err.Error())
 			} else {
-				defer resp.Body.Close()
-				bodyBytes, delete_resp_body_err = ioutil.ReadAll(resp.Body)
-				responseBody = string(bodyBytes)
-
-				switch resp.Header.Get("Content-Type") {
-				case "application/json":
-					switch {
-					case delete_resp_body_err != nil:
-						deleteError = errors.New("Deletion of " + instanceName +
-							" response reception error : " + delete_resp_body_err.Error())
-					case resp.StatusCode == http.StatusOK:
-						resp_body_json_err := json.Unmarshal(bodyBytes, &resp_body_reader)
-						if resp_body_json_err != nil {
-							deleteError = errors.New("Read of \"" + instanceName +
-								"\" failed, response body json error :\n\r\"" +
-								resp_body_json_err.Error())
-						} else if responseBody != resource_destroy_failure {
-							logger.Println("resource_destroy_failure", resource_destroy_failure)
-							deleteError = errors.New(resp.Status + responseBody)
-						}
-					default:
-						deleteError = errors.New(resp.Status + responseBody)
-					}
-				case "text/html":
-					deleteError = errors.New(resp.Status + responseBody)
-				default:
-					deleteError = errors.New("Unhandled api response type : " +
-						resp.Header.Get("Content-Type") +
-						"\nPlease validate the configuration api url.")
+				if resp.Body != nil {
+					defer resp.Body.Close()
+					bodyBytes, delete_resp_body_err = ioutil.ReadAll(resp.Body)
+					responseBody = string(bodyBytes)
+				} else {
+					bodyBytes = []byte{}
+					delete_resp_body_err = nil
+					responseBody = ""
 				}
-			}
+				if resp.StatusCode != http.StatusNoContent {
+					switch resp.Header.Get("Content-Type") {
+					case "application/json":
+						switch {
+						case delete_resp_body_err != nil:
+							deleteError = errors.New("Deletion of " + instanceName +
+								" response reception error : " + delete_resp_body_err.Error())
+						default:
+							resp_body_json_err := json.Unmarshal(bodyBytes, &resp_body_reader)
+							switch {
+							case resp_body_json_err != nil :
+									deleteError = errors.New("Read of \"" + instanceName +
+										"\" failed, response body json error :\n\r\"" +
+										resp_body_json_err.Error())
+							default :
+								deleteError = errors.New(resp.Status + responseBody)
+							}
+						}
+					case "text/html":
+						deleteError = errors.New(resp.Status + responseBody)
+					default:
+						deleteError = errors.New("Unhandled api response type : " +
+							resp.Header.Get("Content-Type") +
+							"\nPlease validate the configuration api url.")
+					}
+				}
+				}
 		} else {
 			deleteError = delete_req_err
 		}

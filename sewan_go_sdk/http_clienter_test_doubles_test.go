@@ -347,10 +347,7 @@ func (client VDC_DeleteSuccess_HttpClienterFake) Do(api *API,
 	resp := http.Response{}
 	resp.Header = map[string][]string{}
 	resp.Header.Add("Content-Type", "application/json")
-	resp.StatusCode = http.StatusOK
-	body := Resp_Body{VDC_DESTROY_FAILURE_MSG}
-	js, _ := json.Marshal(body)
-	resp.Body = ioutil.NopCloser(bytes.NewBuffer(js))
+	resp.StatusCode = http.StatusNoContent
 	return &resp, nil
 }
 
@@ -463,10 +460,7 @@ func (client VM_DeleteSuccess_HttpClienterFake) Do(api *API,
 	resp := http.Response{}
 	resp.Header = map[string][]string{}
 	resp.Header.Add("Content-Type", "application/json")
-	resp.StatusCode = http.StatusOK
-	body := Resp_Body{VM_DESTROY_FAILURE_MSG}
-	js, _ := json.Marshal(body)
-	resp.Body = ioutil.NopCloser(bytes.NewBuffer(js))
+	resp.StatusCode = http.StatusNoContent
 	return &resp, nil
 }
 

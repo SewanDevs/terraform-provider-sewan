@@ -1,31 +1,31 @@
 provider "sewan" {
-  api_token = "5a981d935bba3a7a8295bfb2d70380746ce7ead1"
+  api_token = "45acaa30efc5d3f2c737d543c27f6ab890f822d5"
   api_url = "https://next.cloud-datacenter.fr/api/clouddc/"
 }
 
 resource "sewan_clouddc_vdc" "terraform-vdc" {
   name = "terraform-vdc"
-  enterprise = "unit test enterprise"
+  enterprise = "sewan-rd-cloud-beta"
   datacenter = "dc1"
   vdc_resources=[
   {
-    resource="unit test enterprise-mono-ram"
+    resource="sewan-rd-cloud-beta-mono-ram"
     total=10
   },
   {
-    resource="unit test enterprise-mono-cpu"
+    resource="sewan-rd-cloud-beta-mono-cpu"
     total=10
   },
   {
-    resource="unit test enterprise-mono-storage_enterprise"
+    resource="sewan-rd-cloud-beta-mono-storage_enterprise"
     total=80
   },
   {
-    resource="unit test enterprise-mono-storage_performance"
+    resource="sewan-rd-cloud-beta-mono-storage_performance"
     total=20
   },
   {
-    resource="unit test enterprise-mono-storage_high_performance"
+    resource="sewan-rd-cloud-beta-mono-storage_high_performance"
     total=10
   },
   ]
@@ -40,24 +40,25 @@ resource "sewan_clouddc_vm" "template-server" {
   name = "template-server${count.index}"
   ram = 1
   cpu = 2
-  disks=[
-  {
-    name= "disk-centos7-rd-DC1-1"
-    storage_class="storage_enterprise"
-    size=16
-    deletion= false
-  },
-  {
-    name="add disk test"
-    size=16
-    storage_class="storage_enterprise"
-  },
-  {
-    name="add disk test2"
-    size=0
-    storage_class="storage_enterprise"
-  },
-  ]
+  //disks=[
+  //{
+  //  name= "disk-centos7-rd-DC1-1"
+  //  storage_class="storage_enterprise"
+  //  size=16
+  //  deletion= false
+  //},
+  //]
+  //{
+  //  name="add disk test"
+  //  size=16
+  //  storage_class="storage_enterprise"
+  //},
+  //{
+  //  name="add disk test2"
+  //  size=0
+  //  storage_class="storage_enterprise"
+  //},
+  //]
   nics=[
     {
       vlan="internal-2412"

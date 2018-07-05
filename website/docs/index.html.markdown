@@ -6,80 +6,108 @@ description: |-
   The Sewan provider is used to interact with Sewan "AirDrum" API to provide vdc and vms.
 ---
 
+**< WARNING : page in construction>**
+
 # Sewan Provider
 
-The Sewan provider is used to interact with Sewan "AirDrum" API to provide vdc and vms.
+The Sewan provider is used to interact with [Sewan's cloud data center](https://www.sewan.fr/cloud-data-center/) API to provide virtual data centers (vdc) and virtual machines (vm).
 
 Use the navigation to the left to read about the available data sources.
+
+## Get an api token for your company
+
+Contact the support.
 
 ## Example Usage
 
 ```hcl
 provider "sewan" {
-  api_token = "111111111111111111"
-  api_url = "https://next.cloud-datacenter.fr/api/clouddc/vm/"
+  api_token = "your-company token"
+  api_url = "https://cloud-datacenter.fr/api/clouddc/"
 }
 
-resource "sewan_clouddc_vm" "server_resource_name" {
-  name = "server_name"
-  vdc = "unit test enterprise-dc1-terraf"
-  os = "CentOS"
-  ram  = "2"
-  cpu = "2"
-  disk_image = ""
-  nics=[
+resource "sewan_clouddc_vdc" "vdc-example" {
+  name = "vdc example"
+  enterprise = "your-company"
+  datacenter = "a datacenter"
+  vdc_resources=[
   {
-    vlan="internal-2412"
-    connected=true
+    resource="your-company-mono-ram"
+    total=10
   },
   {
-    vlan="internal-2410"
-    connected=true
+    resource="your-company-mono-cpu"
+    total=10
+  },
+  {
+    resource="your-company-mono-storage_enterprise"
+    total=80
+  },
+  {
+    resource="your-company-mono-storage_performance"
+    total=20
+  },
+  {
+    resource="your-company-mono-storage_high_performance"
+    total=10
   },
   ]
-  disks=[
-    {
-      name="template1 disk1"
-      size=20
-      v_disk="unit test enterprise-dc1-terraf-storage_enterprise"
-    },
-    {
-      name="disk-template1-2"
-      size=20
-      v_disk="unit test enterprise-dc1-terraf-storage_enterprise"
-    }
-  ]
-  boot = "on disk"
-  storage_class = "unit test enterprise-dc1-terraf-storage_enterprise"
-  backup = "backup-no-backup"
 }
 
-resource "sewan_clouddc_vm" "client_resource_name" {
-  name = "client_name"
-  vdc = "unit test enterprise-dc1-terraf"
-  os = "CentOS"
-  ram  = "1"
-  cpu = "1"
-  disk_image = ""
+//
+// RESOURCES CREATED FROM A SEWAN'S CLOUD DATA CENTER TEMPLATE
+//
+resource "sewan_clouddc_vm" "template-created-vm" {
+  depends_on = ["sewan_clouddc_vdc.vdc-example"]
+  count = 10
+  name = "template-created-vm${count.index}"
   nics=[
-  {
-    vlan="internal-2404"
-    connected=true
-  },
-  ]
-  disks=[
     {
-      name="template1 disk1"
-      size=20
-      v_disk="unit test enterprise-dc1-terraf-storage_enterprise"
+      vlan="vlan name"
+      connected=false
     },
   ]
-  boot = "on disk"
-  storage_class = "unit test enterprise-dc1-terraf-storage_enterprise"
+  template = "a template"
+  vdc = "${sewan_clouddc_vdc.vdc-example.slug}"
   backup = "backup-no-backup"
+  storage_class = "storage_enterprise"
+  boot = "on disk"
+}
+
+//
+// TEMPLATE-LESS RESOURCES
+//
+resource "sewan_clouddc_vm" "vm" {
+  depends_on = ["sewan_clouddc_vdc.vdc-example"]
+  count = 10
+  ram = 1 //GiB
+  cpu = 1
+  os = "CentOS"
+  name = "vm${count.index}"
+  disks=[
+    {
+      name="disk 1"
+      size=1
+      storage_class="storage_performance"
+    },
+    {
+      name="disk 2"
+      size=2
+      storage_class="storage_enterprise"
+    },
+  ]
+  nics=[
+    {
+      vlan="vlan 1"
+      connected=false
+    },
+    {
+      vlan="vlan 2"
+      connected=true
+    },
+  ]
+  vdc = "${sewan_clouddc_vdc.vdc-example.slug}"
+  backup = "backup-no-backup"
+  boot = "on disk"
 }
 ```
-
-NB 1 : add info about how to get a valid token
-
-NB 2 : add info about how to choose api url

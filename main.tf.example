@@ -1,6 +1,6 @@
 provider "sewan" {
-  api_token = "<add a valid token>"
-  api_url = "<add a valid api url>"
+  api_token = "<your-company token>"
+  api_url = "https://cloud-datacenter.fr/api/clouddc/"
 }
 
 resource "sewan_clouddc_vdc" "vdc-example" {
@@ -32,7 +32,7 @@ resource "sewan_clouddc_vdc" "vdc-example" {
 }
 
 //
-// RESOURCES CREATED FROM TEMPLATE
+// RESOURCES CREATED FROM A SEWAN'S CLOUD DATA CENTER TEMPLATE
 //
 resource "sewan_clouddc_vm" "template-created-vm" {
   depends_on = ["sewan_clouddc_vdc.vdc-example"]
@@ -60,7 +60,7 @@ resource "sewan_clouddc_vm" "vm" {
   ram = 1 //GiB
   cpu = 1
   os = "CentOS"
-  name = "server${count.index}"
+  name = "vm${count.index}"
   disks=[
     {
       name="disk 1"

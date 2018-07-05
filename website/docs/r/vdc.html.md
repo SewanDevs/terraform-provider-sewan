@@ -6,6 +6,8 @@ description: |-
   Manages Sewan clouddc vdc.
 ---
 
+**< WARNING : page in construction>**
+
 # sewan\_vdc
 
 Provides a virtual data center (VDC).
@@ -15,35 +17,33 @@ Provides a virtual data center (VDC).
 It creates 10 instance of the described vdc with a dynamic name field.
 
 ```hcl
-resource "sewan_clouddc_vdc" "terraform-built-vdc" {
-  count = 10
-  name = "terraform-vdc-charge-test${count.index}"
-  enterprise = "unit test enterprise"
-  datacenter = "dc1"
+resource "sewan_clouddc_vdc" "vdc-example" {
+  name = "vdc example"
+  enterprise = "your-company"
+  datacenter = "a datacenter"
   vdc_resources=[
   {
-    resource="ram"
-    total=1
+    resource="your-company-mono-ram"
+    total=10
   },
   {
-    resource="cpu"
-    total=1
+    resource="your-company-mono-cpu"
+    total=10
   },
   {
-    resource="storage_enterprise"
-    total=1
+    resource="your-company-mono-storage_enterprise"
+    total=80
   },
   {
-    resource="storage_performance"
-    total=1
+    resource="your-company-mono-storage_performance"
+    total=20
   },
   {
-    resource="storage_high_performance"
-    total=1
+    resource="your-company-mono-storage_high_performance"
+    total=10
   },
   ]
 }
-
 ```
 
 ## Argument Reference

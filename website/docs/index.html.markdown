@@ -6,8 +6,6 @@ description: |-
   The Sewan provider is used to interact with Sewan "AirDrum" API to provide vdc and vms.
 ---
 
-**< WARNING : page in construction>**
-
 # Sewan Provider
 
 The Sewan provider is used to interact with [Sewan's cloud data center](https://www.sewan.fr/cloud-data-center/) API to provide virtual data centers (vdc) and virtual machines (vm).
@@ -111,3 +109,6 @@ resource "sewan_clouddc_vm" "vm" {
   boot = "on disk"
 }
 ```
+## SonarQube analysis
+
+[temporary results url](https://sonarcloud.io/organizations/jeanlefou-github/projects?sort=security)

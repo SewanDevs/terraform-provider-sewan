@@ -6,8 +6,6 @@ description: |-
   Manages Sewan clouddc vdc.
 ---
 
-**< WARNING : page in construction>**
-
 # sewan\_vdc
 
 Provides a virtual data center (VDC).
@@ -51,11 +49,11 @@ resource "sewan_clouddc_vdc" "vdc-example" {
 The following vdc creation arguments are supported :
 
 * `name` - (Required, string) vdc name
-* `enterprise` - (Required, string) name of the enterprise using sewan data center
+* `enterprise` - (Required, string) name of your enterprise
 * `datacenter` - (Required, string) name of the datacenter
-* `resources` - (Required, listof maps) disks allocated to the vdc, minimum of 1 is required
-  * `resource` - (Required, string) resource name
-  * `total` - (Required, int) size of the resource (GiB for RAM or storage, number for CPU etc.)
+* `vdc_resources` - (Required, list of maps) resources allocated to the vdc, minimum of 1 is required
+  * `resource` - (Required, string) resource name (accepted resources for storage "Enterprise Storage", "Performance Storage", "High Performance Storage"), format <enterprise name>-mono-<resource name>
+  * `total` - (Required, int) size of the resource (GiB for RAM or storage class, number for CPU etc.)
 
 ## Attributes Reference
 

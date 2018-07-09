@@ -29,3 +29,4 @@ sonarqube:
     - sh /opt/sonar-runner/bin/sonar-runner -Dsonar.host.url=$SONAR_URL -Dsonar.login=$SONAR_LOGIN
   only:
     - master
+    - dev

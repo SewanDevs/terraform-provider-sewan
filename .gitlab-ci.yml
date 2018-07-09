@@ -13,13 +13,21 @@ lint:
 tests:
   stage: test
   script:
-    - echo "No test script currently available. For now, run \"go test -cover -coverprofile=c.out\" and \"go tool cover -html=c.out -o coverage.html\" for unit testing and results in html pages."
+    - sh go test -coverprofile=coverage.out; go test -json > report.json
 
 sonarqube_preview:
   image: $DOCKER_REGISTRY/sidevops/docker/utils/sonar-ci:latest
   stage: sonar
   script:
-    - sh /opt/sonar-runner/bin/sonar-runner -Dsonar.host.url=$SONAR_URL -Dsonar.gitlab.user_token=$SONAR_GITLAB_USERTOKEN -Dsonar.login=$SONAR_LOGIN -Dsonar.gitlab.project_id=$CI_PROJECT_PATH -Dsonar.analysis.mode=preview -Dsonar.issuesReport.console.enable=true -Dsonar.gitlab.commit_sha=$CI_BUILD_REF -Dsonar.gitlab.ref_name=$CI_BUILD_REF_NAME
+    - sh /opt/sonar-runner/bin/sonar-runner \
+      -Dsonar.host.url=$SONAR_URL \
+      -Dsonar.gitlab.user_token=$SONAR_GITLAB_USERTOKEN \
+      -Dsonar.login=$SONAR_LOGIN \
+      -Dsonar.gitlab.project_id=$CI_PROJECT_PATH \
+      -Dsonar.analysis.mode=preview \
+      -Dsonar.issuesReport.console.enable=true \
+      -Dsonar.gitlab.commit_sha=$CI_BUILD_REF \
+      -Dsonar.gitlab.ref_name=$CI_BUILD_REF_NAME
 
 
 sonarqube:
@@ -29,3 +37,4 @@ sonarqube:
     - sh /opt/sonar-runner/bin/sonar-runner -Dsonar.host.url=$SONAR_URL -Dsonar.login=$SONAR_LOGIN
   only:
     - master
+    - dev

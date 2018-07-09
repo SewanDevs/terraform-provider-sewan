@@ -15,35 +15,33 @@ Provides a virtual data center (VDC).
 It creates 10 instance of the described vdc with a dynamic name field.
 
 ```hcl
-resource "sewan_clouddc_vdc" "terraform-built-vdc" {
-  count = 10
-  name = "terraform-vdc-charge-test${count.index}"
-  enterprise = "unit test enterprise"
-  datacenter = "dc1"
+resource "sewan_clouddc_vdc" "vdc-example" {
+  name = "vdc example"
+  enterprise = "your-company"
+  datacenter = "a datacenter"
   vdc_resources=[
   {
-    resource="ram"
-    total=1
+    resource="your-company-mono-ram"
+    total=10
   },
   {
-    resource="cpu"
-    total=1
+    resource="your-company-mono-cpu"
+    total=10
   },
   {
-    resource="storage_enterprise"
-    total=1
+    resource="your-company-mono-storage_enterprise"
+    total=80
   },
   {
-    resource="storage_performance"
-    total=1
+    resource="your-company-mono-storage_performance"
+    total=20
   },
   {
-    resource="storage_high_performance"
-    total=1
+    resource="your-company-mono-storage_high_performance"
+    total=10
   },
   ]
 }
-
 ```
 
 ## Argument Reference
@@ -51,11 +49,11 @@ resource "sewan_clouddc_vdc" "terraform-built-vdc" {
 The following vdc creation arguments are supported :
 
 * `name` - (Required, string) vdc name
-* `enterprise` - (Required, string) name of the enterprise using sewan data center
+* `enterprise` - (Required, string) name of your enterprise
 * `datacenter` - (Required, string) name of the datacenter
-* `resources` - (Required, listof maps) disks allocated to the vdc, minimum of 1 is required
-  * `resource` - (Required, string) resource name
-  * `total` - (Required, int) size of the resource (GiB for RAM or storage, number for CPU etc.)
+* `vdc_resources` - (Required, list of maps) resources allocated to the vdc, minimum of 1 is required
+  * `resource` - (Required, string) resource name (accepted resources for storage "Enterprise Storage", "Performance Storage", "High Performance Storage"), format <enterprise name>-mono-<resource name>
+  * `total` - (Required, int) size of the resource (GiB for RAM or storage class, number for CPU etc.)
 
 ## Attributes Reference
 

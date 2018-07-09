@@ -8,12 +8,12 @@ stages:
 lint:
   stage: lint
   script:
-   - echo "I'm Linting Mother Fuckers!"
+   - echo "No lint script currently available."
 
 tests:
   stage: test
   script:
-    - echo "My code is the best, no need to test"
+    - echo "No test script currently available. For now, run \"go test -cover -coverprofile=c.out\" and \"go tool cover -html=c.out -o coverage.html\" for unit testing and results in html pages."
 
 sonarqube_preview:
   image: $DOCKER_REGISTRY/sidevops/docker/utils/sonar-ci:latest

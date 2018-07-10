@@ -83,7 +83,7 @@ import (
 
 const (
         VM_RESOURCE_TYPE  = "vm"
-        VDC_RESOURCE_TYPE = "vdc"
+        VDC_RESOURCE_TYPE = VDC_FIELD
 )
 
 type Config struct {
@@ -183,19 +183,19 @@ import (
 func resource_vdc_resource() *schema.Resource <span class="cov8" title="1">{
         return &amp;schema.Resource{
                 Schema: map[string]*schema.Schema{
-                        "resource": &amp;schema.Schema{
+                        RESOURCE_FIELD: &amp;schema.Schema{
                                 Type:     schema.TypeString,
                                 Required: true,
                         },
-                        "used": &amp;schema.Schema{
+                        USED_FIELD: &amp;schema.Schema{
                                 Type:     schema.TypeInt,
                                 Computed: true,
                         },
-                        "total": &amp;schema.Schema{
+                        TOTAL_FIELD: &amp;schema.Schema{
                                 Type:     schema.TypeInt,
                                 Required: true,
                         },
-                        "slug": &amp;schema.Schema{
+                        SLUG_FIELD: &amp;schema.Schema{
                                 Type:     schema.TypeString,
                                 Computed: true,
                         },
@@ -210,28 +210,28 @@ func resource_vdc() *schema.Resource <span class="cov8" title="1">{
                 Update: resource_vdc_update,
                 Delete: resource_vdc_delete,
                 Schema: map[string]*schema.Schema{
-                        "name": &amp;schema.Schema{
+                        NAME_FIELD: &amp;schema.Schema{
                                 Type:     schema.TypeString,
                                 Required: true,
                         },
-                        "enterprise": &amp;schema.Schema{
+                        ENTERPRISE_FIELD: &amp;schema.Schema{
                                 Type:     schema.TypeString,
                                 Required: true,
                         },
-                        "datacenter": &amp;schema.Schema{
+                        DATACENTER_FIELD: &amp;schema.Schema{
                                 Type:     schema.TypeString,
                                 Required: true,
                         },
-                        "vdc_resources": &amp;schema.Schema{
+                        VDC_RESOURCE_FIELD: &amp;schema.Schema{
                                 Type:     schema.TypeList,
                                 Optional: true,
                                 Elem:     resource_vdc_resource(),
                         },
-                        "slug": &amp;schema.Schema{
+                        SLUG_FIELD: &amp;schema.Schema{
                                 Type:     schema.TypeString,
                                 Computed: true,
                         },
-                        "dynamic_field": &amp;schema.Schema{
+                        DYNAMIC_FIELD: &amp;schema.Schema{
                                 Type:     schema.TypeString,
                                 Optional: true,
                         },
@@ -324,19 +324,19 @@ import (
 func resource_vm_disk() *schema.Resource <span class="cov8" title="1">{
         return &amp;schema.Resource{
                 Schema: map[string]*schema.Schema{
-                        "name": &amp;schema.Schema{
+                        NAME_FIELD: &amp;schema.Schema{
                                 Type:     schema.TypeString,
                                 Required: true,
                         },
-                        "size": &amp;schema.Schema{
+                        SIZE_FIELD: &amp;schema.Schema{
                                 Type:     schema.TypeInt,
                                 Optional: true,
                         },
-                        "storage_class": &amp;schema.Schema{
+                        STORAGE_CLASS_FIELD: &amp;schema.Schema{
                                 Type:     schema.TypeString,
                                 Optional: true,
                         },
-                        "slug": &amp;schema.Schema{
+                        SLUG_FIELD: &amp;schema.Schema{
                                 Type:     schema.TypeString,
                                 Computed: true,
                         },
@@ -344,7 +344,7 @@ func resource_vm_disk() *schema.Resource <span class="cov8" title="1">{
                                 Type:     schema.TypeString,
                                 Computed: true,
                         },
-                        "deletion": &amp;schema.Schema{
+                        DELETION_FIELD: &amp;schema.Schema{
                                 Type:     schema.TypeBool,
                                 Optional: true,
                         },
@@ -355,15 +355,15 @@ func resource_vm_disk() *schema.Resource <span class="cov8" title="1">{
 func resource_vm_nic() *schema.Resource <span class="cov8" title="1">{
         return &amp;schema.Resource{
                 Schema: map[string]*schema.Schema{
-                        "vlan": &amp;schema.Schema{
+                        VLAN_NAME_FIELD: &amp;schema.Schema{
                                 Type:     schema.TypeString,
                                 Required: true,
                         },
-                        "mac_address": &amp;schema.Schema{
+                        MAC_ADRESS_FIELD: &amp;schema.Schema{
                                 Type:     schema.TypeString,
                                 Computed: true,
                         },
-                        "connected": &amp;schema.Schema{
+                        CONNECTED_FIELD: &amp;schema.Schema{
                                 Type:     schema.TypeBool,
                                 Required: true,
                         },
@@ -378,81 +378,81 @@ func resource_vm() *schema.Resource <span class="cov8" title="1">{
                 Update: resource_vm_update,
                 Delete: resource_vm_delete,
                 Schema: map[string]*schema.Schema{
-                        "name": &amp;schema.Schema{
+                        NAME_FIELD: &amp;schema.Schema{
                                 Type:     schema.TypeString,
                                 Required: true,
                         },
-                        "enterprise": &amp;schema.Schema{
+                        ENTERPRISE_FIELD: &amp;schema.Schema{
                                 Type:     schema.TypeString,
                                 Optional: true,
                         },
-                        "template": &amp;schema.Schema{
+                        TEMPLATE_FIELD: &amp;schema.Schema{
                                 Type:     schema.TypeString,
                                 Optional: true,
                         },
-                        "state": &amp;schema.Schema{
+                        STATE_FIELD: &amp;schema.Schema{
                                 Type:     schema.TypeString,
                                 Computed: true,
                         },
-                        "os": &amp;schema.Schema{
+                        OS_FIELD: &amp;schema.Schema{
                                 Type:     schema.TypeString,
                                 Optional: true,
                         },
-                        "ram": &amp;schema.Schema{
+                        RAM_FIELD: &amp;schema.Schema{
                                 Type:     schema.TypeInt,
                                 Optional: true,
                         },
-                        "cpu": &amp;schema.Schema{
+                        CPU_FIELD: &amp;schema.Schema{
                                 Type:     schema.TypeInt,
                                 Optional: true,
                         },
-                        "disks": &amp;schema.Schema{
+                        DISKS_FIELD: &amp;schema.Schema{
                                 Type:     schema.TypeList,
                                 Optional: true,
                                 Elem:     resource_vm_disk(),
                         },
-                        "nics": &amp;schema.Schema{
+                        NICS_FIELD: &amp;schema.Schema{
                                 Type:     schema.TypeList,
                                 Optional: true,
                                 Elem:     resource_vm_nic(),
                         },
-                        "vdc": &amp;schema.Schema{
+                        VDC_FIELD: &amp;schema.Schema{
                                 Type:     schema.TypeString,
                                 Required: true,
                         },
-                        "boot": &amp;schema.Schema{
+                        BOOT_FIELD: &amp;schema.Schema{
                                 Type:     schema.TypeString,
                                 Optional: true,
                         },
-                        "storage_class": &amp;schema.Schema{
+                        STORAGE_CLASS_FIELD: &amp;schema.Schema{
                                 Type:     schema.TypeString,
                                 Optional: true,
                         },
-                        "slug": &amp;schema.Schema{
+                        SLUG_FIELD: &amp;schema.Schema{
                                 Type:     schema.TypeString,
                                 Computed: true,
                         },
-                        "token": &amp;schema.Schema{
+                        TOKEN_FIELD: &amp;schema.Schema{
                                 Type:     schema.TypeString,
                                 Computed: true,
                         },
-                        "backup": &amp;schema.Schema{
+                        BACKUP_FIELD: &amp;schema.Schema{
                                 Type:     schema.TypeString,
                                 Required: true,
                         },
-                        "disk_image": &amp;schema.Schema{
+                        DISK_IMAGE_FIELD: &amp;schema.Schema{
                                 Type:     schema.TypeString,
                                 Optional: true,
                         },
-                        "platform_name": &amp;schema.Schema{
+                        PLATFORM_NAME_FIELD: &amp;schema.Schema{
                                 Type:     schema.TypeString,
                                 Computed: true,
                         },
-                        "backup_size": &amp;schema.Schema{
+                        BACKUP_SIZE_FIELD: &amp;schema.Schema{
                                 Type:     schema.TypeInt,
                                 Computed: true,
                         },
-                        "comment": &amp;schema.Schema{
+                        COMMENT_FIELD: &amp;schema.Schema{
                                 Type:     schema.TypeString,
                                 Optional: true,
                         },
@@ -460,7 +460,7 @@ func resource_vm() *schema.Resource <span class="cov8" title="1">{
                                 Type:     schema.TypeString,
                                 Computed: true,
                         },
-                        "dynamic_field": &amp;schema.Schema{
+                        DYNAMIC_FIELD: &amp;schema.Schema{
                                 Type:     schema.TypeString,
                                 Computed: true,
                         },

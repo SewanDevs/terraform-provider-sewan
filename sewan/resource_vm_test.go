@@ -2,8 +2,8 @@ package sewan
 
 import (
 	"errors"
-	sdk "gitlab.com/sewan_go_sdk"
 	"github.com/hashicorp/terraform/helper/schema"
+	sdk "gitlab.com/sewan_go_sdk"
 	"testing"
 )
 
@@ -20,21 +20,21 @@ var (
 		CPU_FIELD:        4,
 		DISKS_FIELD: []interface{}{
 			map[string]interface{}{
-				NAME_FIELD:   "disk 1",
-				SIZE_FIELD:   24,
-				SLUG_FIELD:   SLUG_FIELD,
+				NAME_FIELD: "disk 1",
+				SIZE_FIELD: 24,
+				SLUG_FIELD: SLUG_FIELD,
 			},
 		},
 		NICS_FIELD: []interface{}{
 			map[string]interface{}{
-				VLAN_NAME_FIELD:        "vlan 1 update",
+				VLAN_NAME_FIELD:  "vlan 1 update",
 				MAC_ADRESS_FIELD: "24",
-				CONNECTED_FIELD:   "true",
+				CONNECTED_FIELD:  "true",
 			},
 			map[string]interface{}{
-				VLAN_NAME_FIELD:        "vlan 2",
+				VLAN_NAME_FIELD:  "vlan 2",
 				MAC_ADRESS_FIELD: "24",
-				CONNECTED_FIELD:   "true",
+				CONNECTED_FIELD:  "true",
 			},
 		},
 		VDC_FIELD:           VDC_FIELD,
@@ -47,7 +47,7 @@ var (
 		PLATFORM_NAME_FIELD: "42",
 		BACKUP_SIZE_FIELD:   42,
 		COMMENT_FIELD:       "42",
-		DYNAMIC_FIELD: "42",
+		DYNAMIC_FIELD:       "42",
 	}
 )
 

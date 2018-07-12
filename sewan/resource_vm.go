@@ -23,9 +23,9 @@ func resource_vm_disk() *schema.Resource {
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			DELETION_FIELD: &schema.Schema{
-				Type:     schema.TypeBool,
-				Optional: true,
+			V_DISK_FIELD: &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
 			},
 		},
 	}
@@ -136,6 +136,10 @@ func resource_vm() *schema.Resource {
 				Optional: true,
 			},
 			DYNAMIC_FIELD: &schema.Schema{
+				Type:     schema.TypeString,
+				Computed: true,
+			},
+			OUTSOURCING_FIELD: &schema.Schema{
 				Type:     schema.TypeString,
 				Computed: true,
 			},

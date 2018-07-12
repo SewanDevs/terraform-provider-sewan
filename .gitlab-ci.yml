@@ -1,19 +1,40 @@
 image: golang
 
+#variables:
+#  CI_PROJECT_DIR: /go/src/gitlab.com/terraform-provider-sewan
+
 stages:
-  - lint
+#  - gofmt
   - test
   - sonar
 
-lint:
-  stage: lint
-  script:
-   - echo "No lint script currently available."
+#gofmt:
+#  stage: gofmt
+#  script:
+#    - gofmt -w $(find . -name '*.go')
 
 tests:
   stage: test
+  before_script:
+    - pwd
+    - cd ../
+    - mkdir /go/src/gitlab.com
+    - ls -al /go/src/gitlab.com
+    - git clone https://github.com/SewanDevs/sewan_go_sdk.git \
+        /go/src/gitlab.com/sewan_go_sdk
+    - ls -al /go/src/gitlab.com
+    - ls -al /go/src/gitlab.com/sewan_go_sdk
+    - go get github.com/hashicorp/terraform/helper/schema
+    - go get github.com/hashicorp/terraform/terraform
+    - go get ./terraform-provider-sewan/sewan
+    - ls -al /go/src/gitlab.com/
+    - ls -al /go/src/github.com/
+    - ls -al /go/src/github.com/hashicorp
+
   script:
-    - sh go test -coverprofile=coverage.out; go test -json > report.json
+    - go test -coverprofile=coverage.out
+    - go test -json > report.json
+    - go tool cover -html=c.out -o coverage.html
 
 sonarqube_preview:
   image: $DOCKER_REGISTRY/sidevops/docker/utils/sonar-ci:latest
@@ -29,12 +50,10 @@ sonarqube_preview:
       -Dsonar.gitlab.commit_sha=$CI_BUILD_REF \
       -Dsonar.gitlab.ref_name=$CI_BUILD_REF_NAME
 
-
 sonarqube:
   image: $DOCKER_REGISTRY/sidevops/docker/utils/sonar-ci:latest
   stage: sonar
   script:
-    - sh /opt/sonar-runner/bin/sonar-runner -Dsonar.host.url=$SONAR_URL -Dsonar.login=$SONAR_LOGIN
-  only:
-    - master
-    - dev
+    - sh /opt/sonar-runner/bin/sonar-runner \
+     -Dsonar.host.url=$SONAR_URL \
+     -Dsonar.login=$SONAR_LOGIN

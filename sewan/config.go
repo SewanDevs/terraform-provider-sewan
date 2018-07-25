@@ -54,11 +54,11 @@ type API struct {
 }
 
 type Client struct {
-	sewan                 *sdk.API
-	sewan_apiTooler       *sdk.APITooler
-	sewan_clientTooler    *sdk.ClientTooler
-	sewan_templatesTooler *sdk.TemplatesTooler
-	sewan_schemaTooler    *sdk.SchemaTooler
+	sewan                *sdk.API
+	sewanApiTooler       *sdk.APITooler
+	sewanClientTooler    *sdk.ClientTooler
+	sewanTemplatesTooler *sdk.TemplatesTooler
+	sewanSchemaTooler    *sdk.SchemaTooler
 }
 
 func (c *Config) Client() (*Client, error) {

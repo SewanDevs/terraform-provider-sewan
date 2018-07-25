@@ -55,5 +55,7 @@ sonarqube:
   stage: sonar
   script:
     - sh /opt/sonar-runner/bin/sonar-runner \
-     -Dsonar.host.url=$SONAR_URL \
-     -Dsonar.login=$SONAR_LOGIN
+      -Dsonar.host.url=$SONAR_URL \
+      -Dsonar.login=$SONAR_LOGIN \
+      -Dsonar.projectKey=terraform-provider-sewan-key
+      -Dsonar.sources=.

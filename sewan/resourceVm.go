@@ -153,17 +153,17 @@ func resource_vm_create(d *schema.ResourceData, m interface{}) error {
 	var apiCreationResponse map[string]interface{}
 	sewan := m.(*Client).sewan
 	creationError,
-		apiCreationResponse = m.(*Client).sewan_apiTooler.Api.Create_resource(d,
-		m.(*Client).sewan_clientTooler,
-		m.(*Client).sewan_templatesTooler,
-		m.(*Client).sewan_schemaTooler,
+		apiCreationResponse = m.(*Client).sewanApiTooler.Api.CreateResource(d,
+		m.(*Client).sewanClientTooler,
+		m.(*Client).sewanTemplatesTooler,
+		m.(*Client).sewanSchemaTooler,
 		VM_RESOURCE_TYPE,
 		sewan)
 
 	if creationError == nil {
-		creationError = m.(*Client).sewan_schemaTooler.SchemaTools.Update_local_resource_state(apiCreationResponse,
+		creationError = m.(*Client).sewanSchemaTooler.SchemaTools.UpdateLocalResourceState(apiCreationResponse,
 			d,
-			m.(*Client).sewan_schemaTooler)
+			m.(*Client).sewanSchemaTooler)
 	}
 	return creationError
 }
@@ -176,20 +176,20 @@ func resource_vm_read(d *schema.ResourceData, m interface{}) error {
 	sewan := m.(*Client).sewan
 	readError,
 		apiReadResponse,
-		resource_exists = m.(*Client).sewan_apiTooler.Api.Read_resource(d,
-		m.(*Client).sewan_clientTooler,
-		m.(*Client).sewan_templatesTooler,
-		m.(*Client).sewan_schemaTooler,
+		resource_exists = m.(*Client).sewanApiTooler.Api.ReadResource(d,
+		m.(*Client).sewanClientTooler,
+		m.(*Client).sewanTemplatesTooler,
+		m.(*Client).sewanSchemaTooler,
 		VM_RESOURCE_TYPE,
 		sewan)
 
 	if resource_exists == false {
-		m.(*Client).sewan_schemaTooler.SchemaTools.Delete_terraform_resource(d)
+		m.(*Client).sewanSchemaTooler.SchemaTools.DeleteTerraformResource(d)
 	} else {
 		if readError == nil {
-			readError = m.(*Client).sewan_schemaTooler.SchemaTools.Update_local_resource_state(apiReadResponse,
+			readError = m.(*Client).sewanSchemaTooler.SchemaTools.UpdateLocalResourceState(apiReadResponse,
 				d,
-				m.(*Client).sewan_schemaTooler)
+				m.(*Client).sewanSchemaTooler)
 		}
 	}
 	return readError
@@ -199,10 +199,10 @@ func resource_vm_update(d *schema.ResourceData, m interface{}) error {
 	var updateError error
 	updateError = nil
 	sewan := m.(*Client).sewan
-	updateError = m.(*Client).sewan_apiTooler.Api.Update_resource(d,
-		m.(*Client).sewan_clientTooler,
-		m.(*Client).sewan_templatesTooler,
-		m.(*Client).sewan_schemaTooler,
+	updateError = m.(*Client).sewanApiTooler.Api.UpdateResource(d,
+		m.(*Client).sewanClientTooler,
+		m.(*Client).sewanTemplatesTooler,
+		m.(*Client).sewanSchemaTooler,
 		VM_RESOURCE_TYPE,
 		sewan)
 	return updateError
@@ -212,14 +212,14 @@ func resource_vm_delete(d *schema.ResourceData, m interface{}) error {
 	var deleteError error
 	deleteError = nil
 	sewan := m.(*Client).sewan
-	deleteError = m.(*Client).sewan_apiTooler.Api.Delete_resource(d,
-		m.(*Client).sewan_clientTooler,
-		m.(*Client).sewan_templatesTooler,
-		m.(*Client).sewan_schemaTooler,
+	deleteError = m.(*Client).sewanApiTooler.Api.DeleteResource(d,
+		m.(*Client).sewanClientTooler,
+		m.(*Client).sewanTemplatesTooler,
+		m.(*Client).sewanSchemaTooler,
 		VM_RESOURCE_TYPE,
 		sewan)
 	if deleteError == nil {
-		m.(*Client).sewan_schemaTooler.SchemaTools.Delete_terraform_resource(d)
+		m.(*Client).sewanSchemaTooler.SchemaTools.DeleteTerraformResource(d)
 	}
 	return deleteError
 }

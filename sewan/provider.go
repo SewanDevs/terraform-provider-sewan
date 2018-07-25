@@ -9,7 +9,7 @@ func Provider() *schema.Provider {
 		Schema: providerSchema(),
 		ResourcesMap: map[string]*schema.Resource{
 			"sewan_clouddc_vm":  resource_vm(),
-			"sewan_clouddc_vdc": resource_vdc(),
+			"sewan_clouddc_vdc": resourceVdc(),
 		},
 		ConfigureFunc: providerConfigure,
 	}

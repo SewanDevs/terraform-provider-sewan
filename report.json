@@ -1,7 +1,0 @@
-{"Time":"2018-07-09T15:56:49.993272449+02:00","Action":"run","Package":"gitlab.com/terraform-provider-sewan","Test":"TestMain"}
-{"Time":"2018-07-09T15:56:49.99352095+02:00","Action":"output","Package":"gitlab.com/terraform-provider-sewan","Test":"TestMain","Output":"=== RUN   TestMain\n"}
-{"Time":"2018-07-09T15:56:49.993557357+02:00","Action":"output","Package":"gitlab.com/terraform-provider-sewan","Test":"TestMain","Output":"--- PASS: TestMain (0.00s)\n"}
-{"Time":"2018-07-09T15:56:49.993572645+02:00","Action":"pass","Package":"gitlab.com/terraform-provider-sewan","Test":"TestMain","Elapsed":0}
-{"Time":"2018-07-09T15:56:49.993593343+02:00","Action":"output","Package":"gitlab.com/terraform-provider-sewan","Output":"PASS\n"}
-{"Time":"2018-07-09T15:56:49.994700369+02:00","Action":"output","Package":"gitlab.com/terraform-provider-sewan","Output":"ok  \tgitlab.com/terraform-provider-sewan\t0.010s\n"}
-{"Time":"2018-07-09T15:56:49.994736686+02:00","Action":"pass","Package":"gitlab.com/terraform-provider-sewan","Elapsed":0.01}

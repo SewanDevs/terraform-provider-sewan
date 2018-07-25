@@ -1,19 +1,7 @@
 image: golang
 
 stages:
-  - lint
-  - test
   - sonar
-
-lint:
-  stage: lint
-  script:
-   - echo "No lint script currently available."
-
-tests:
-  stage: test
-  script:
-    - sh go test -coverprofile=coverage.out; go test -json > report.json
 
 sonarqube_preview:
   image: $DOCKER_REGISTRY/sidevops/docker/utils/sonar-ci:latest
@@ -34,7 +22,8 @@ sonarqube:
   image: $DOCKER_REGISTRY/sidevops/docker/utils/sonar-ci:latest
   stage: sonar
   script:
-    - sh /opt/sonar-runner/bin/sonar-runner -Dsonar.host.url=$SONAR_URL -Dsonar.login=$SONAR_LOGIN
-  only:
-    - master
-    - dev
+    - sh /opt/sonar-runner/bin/sonar-runner \
+      -Dsonar.host.url=$SONAR_URL \
+      -Dsonar.login=$SONAR_LOGIN \
+      -Dsonar.projectKey=terraform-provider-sewan-key
+      -Dsonar.sources=.

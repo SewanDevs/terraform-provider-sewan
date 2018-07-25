@@ -41,6 +41,12 @@ $ cd $GOPATH/src/github.com/SewanDevs/
 $ git clone git@github.com:SewanDevs/sewan_go_sdk.git
 $ git clone git@github.com:SewanDevs/terraform-provider-sewan.git
 ```
+
+* Install additional library used in unit test:
+```sh
+$ go get -u github.com/google/go-cmp/cmp
+```
+
 * **Optional steps :**
 
 To run unit tests of the provider ans sdk, run `make test`.

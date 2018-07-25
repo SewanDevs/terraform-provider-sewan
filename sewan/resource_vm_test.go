@@ -2,8 +2,8 @@ package sewan
 
 import (
 	"errors"
-	sdk "github.com/SewanDevs/sewan_go_sdk"
 	"github.com/hashicorp/terraform/helper/schema"
+	sdk "gitlab.com/sewan_go_sdk"
 	"testing"
 )
 
@@ -12,44 +12,42 @@ import (
 //------------------------------------------------------------------------------
 var (
 	NO_TEMPLATE_VM_MAP = map[string]interface{}{
-		"name":       "Unit test vm",
-		"enterprise": "unit test enterprise",
-		"state":      "UP",
-		"os":         "Debian",
-		"ram":        8,
-		"cpu":        4,
-		"disks": []interface{}{
+		NAME_FIELD:       "Unit test vm",
+		ENTERPRISE_FIELD: "unit test enterprise",
+		STATE_FIELD:      "UP",
+		OS_FIELD:         "Debian",
+		RAM_FIELD:        8,
+		CPU_FIELD:        4,
+		DISKS_FIELD: []interface{}{
 			map[string]interface{}{
-				"name":   "disk 1",
-				"size":   24,
-				"v_disk": "v_disk",
-				"slug":   "slug",
+				NAME_FIELD: "disk 1",
+				SIZE_FIELD: 24,
+				SLUG_FIELD: SLUG_FIELD,
 			},
 		},
-		"nics": []interface{}{
+		NICS_FIELD: []interface{}{
 			map[string]interface{}{
-				"vlan":        "vlan 1 update",
-				"mac_address": "24",
-				"connected":   "true",
+				VLAN_NAME_FIELD:  "vlan 1 update",
+				MAC_ADRESS_FIELD: "24",
+				CONNECTED_FIELD:  true,
 			},
 			map[string]interface{}{
-				"vlan":        "vlan 2",
-				"mac_address": "24",
-				"connected":   "true",
+				VLAN_NAME_FIELD:  "vlan 2",
+				MAC_ADRESS_FIELD: "24",
+				CONNECTED_FIELD:  true,
 			},
 		},
-		"vdc":           "vdc",
-		"boot":          "on disk",
-		"storage_class": "storage_enterprise",
-		"slug":          "42",
-		"token":         "424242",
-		"backup":        "backup-no_backup",
-		"disk_image":    "",
-		"platform_name": "42",
-		"backup_size":   42,
-		"comment":       "42",
-		"outsourcing":   "42",
-		"dynamic_field": "42",
+		VDC_FIELD:           VDC_FIELD,
+		BOOT_FIELD:          "on disk",
+		STORAGE_CLASS_FIELD: "storage_enterprise",
+		SLUG_FIELD:          "42",
+		TOKEN_FIELD:         "424242",
+		BACKUP_FIELD:        "backup-no_backup",
+		DISK_IMAGE_FIELD:    "",
+		PLATFORM_NAME_FIELD: "42",
+		BACKUP_SIZE_FIELD:   42,
+		COMMENT_FIELD:       "42",
+		DYNAMIC_FIELD:       "42",
 	}
 )
 

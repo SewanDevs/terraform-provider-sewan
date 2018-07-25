@@ -2,8 +2,8 @@ package sewan
 
 import (
 	"errors"
-	sdk "github.com/SewanDevs/sewan_go_sdk"
 	"github.com/hashicorp/terraform/helper/schema"
+	sdk "gitlab.com/sewan_go_sdk"
 	"testing"
 )
 
@@ -12,29 +12,29 @@ import (
 //------------------------------------------------------------------------------
 var (
 	TEST_VDC_MAP = map[string]interface{}{
-		"name":       "Unit test vdc resource",
-		"enterprise": "unit test enterprise",
-		"datacenter": "dc1",
-		"vdc_resources": []interface{}{
+		NAME_FIELD:       "Unit test vdc resource",
+		ENTERPRISE_FIELD: "unit test enterprise",
+		DATACENTER_FIELD: "dc1",
+		VDC_RESOURCE_FIELD: []interface{}{
 			map[string]interface{}{
-				"resource": "ram",
-				"total":    20,
+				RESOURCE_FIELD: RAM_FIELD,
+				TOTAL_FIELD:    20,
 			},
 			map[string]interface{}{
-				"resource": "cpu",
-				"total":    1,
+				RESOURCE_FIELD: CPU_FIELD,
+				TOTAL_FIELD:    1,
 			},
 			map[string]interface{}{
-				"resource": "storage_enterprise",
-				"total":    10,
+				RESOURCE_FIELD: "storage_enterprise",
+				TOTAL_FIELD:    10,
 			},
 			map[string]interface{}{
-				"resource": "storage_performance",
-				"total":    10,
+				RESOURCE_FIELD: "storage_performance",
+				TOTAL_FIELD:    10,
 			},
 			map[string]interface{}{
-				"resource": "storage_high_performance",
-				"total":    10,
+				RESOURCE_FIELD: "storage_high_performance",
+				TOTAL_FIELD:    10,
 			},
 		},
 	}

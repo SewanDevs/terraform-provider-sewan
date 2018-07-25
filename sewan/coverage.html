@@ -1,0 +1,578 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">terraform-provider-sewan/sewan/config.go (0.0%)</option>
+				
+				<option value="file1">terraform-provider-sewan/sewan/provider.go (50.0%)</option>
+				
+				<option value="file2">terraform-provider-sewan/sewan/resource_vdc.go (100.0%)</option>
+				
+				<option value="file3">terraform-provider-sewan/sewan/resource_vm.go (100.0%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package sewan
+
+import (
+        "net/http"
+        sdk "terraform-provider-sewan/sewan_go_sdk"
+)
+
+const (
+        VM_RESOURCE_TYPE  = "vm"
+        VDC_RESOURCE_TYPE = VDC_FIELD
+)
+
+type Config struct {
+        Api_token string
+        Api_url   string
+}
+
+type API struct {
+        Token  string
+        URL    string
+        Client *http.Client
+}
+
+type Client struct {
+        sewan                 *sdk.API
+        sewan_apiTooler       *sdk.APITooler
+        sewan_clientTooler    *sdk.ClientTooler
+        sewan_templatesTooler *sdk.TemplatesTooler
+        sewan_schemaTooler    *sdk.SchemaTooler
+}
+
+func (c *Config) Client() (*Client, error) <span class="cov0" title="0">{
+        apiTooler := sdk.APITooler{
+                Api: sdk.AirDrumResources_Apier{},
+        }
+        clientTooler := sdk.ClientTooler{
+                Client: sdk.HttpClienter{},
+        }
+        templatesTooler := sdk.TemplatesTooler{
+                TemplatesTools: sdk.Template_Templater{},
+        }
+        schemaTooler := sdk.SchemaTooler{
+                SchemaTools: sdk.Schema_Schemaer{},
+        }
+        api := apiTooler.New(
+                c.Api_token,
+                c.Api_url,
+        )
+        err := apiTooler.CheckStatus(api)
+
+        return &amp;Client{api,
+                        &amp;apiTooler,
+                        &amp;clientTooler,
+                        &amp;templatesTooler,
+                        &amp;schemaTooler},
+                err
+}</span>
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package sewan
+
+import (
+        "github.com/hashicorp/terraform/helper/schema"
+)
+
+func Provider() *schema.Provider <span class="cov8" title="1">{
+        return &amp;schema.Provider{
+                Schema: providerSchema(),
+                ResourcesMap: map[string]*schema.Resource{
+                        "sewan_clouddc_vm":  resource_vm(),
+                        "sewan_clouddc_vdc": resource_vdc(),
+                },
+                ConfigureFunc: providerConfigure,
+        }
+}</span>
+
+func providerSchema() map[string]*schema.Schema <span class="cov8" title="1">{
+        return map[string]*schema.Schema{
+                "api_token": &amp;schema.Schema{
+                        Type:        schema.TypeString,
+                        Required:    true,
+                        Description: "Airdrum session token",
+                },
+                "api_url": &amp;schema.Schema{
+                        Type:        schema.TypeString,
+                        Required:    true,
+                        Description: "Airdrum API's URL",
+                },
+        }
+}</span>
+
+func providerConfigure(d *schema.ResourceData) (interface{}, error) <span class="cov0" title="0">{
+        config := Config{
+                Api_token: d.Get("api_token").(string),
+                Api_url:   d.Get("api_url").(string),
+        }
+        return config.Client()
+}</span>
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package sewan
+
+import (
+        "github.com/hashicorp/terraform/helper/schema"
+)
+
+func resource_vdc_resource() *schema.Resource <span class="cov8" title="1">{
+        return &amp;schema.Resource{
+                Schema: map[string]*schema.Schema{
+                        RESOURCE_FIELD: &amp;schema.Schema{
+                                Type:     schema.TypeString,
+                                Required: true,
+                        },
+                        USED_FIELD: &amp;schema.Schema{
+                                Type:     schema.TypeInt,
+                                Computed: true,
+                        },
+                        TOTAL_FIELD: &amp;schema.Schema{
+                                Type:     schema.TypeInt,
+                                Required: true,
+                        },
+                        SLUG_FIELD: &amp;schema.Schema{
+                                Type:     schema.TypeString,
+                                Computed: true,
+                        },
+                },
+        }
+}</span>
+
+func resource_vdc() *schema.Resource <span class="cov8" title="1">{
+        return &amp;schema.Resource{
+                Create: resource_vdc_create,
+                Read:   resource_vdc_read,
+                Update: resource_vdc_update,
+                Delete: resource_vdc_delete,
+                Schema: map[string]*schema.Schema{
+                        NAME_FIELD: &amp;schema.Schema{
+                                Type:     schema.TypeString,
+                                Required: true,
+                        },
+                        ENTERPRISE_FIELD: &amp;schema.Schema{
+                                Type:     schema.TypeString,
+                                Required: true,
+                        },
+                        DATACENTER_FIELD: &amp;schema.Schema{
+                                Type:     schema.TypeString,
+                                Required: true,
+                        },
+                        VDC_RESOURCE_FIELD: &amp;schema.Schema{
+                                Type:     schema.TypeList,
+                                Optional: true,
+                                Elem:     resource_vdc_resource(),
+                        },
+                        SLUG_FIELD: &amp;schema.Schema{
+                                Type:     schema.TypeString,
+                                Computed: true,
+                        },
+                        DYNAMIC_FIELD: &amp;schema.Schema{
+                                Type:     schema.TypeString,
+                                Optional: true,
+                        },
+                },
+        }
+}</span>
+
+func resource_vdc_create(d *schema.ResourceData, m interface{}) error <span class="cov8" title="1">{
+        var creationError error
+        creationError = nil
+        var apiCreationResponse map[string]interface{}
+        sewan := m.(*Client).sewan
+        creationError, apiCreationResponse = m.(*Client).sewan_apiTooler.Api.Create_resource(d,
+                m.(*Client).sewan_clientTooler,
+                m.(*Client).sewan_templatesTooler,
+                m.(*Client).sewan_schemaTooler,
+                VDC_RESOURCE_TYPE,
+                sewan)
+
+        if creationError == nil </span><span class="cov8" title="1">{
+                creationError = m.(*Client).sewan_schemaTooler.SchemaTools.Update_local_resource_state(apiCreationResponse,
+                        d,
+                        m.(*Client).sewan_schemaTooler)
+        }</span>
+        <span class="cov8" title="1">return creationError</span>
+}
+
+func resource_vdc_read(d *schema.ResourceData, m interface{}) error <span class="cov8" title="1">{
+        var readError error
+        readError = nil
+        var resource_exists bool
+        var apiCreationResponse map[string]interface{}
+        sewan := m.(*Client).sewan
+        readError, apiCreationResponse, resource_exists = m.(*Client).sewan_apiTooler.Api.Read_resource(d,
+                m.(*Client).sewan_clientTooler,
+                m.(*Client).sewan_templatesTooler,
+                m.(*Client).sewan_schemaTooler,
+                VDC_RESOURCE_TYPE,
+                sewan)
+
+        if resource_exists == false </span><span class="cov8" title="1">{
+                m.(*Client).sewan_schemaTooler.SchemaTools.Delete_terraform_resource(d)
+        }</span> else<span class="cov8" title="1"> {
+                if readError == nil </span><span class="cov8" title="1">{
+                        readError = m.(*Client).sewan_schemaTooler.SchemaTools.Update_local_resource_state(apiCreationResponse,
+                                d,
+                                m.(*Client).sewan_schemaTooler)
+                }</span>
+        }
+        <span class="cov8" title="1">return readError</span>
+}
+
+func resource_vdc_update(d *schema.ResourceData, m interface{}) error <span class="cov8" title="1">{
+        var updateError error
+        updateError = nil
+        sewan := m.(*Client).sewan
+        updateError = m.(*Client).sewan_apiTooler.Api.Update_resource(d,
+                m.(*Client).sewan_clientTooler,
+                m.(*Client).sewan_templatesTooler,
+                m.(*Client).sewan_schemaTooler,
+                VDC_RESOURCE_TYPE,
+                sewan)
+        return updateError
+}</span>
+
+func resource_vdc_delete(d *schema.ResourceData, m interface{}) error <span class="cov8" title="1">{
+
+        var deleteError error
+        deleteError = nil
+        sewan := m.(*Client).sewan
+        deleteError = m.(*Client).sewan_apiTooler.Api.Delete_resource(d,
+                m.(*Client).sewan_clientTooler,
+                m.(*Client).sewan_templatesTooler,
+                m.(*Client).sewan_schemaTooler,
+                VDC_RESOURCE_TYPE,
+                sewan)
+        if deleteError == nil </span><span class="cov8" title="1">{
+                m.(*Client).sewan_schemaTooler.SchemaTools.Delete_terraform_resource(d)
+        }</span>
+        <span class="cov8" title="1">return deleteError</span>
+}
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package sewan
+
+import (
+        "github.com/hashicorp/terraform/helper/schema"
+)
+
+func resource_vm_disk() *schema.Resource <span class="cov8" title="1">{
+        return &amp;schema.Resource{
+                Schema: map[string]*schema.Schema{
+                        NAME_FIELD: &amp;schema.Schema{
+                                Type:     schema.TypeString,
+                                Required: true,
+                        },
+                        SIZE_FIELD: &amp;schema.Schema{
+                                Type:     schema.TypeInt,
+                                Optional: true,
+                        },
+                        STORAGE_CLASS_FIELD: &amp;schema.Schema{
+                                Type:     schema.TypeString,
+                                Optional: true,
+                        },
+                        SLUG_FIELD: &amp;schema.Schema{
+                                Type:     schema.TypeString,
+                                Computed: true,
+                        },
+                        "v_disk": &amp;schema.Schema{
+                                Type:     schema.TypeString,
+                                Computed: true,
+                        },
+                        DELETION_FIELD: &amp;schema.Schema{
+                                Type:     schema.TypeBool,
+                                Optional: true,
+                        },
+                },
+        }
+}</span>
+
+func resource_vm_nic() *schema.Resource <span class="cov8" title="1">{
+        return &amp;schema.Resource{
+                Schema: map[string]*schema.Schema{
+                        VLAN_NAME_FIELD: &amp;schema.Schema{
+                                Type:     schema.TypeString,
+                                Required: true,
+                        },
+                        MAC_ADRESS_FIELD: &amp;schema.Schema{
+                                Type:     schema.TypeString,
+                                Computed: true,
+                        },
+                        CONNECTED_FIELD: &amp;schema.Schema{
+                                Type:     schema.TypeBool,
+                                Required: true,
+                        },
+                },
+        }
+}</span>
+
+func resource_vm() *schema.Resource <span class="cov8" title="1">{
+        return &amp;schema.Resource{
+                Create: resource_vm_create,
+                Read:   resource_vm_read,
+                Update: resource_vm_update,
+                Delete: resource_vm_delete,
+                Schema: map[string]*schema.Schema{
+                        NAME_FIELD: &amp;schema.Schema{
+                                Type:     schema.TypeString,
+                                Required: true,
+                        },
+                        ENTERPRISE_FIELD: &amp;schema.Schema{
+                                Type:     schema.TypeString,
+                                Optional: true,
+                        },
+                        TEMPLATE_FIELD: &amp;schema.Schema{
+                                Type:     schema.TypeString,
+                                Optional: true,
+                        },
+                        STATE_FIELD: &amp;schema.Schema{
+                                Type:     schema.TypeString,
+                                Computed: true,
+                        },
+                        OS_FIELD: &amp;schema.Schema{
+                                Type:     schema.TypeString,
+                                Optional: true,
+                        },
+                        RAM_FIELD: &amp;schema.Schema{
+                                Type:     schema.TypeInt,
+                                Optional: true,
+                        },
+                        CPU_FIELD: &amp;schema.Schema{
+                                Type:     schema.TypeInt,
+                                Optional: true,
+                        },
+                        DISKS_FIELD: &amp;schema.Schema{
+                                Type:     schema.TypeList,
+                                Optional: true,
+                                Elem:     resource_vm_disk(),
+                        },
+                        NICS_FIELD: &amp;schema.Schema{
+                                Type:     schema.TypeList,
+                                Optional: true,
+                                Elem:     resource_vm_nic(),
+                        },
+                        VDC_FIELD: &amp;schema.Schema{
+                                Type:     schema.TypeString,
+                                Required: true,
+                        },
+                        BOOT_FIELD: &amp;schema.Schema{
+                                Type:     schema.TypeString,
+                                Optional: true,
+                        },
+                        STORAGE_CLASS_FIELD: &amp;schema.Schema{
+                                Type:     schema.TypeString,
+                                Optional: true,
+                        },
+                        SLUG_FIELD: &amp;schema.Schema{
+                                Type:     schema.TypeString,
+                                Computed: true,
+                        },
+                        TOKEN_FIELD: &amp;schema.Schema{
+                                Type:     schema.TypeString,
+                                Computed: true,
+                        },
+                        BACKUP_FIELD: &amp;schema.Schema{
+                                Type:     schema.TypeString,
+                                Required: true,
+                        },
+                        DISK_IMAGE_FIELD: &amp;schema.Schema{
+                                Type:     schema.TypeString,
+                                Optional: true,
+                        },
+                        PLATFORM_NAME_FIELD: &amp;schema.Schema{
+                                Type:     schema.TypeString,
+                                Computed: true,
+                        },
+                        BACKUP_SIZE_FIELD: &amp;schema.Schema{
+                                Type:     schema.TypeInt,
+                                Computed: true,
+                        },
+                        COMMENT_FIELD: &amp;schema.Schema{
+                                Type:     schema.TypeString,
+                                Optional: true,
+                        },
+                        "outsourcing": &amp;schema.Schema{
+                                Type:     schema.TypeString,
+                                Computed: true,
+                        },
+                        DYNAMIC_FIELD: &amp;schema.Schema{
+                                Type:     schema.TypeString,
+                                Computed: true,
+                        },
+                },
+        }
+}</span>
+
+func resource_vm_create(d *schema.ResourceData, m interface{}) error <span class="cov8" title="1">{
+        var creationError error
+        creationError = nil
+        var apiCreationResponse map[string]interface{}
+        sewan := m.(*Client).sewan
+        creationError,
+                apiCreationResponse = m.(*Client).sewan_apiTooler.Api.Create_resource(d,
+                m.(*Client).sewan_clientTooler,
+                m.(*Client).sewan_templatesTooler,
+                m.(*Client).sewan_schemaTooler,
+                VM_RESOURCE_TYPE,
+                sewan)
+
+        if creationError == nil </span><span class="cov8" title="1">{
+                creationError = m.(*Client).sewan_schemaTooler.SchemaTools.Update_local_resource_state(apiCreationResponse,
+                        d,
+                        m.(*Client).sewan_schemaTooler)
+        }</span>
+        <span class="cov8" title="1">return creationError</span>
+}
+
+func resource_vm_read(d *schema.ResourceData, m interface{}) error <span class="cov8" title="1">{
+        var readError error
+        readError = nil
+        var resource_exists bool
+        var apiReadResponse map[string]interface{}
+        sewan := m.(*Client).sewan
+        readError,
+                apiReadResponse,
+                resource_exists = m.(*Client).sewan_apiTooler.Api.Read_resource(d,
+                m.(*Client).sewan_clientTooler,
+                m.(*Client).sewan_templatesTooler,
+                m.(*Client).sewan_schemaTooler,
+                VM_RESOURCE_TYPE,
+                sewan)
+
+        if resource_exists == false </span><span class="cov8" title="1">{
+                m.(*Client).sewan_schemaTooler.SchemaTools.Delete_terraform_resource(d)
+        }</span> else<span class="cov8" title="1"> {
+                if readError == nil </span><span class="cov8" title="1">{
+                        readError = m.(*Client).sewan_schemaTooler.SchemaTools.Update_local_resource_state(apiReadResponse,
+                                d,
+                                m.(*Client).sewan_schemaTooler)
+                }</span>
+        }
+        <span class="cov8" title="1">return readError</span>
+}
+
+func resource_vm_update(d *schema.ResourceData, m interface{}) error <span class="cov8" title="1">{
+        var updateError error
+        updateError = nil
+        sewan := m.(*Client).sewan
+        updateError = m.(*Client).sewan_apiTooler.Api.Update_resource(d,
+                m.(*Client).sewan_clientTooler,
+                m.(*Client).sewan_templatesTooler,
+                m.(*Client).sewan_schemaTooler,
+                VM_RESOURCE_TYPE,
+                sewan)
+        return updateError
+}</span>
+
+func resource_vm_delete(d *schema.ResourceData, m interface{}) error <span class="cov8" title="1">{
+        var deleteError error
+        deleteError = nil
+        sewan := m.(*Client).sewan
+        deleteError = m.(*Client).sewan_apiTooler.Api.Delete_resource(d,
+                m.(*Client).sewan_clientTooler,
+                m.(*Client).sewan_templatesTooler,
+                m.(*Client).sewan_schemaTooler,
+                VM_RESOURCE_TYPE,
+                sewan)
+        if deleteError == nil </span><span class="cov8" title="1">{
+                m.(*Client).sewan_schemaTooler.SchemaTools.Delete_terraform_resource(d)
+        }</span>
+        <span class="cov8" title="1">return deleteError</span>
+}
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>

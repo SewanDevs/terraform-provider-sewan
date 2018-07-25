@@ -7,19 +7,19 @@ import (
 func resource_vdc_resource() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"resource": &schema.Schema{
+			RESOURCE_FIELD: &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"used": &schema.Schema{
+			USED_FIELD: &schema.Schema{
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
-			"total": &schema.Schema{
+			TOTAL_FIELD: &schema.Schema{
 				Type:     schema.TypeInt,
 				Required: true,
 			},
-			"slug": &schema.Schema{
+			SLUG_FIELD: &schema.Schema{
 				Type:     schema.TypeString,
 				Computed: true,
 			},
@@ -34,28 +34,28 @@ func resource_vdc() *schema.Resource {
 		Update: resource_vdc_update,
 		Delete: resource_vdc_delete,
 		Schema: map[string]*schema.Schema{
-			"name": &schema.Schema{
+			NAME_FIELD: &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"enterprise": &schema.Schema{
+			ENTERPRISE_FIELD: &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"datacenter": &schema.Schema{
+			DATACENTER_FIELD: &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"vdc_resources": &schema.Schema{
+			VDC_RESOURCE_FIELD: &schema.Schema{
 				Type:     schema.TypeList,
 				Optional: true,
 				Elem:     resource_vdc_resource(),
 			},
-			"slug": &schema.Schema{
+			SLUG_FIELD: &schema.Schema{
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"dynamic_field": &schema.Schema{
+			DYNAMIC_FIELD: &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
 			},

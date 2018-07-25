@@ -7,29 +7,25 @@ import (
 func resource_vm_disk() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"name": &schema.Schema{
+			NAME_FIELD: &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"size": &schema.Schema{
+			SIZE_FIELD: &schema.Schema{
 				Type:     schema.TypeInt,
 				Optional: true,
 			},
-			"storage_class": &schema.Schema{
+			STORAGE_CLASS_FIELD: &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"slug": &schema.Schema{
+			SLUG_FIELD: &schema.Schema{
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"v_disk": &schema.Schema{
+			V_DISK_FIELD: &schema.Schema{
 				Type:     schema.TypeString,
 				Computed: true,
-			},
-			"deletion": &schema.Schema{
-				Type:     schema.TypeBool,
-				Optional: true,
 			},
 		},
 	}
@@ -38,15 +34,15 @@ func resource_vm_disk() *schema.Resource {
 func resource_vm_nic() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
-			"vlan": &schema.Schema{
+			VLAN_NAME_FIELD: &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"mac_address": &schema.Schema{
+			MAC_ADRESS_FIELD: &schema.Schema{
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"connected": &schema.Schema{
+			CONNECTED_FIELD: &schema.Schema{
 				Type:     schema.TypeBool,
 				Required: true,
 			},
@@ -61,89 +57,89 @@ func resource_vm() *schema.Resource {
 		Update: resource_vm_update,
 		Delete: resource_vm_delete,
 		Schema: map[string]*schema.Schema{
-			"name": &schema.Schema{
+			NAME_FIELD: &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"enterprise": &schema.Schema{
+			ENTERPRISE_FIELD: &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"template": &schema.Schema{
+			TEMPLATE_FIELD: &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"state": &schema.Schema{
+			STATE_FIELD: &schema.Schema{
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"os": &schema.Schema{
+			OS_FIELD: &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"ram": &schema.Schema{
+			RAM_FIELD: &schema.Schema{
 				Type:     schema.TypeInt,
 				Optional: true,
 			},
-			"cpu": &schema.Schema{
+			CPU_FIELD: &schema.Schema{
 				Type:     schema.TypeInt,
 				Optional: true,
 			},
-			"disks": &schema.Schema{
+			DISKS_FIELD: &schema.Schema{
 				Type:     schema.TypeList,
 				Optional: true,
 				Elem:     resource_vm_disk(),
 			},
-			"nics": &schema.Schema{
+			NICS_FIELD: &schema.Schema{
 				Type:     schema.TypeList,
 				Optional: true,
 				Elem:     resource_vm_nic(),
 			},
-			"vdc": &schema.Schema{
+			VDC_FIELD: &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"boot": &schema.Schema{
+			BOOT_FIELD: &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"storage_class": &schema.Schema{
+			STORAGE_CLASS_FIELD: &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"slug": &schema.Schema{
+			SLUG_FIELD: &schema.Schema{
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"token": &schema.Schema{
+			TOKEN_FIELD: &schema.Schema{
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"backup": &schema.Schema{
+			BACKUP_FIELD: &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			"disk_image": &schema.Schema{
+			DISK_IMAGE_FIELD: &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"platform_name": &schema.Schema{
+			PLATFORM_NAME_FIELD: &schema.Schema{
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"backup_size": &schema.Schema{
+			BACKUP_SIZE_FIELD: &schema.Schema{
 				Type:     schema.TypeInt,
 				Computed: true,
 			},
-			"comment": &schema.Schema{
+			COMMENT_FIELD: &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			"outsourcing": &schema.Schema{
+			DYNAMIC_FIELD: &schema.Schema{
 				Type:     schema.TypeString,
 				Computed: true,
 			},
-			"dynamic_field": &schema.Schema{
+			OUTSOURCING_FIELD: &schema.Schema{
 				Type:     schema.TypeString,
 				Computed: true,
 			},

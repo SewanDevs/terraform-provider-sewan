@@ -47,7 +47,7 @@ resource "sewan_clouddc_vm" "template-created-vm" {
   template = "a template"
   vdc = "${sewan_clouddc_vdc.vdc-example.slug}"
   backup = "backup-no-backup"
-  storage_class = "storage_enterprise"
+  STORAGE_CLASS_FIELD = "storage_enterprise"
   boot = "on disk"
 }
 
@@ -65,12 +65,12 @@ resource "sewan_clouddc_vm" "vm" {
     {
       name="disk 1"
       size=1
-      storage_class="storage_performance"
+      STORAGE_CLASS_FIELD="storage_performance"
     },
     {
       name="disk 2"
       size=2
-      storage_class="storage_enterprise"
+      STORAGE_CLASS_FIELD="storage_enterprise"
     },
   ]
   nics=[

@@ -29,12 +29,12 @@ var (
 			map[string]interface{}{
 				VLAN_NAME_FIELD:  "vlan 1 update",
 				MAC_ADRESS_FIELD: "24",
-				CONNECTED_FIELD:  "true",
+				CONNECTED_FIELD:  true,
 			},
 			map[string]interface{}{
 				VLAN_NAME_FIELD:  "vlan 2",
 				MAC_ADRESS_FIELD: "24",
-				CONNECTED_FIELD:  "true",
+				CONNECTED_FIELD:  true,
 			},
 		},
 		VDC_FIELD:           VDC_FIELD,

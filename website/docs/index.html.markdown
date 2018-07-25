@@ -30,23 +30,23 @@ resource "sewan_clouddc_vdc" "vdc-example" {
   datacenter = "a datacenter"
   vdc_resources=[
   {
-    resource="your-company-mono-ram"
+    resource="ram"
     total=10
   },
   {
-    resource="your-company-mono-cpu"
+    resource="cpu"
     total=10
   },
   {
-    resource="your-company-mono-storage_enterprise"
+    resource="storage_enterprise"
     total=80
   },
   {
-    resource="your-company-mono-storage_performance"
+    resource="storage_performance"
     total=20
   },
   {
-    resource="your-company-mono-storage_high_performance"
+    resource="storage_high_performance"
     total=10
   },
   ]

@@ -21,9 +21,9 @@ const (
 	RAM_FIELD           = sdk.RAM_FIELD
 	CPU_FIELD           = sdk.CPU_FIELD
 	DISKS_FIELD         = sdk.DISKS_FIELD
+	V_DISK_FIELD        = sdk.V_DISK_FIELD
 	SIZE_FIELD          = sdk.SIZE_FIELD
 	STORAGE_CLASS_FIELD = sdk.STORAGE_CLASS_FIELD
-	DELETION_FIELD      = sdk.DELETION_FIELD
 	NICS_FIELD          = sdk.NICS_FIELD
 	VLAN_NAME_FIELD     = sdk.VLAN_NAME_FIELD
 	MAC_ADRESS_FIELD    = sdk.MAC_ADRESS_FIELD
@@ -39,6 +39,7 @@ const (
 	TEMPLATE_FIELD      = sdk.TEMPLATE_FIELD
 	ID_FIELD            = sdk.ID_FIELD
 	DYNAMIC_FIELD       = sdk.DYNAMIC_FIELD
+	OUTSOURCING_FIELD   = sdk.OUTSOURCING_FIELD
 )
 
 type Config struct {

@@ -77,6 +77,9 @@ resource "sewan_clouddc_vm" "vm" {
 
 To consult the list of available templates for your company or create new ones, access your company account on [cloud-datacenter.fr](https://cloud-datacenter.fr).
 
+NB : After the creation from a template, an override file (< template name >\_override.tf.json, [terraform configuration override official doc](https://www.terraform.io/docs/configuration/override.html)) is created to enable the modification of all template provided parameters. This file is currently generated in the current terraform initialized terraform folder, it does not yet support the remote state feature. An example of override file is available on the annexe of this page.
+
+
 * `name` - *(Required, string)* vm name
 * `template` - *(Required, string)* optional field required for creating a vm from a template
 * Arguments handled by the template
@@ -88,9 +91,8 @@ To consult the list of available templates for your company or create new ones, 
   * `name` - *(Required, string)* disk name
   * `size` - *(Required, int)* disk size in GiB
   * `storage_class` - *(Required, string)* type of virtual disks (accepted values : "Enterprise Storage", "Performance Storage", "High Performance Storage")
-  * `deletion` *(Optional, bool)* set to "true" to deleted a template created disk
 
-  **Warning, please read this** : On creation, additional disk can not be created, only the template provided disks are created. Additional disks can be added once the vm is created. Moreover, a disks created by a template can be deleted by providing it's name and set deleted field to "true"
+  **Warning** : **On creation, additional disk can not be created**, only the template provided disks are created. Additional disks can be added once the vm is created.
 
 * `nics` - *(Optional, list of maps)* network interfaces allocated to the vm, can be nil
   * `vlan` - *(Required, string)* nic vlan name
@@ -130,3 +132,38 @@ The following attributes are exported :
 ## Import
 
 Instance import is not yet supported, coming soon.
+
+## Annexe : vm template override generated file
+
+In order to make resources post-creation modification, this file must be modified prior to initial configuration file (see [terraform configuration override official doc](https://www.terraform.io/docs/configuration/override.html)).
+
+```json
+{"resource":
+  {"sewan_clouddc_vm":
+    {"vm":
+      {
+        "os":"CentOS",
+        "ram":1,
+        "cpu":1,
+        "disks":[
+          {
+            "name":"a template created disk",
+            "size":42,
+            "storage_class":"storage_enterprise"
+            }
+        ],
+        "nics":[
+          {
+            "vlan":"a vlan",
+            "connected":true
+          }
+        ],
+        "vdc":"vdc-example",
+        "boot":"on disk",
+        "backup":"backup-no-backup",
+        "disk_image":""
+      }
+    }
+  }
+}
+```

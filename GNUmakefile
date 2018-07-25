@@ -1,6 +1,6 @@
 TEST?=$$(go list ./...)
 GOFMT_FILES?=$$(find . -name '*.go')
-WEBSITE_REPO=gitlab.com/terraform-provider-sewan/terraform-website
+WEBSITE_REPO=github.com/hashicorp/terraform-website
 PKG_NAME=sewan
 
 default: build

@@ -21,23 +21,23 @@ resource "sewan_clouddc_vdc" "vdc-example" {
   datacenter = "a datacenter"
   vdc_resources=[
   {
-    resource="your-company-mono-ram"
+    resource="ram"
     total=10
   },
   {
-    resource="your-company-mono-cpu"
+    resource="cpu"
     total=10
   },
   {
-    resource="your-company-mono-storage_enterprise"
+    resource="storage_enterprise"
     total=80
   },
   {
-    resource="your-company-mono-storage_performance"
+    resource="storage_performance"
     total=20
   },
   {
-    resource="your-company-mono-storage_high_performance"
+    resource="storage_high_performance"
     total=10
   },
   ]
@@ -52,7 +52,7 @@ The following vdc creation arguments are supported :
 * `enterprise` - (Required, string) name of your enterprise
 * `datacenter` - (Required, string) name of the datacenter
 * `vdc_resources` - (Required, list of maps) resources allocated to the vdc, minimum of 1 is required
-  * `resource` - (Required, string) resource name (accepted resources for storage "Enterprise Storage", "Performance Storage", "High Performance Storage"), format <enterprise name>-mono-<resource name>
+  * `resource` - (Required, string) resource name (accepted resources for storage "storage_enterprise", "storage_performance", "storage_high_performance"), other resources : "ram" & "cpu"
   * `total` - (Required, int) size of the resource (GiB for RAM or storage class, number for CPU etc.)
 
 ## Attributes Reference

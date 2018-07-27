@@ -7,7 +7,7 @@ import (
 )
 
 func TestResourceVdcCreate(t *testing.T) {
-	test_cases := []struct {
+	testCases := []struct {
 		Id           int
 		TC_apier     sdk.APIer
 		Creation_Err error
@@ -50,25 +50,25 @@ func TestResourceVdcCreate(t *testing.T) {
 		&schemaTooler}
 	var err error
 
-	for _, test_case := range test_cases {
-		apiTooler.Api = test_case.TC_apier
+	for _, testCase := range testCases {
+		apiTooler.Api = testCase.TC_apier
 		err = resourceVdcCreate(d, m_struct)
 		switch {
-		case err == nil || test_case.Creation_Err == nil:
-			if !(err == nil && test_case.Creation_Err == nil) {
+		case err == nil || testCase.Creation_Err == nil:
+			if !(err == nil && testCase.Creation_Err == nil) {
 				t.Errorf("\n\nTC %d : VDC creation error was incorrect,"+
-					"\n\rgot: \"%s\"\n\rwant: \"%s\"", test_case.Id, err, test_case.Creation_Err)
+					"\n\rgot: \"%s\"\n\rwant: \"%s\"", testCase.Id, err, testCase.Creation_Err)
 			}
-		case err.Error() != test_case.Creation_Err.Error():
+		case err.Error() != testCase.Creation_Err.Error():
 			t.Errorf("\n\nTC %d : VDC creation error was incorrect,"+
 				"\n\rgot: \"%s\"\n\rwant: \"%s\"",
-				test_case.Id, err.Error(), test_case.Creation_Err.Error())
+				testCase.Id, err.Error(), testCase.Creation_Err.Error())
 		}
 	}
 }
 
 func TestResourceVdcRead(t *testing.T) {
-	test_cases := []struct {
+	testCases := []struct {
 		Id         int
 		TC_apier   sdk.APIer
 		Read_Err   error
@@ -120,25 +120,25 @@ func TestResourceVdcRead(t *testing.T) {
 		&schemaTooler}
 	var err error
 
-	for _, test_case := range test_cases {
-		apiTooler.Api = test_case.TC_apier
+	for _, testCase := range testCases {
+		apiTooler.Api = testCase.TC_apier
 		err = resourceVdcRead(d, m_struct)
 		switch {
-		case err == nil || test_case.Read_Err == nil:
-			if !(err == nil && test_case.Read_Err == nil) {
+		case err == nil || testCase.Read_Err == nil:
+			if !(err == nil && testCase.Read_Err == nil) {
 				t.Errorf("\n\nTC %d : VDC update error was incorrect,"+
-					"\n\rgot: \"%s\"\n\rwant: \"%s\"", test_case.Id, err, test_case.Read_Err)
+					"\n\rgot: \"%s\"\n\rwant: \"%s\"", testCase.Id, err, testCase.Read_Err)
 			}
-		case err.Error() != test_case.Read_Err.Error():
+		case err.Error() != testCase.Read_Err.Error():
 			t.Errorf("\n\nTC %d : VDC update error was incorrect,"+
 				"\n\rgot: \"%s\"\n\rwant: \"%s\"",
-				test_case.Id, err.Error(), test_case.Read_Err.Error())
+				testCase.Id, err.Error(), testCase.Read_Err.Error())
 		}
 	}
 }
 
 func TestResourceVdcUpdate(t *testing.T) {
-	test_cases := []struct {
+	testCases := []struct {
 		Id         int
 		TC_apier   sdk.APIer
 		Update_Err error
@@ -181,25 +181,25 @@ func TestResourceVdcUpdate(t *testing.T) {
 		&schemaTooler}
 	var err error
 
-	for _, test_case := range test_cases {
-		apiTooler.Api = test_case.TC_apier
+	for _, testCase := range testCases {
+		apiTooler.Api = testCase.TC_apier
 		err = resourceVdcUpdate(d, m_struct)
 		switch {
-		case err == nil || test_case.Update_Err == nil:
-			if !(err == nil && test_case.Update_Err == nil) {
+		case err == nil || testCase.Update_Err == nil:
+			if !(err == nil && testCase.Update_Err == nil) {
 				t.Errorf("\n\nTC %d : VDC update error was incorrect,"+
-					"\n\rgot: \"%s\"\n\rwant: \"%s\"", test_case.Id, err, test_case.Update_Err)
+					"\n\rgot: \"%s\"\n\rwant: \"%s\"", testCase.Id, err, testCase.Update_Err)
 			}
-		case err.Error() != test_case.Update_Err.Error():
+		case err.Error() != testCase.Update_Err.Error():
 			t.Errorf("\n\nTC %d : VDC update error was incorrect,"+
 				"\n\rgot: \"%s\"\n\rwant: \"%s\"",
-				test_case.Id, err.Error(), test_case.Update_Err.Error())
+				testCase.Id, err.Error(), testCase.Update_Err.Error())
 		}
 	}
 }
 
 func TestResourceVdcDelete(t *testing.T) {
-	test_cases := []struct {
+	testCases := []struct {
 		Id         int
 		TC_apier   sdk.APIer
 		Delete_Err error
@@ -242,19 +242,19 @@ func TestResourceVdcDelete(t *testing.T) {
 		&schemaTooler}
 	var err error
 
-	for _, test_case := range test_cases {
-		apiTooler.Api = test_case.TC_apier
+	for _, testCase := range testCases {
+		apiTooler.Api = testCase.TC_apier
 		err = resourceVdcDelete(d, m_struct)
 		switch {
-		case err == nil || test_case.Delete_Err == nil:
-			if !(err == nil && test_case.Delete_Err == nil) {
+		case err == nil || testCase.Delete_Err == nil:
+			if !(err == nil && testCase.Delete_Err == nil) {
 				t.Errorf("\n\nTC %d : VDC deletion error was incorrect,"+
-					"\n\rgot: \"%s\"\n\rwant: \"%s\"", test_case.Id, err, test_case.Delete_Err)
+					"\n\rgot: \"%s\"\n\rwant: \"%s\"", testCase.Id, err, testCase.Delete_Err)
 			}
-		case err.Error() != test_case.Delete_Err.Error():
+		case err.Error() != testCase.Delete_Err.Error():
 			t.Errorf("\n\nTC %d : VDC deletion error was incorrect,"+
 				"\n\rgot: \"%s\"\n\rwant: \"%s\"",
-				test_case.Id, err.Error(), test_case.Delete_Err.Error())
+				testCase.Id, err.Error(), testCase.Delete_Err.Error())
 		}
 	}
 }

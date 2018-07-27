@@ -61,6 +61,10 @@ func resource_vm() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
+			INSTANCE_NUMBER_FIELD: &schema.Schema{
+				Type:     schema.TypeInt,
+				Optional: true,
+			},
 			ENTERPRISE_FIELD: &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,

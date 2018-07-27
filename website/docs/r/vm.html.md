@@ -19,7 +19,8 @@ Provides a [Sewan's cloud data center](https://www.sewan.fr/cloud-data-center/) 
 resource "sewan_clouddc_vm" "template-created-vm" {
   depends_on = ["sewan_clouddc_vdc.vdc-example"]
   count = 10
-  name = "template-created-vm${count.index}"
+  name = "template-created-vm"
+  instance_number = "${count.index}"
   nics=[
     {
       vlan="vlan 1"
@@ -77,10 +78,18 @@ resource "sewan_clouddc_vm" VM_RESOURCE_TYPE {
 
 To consult the list of available templates for your company or create new ones, access your company account on [cloud-datacenter.fr](https://cloud-datacenter.fr).
 
-NB : After the creation from a template, an override file (< template name >\_override.tf.json, [terraform configuration override official doc](https://www.terraform.io/docs/configuration/override.html)) is created to enable the modification of all template provided parameters. This file is currently generated in the current terraform initialized terraform folder, it does not yet support the remote state feature. An example of override file is available on the annexe of this page.
+**NB 1** : After the creation from a template, an override file (< template name >\_override.tf.json, [terraform configuration override official doc](https://www.terraform.io/docs/configuration/override.html)) is created to enable the modification of all template provided parameters. This file is currently generated in the current terraform initialized terraform folder, it does not yet support the remote state feature. An example of override file is available on the annexe of this page.
 
+**NB 2** : The template created vm resource override file must deleted manually when all related vm are deleted with "terraform destroy" cmd.
 
 * `name` - *(Required, string)* vm name
+
+**Warning :** Do not put dynamic name or the override configuration file will be inaccurate. As terraform does not provide access to meta resource data such as resource count index, it is not possible to pass "${count.index}" or other dynamic variable in resource name field to prevent wrong resource name field value in override file. So this information must be passed through a specific field : `instance_number`
+
+* `instance_number` - *(Required, string)* only one accepted value : "${count.index}"
+
+**Warning :** No autocheck available to validate the field value.
+
 * `template` - *(Required, string)* optional field required for creating a vm from a template
 * Arguments handled by the template
   * `os` - Can not be set as it is template provided
@@ -142,6 +151,7 @@ In order to make resources post-creation modification, this file must be modifie
   {"sewan_clouddc_vm":
     {"vm":
       {
+        "name":"vm-${count.index}",
         "os":"CentOS",
         "ram":1,
         "cpu":1,

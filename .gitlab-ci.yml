@@ -5,7 +5,7 @@ image: golang
 
 stages:
 #  - gofmt
-  - test
+#  - test
   - sonar
 
 #gofmt:
@@ -13,49 +13,49 @@ stages:
 #  script:
 #    - gofmt -w $(find . -name '*.go')
 
-tests:
-  stage: test
-  before_script:
-    - pwd
-    - cd ../
-    - mkdir /go/src/gitlab.com
-    - ls -al /go/src/gitlab.com
-    - git clone https://github.com/SewanDevs/sewan_go_sdk.git \
-        /go/src/gitlab.com/sewan_go_sdk
-    - ls -al /go/src/gitlab.com
-    - ls -al /go/src/gitlab.com/sewan_go_sdk
-    - go get github.com/hashicorp/terraform/helper/schema
-    - go get github.com/hashicorp/terraform/terraform
-    - go get ./terraform-provider-sewan/sewan
-    - ls -al /go/src/gitlab.com/
-    - ls -al /go/src/github.com/
-    - ls -al /go/src/github.com/hashicorp
+#tests:
+#  stage: test
+#  before_script:
+#    - pwd
+#    - cd ../
+#    - mkdir /go/src/gitlab.com
+#    - ls -al /go/src/gitlab.com
+#    - git clone https://github.com/SewanDevs/sewan_go_sdk.git \
+#        /go/src/gitlab.com/sewan_go_sdk
+#    - ls -al /go/src/gitlab.com
+#    - ls -al /go/src/gitlab.com/sewan_go_sdk
+#    - go get github.com/hashicorp/terraform/helper/schema
+#    - go get github.com/hashicorp/terraform/terraform
+#    - go get ./terraform-provider-sewan/sewan
+#    - ls -al /go/src/gitlab.com/
+#    - ls -al /go/src/github.com/
+#    - ls -al /go/src/github.com/hashicorp
+#
+#  script:
+#    - go test -coverprofile=coverage.out
+#    - go test -json > report.json
+#    - go tool cover -html=c.out -o coverage.html
 
-  script:
-    - go test -coverprofile=coverage.out
-    - go test -json > report.json
-    - go tool cover -html=c.out -o coverage.html
+# git clone -b my-branch git@github.com:user/myproject.git
 
 sonarqube_preview:
   image: $DOCKER_REGISTRY/sidevops/docker/utils/sonar-ci:latest
   stage: sonar
   script:
-    - sh /opt/sonar-runner/bin/sonar-runner \
-      -Dsonar.host.url=$SONAR_URL \
-      -Dsonar.gitlab.user_token=$SONAR_GITLAB_USERTOKEN \
-      -Dsonar.login=$SONAR_LOGIN \
-      -Dsonar.gitlab.project_id=$CI_PROJECT_PATH \
-      -Dsonar.analysis.mode=preview \
-      -Dsonar.issuesReport.console.enable=true \
-      -Dsonar.gitlab.commit_sha=$CI_BUILD_REF \
+    - sh /opt/sonar-runner/bin/sonar-runner
+      -Dsonar.host.url=$SONAR_URL
+      -Dsonar.gitlab.user_token=$SONAR_GITLAB_USERTOKEN
+      -Dsonar.login=$SONAR_LOGIN
+      -Dsonar.gitlab.project_id=$CI_PROJECT_PATH
+      -Dsonar.analysis.mode=preview
+      -Dsonar.issuesReport.console.enable=true
+      -Dsonar.gitlab.commit_sha=$CI_BUILD_REF
       -Dsonar.gitlab.ref_name=$CI_BUILD_REF_NAME
 
 sonarqube:
   image: $DOCKER_REGISTRY/sidevops/docker/utils/sonar-ci:latest
   stage: sonar
   script:
-    - sh /opt/sonar-runner/bin/sonar-runner \
-      -Dsonar.host.url=$SONAR_URL \
-      -Dsonar.login=$SONAR_LOGIN \
-      -Dsonar.projectKey=terraform-provider-sewan-key
-      -Dsonar.sources=.
+    - sh /opt/sonar-runner/bin/sonar-runner
+      -Dsonar.host.url=$SONAR_URL
+      -Dsonar.login=$SONAR_LOGIN

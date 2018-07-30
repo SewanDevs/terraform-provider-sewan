@@ -58,7 +58,8 @@ resource "sewan_clouddc_vdc" "vdc-example" {
 resource "sewan_clouddc_vm" "template-created-vm" {
   depends_on = ["sewan_clouddc_vdc.vdc-example"]
   count = 10
-  name = "template-created-vm${count.index}"
+  name = "template-created-vm"
+  instance_number = "${count.index}"
   nics=[
     {
       vlan="vlan name"
@@ -81,7 +82,7 @@ resource "sewan_clouddc_vm" "vm" {
   ram = 1 //GiB
   cpu = 1
   os = "CentOS"
-  name = "vm${count.index}"
+  name = "vm-${count.index}"
   disks=[
     {
       name="disk 1"

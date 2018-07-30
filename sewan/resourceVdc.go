@@ -89,6 +89,8 @@ func resourceVdcRead(d *schema.ResourceData, m interface{}) error {
 	var resource_exists bool
 	var apiCreationResponse map[string]interface{}
 	sewan := m.(*Client).sewan
+	sewanSchemaTooler := m.(*Client).sewanSchemaTooler
+	sewanSchemaTools := sewanSchemaTooler.SchemaTools
 	readError, apiCreationResponse, resource_exists = m.(*Client).sewanApiTooler.Api.ReadResource(d,
 		m.(*Client).sewanClientTooler,
 		m.(*Client).sewanTemplatesTooler,
@@ -97,13 +99,15 @@ func resourceVdcRead(d *schema.ResourceData, m interface{}) error {
 		sewan)
 
 	if resource_exists == false {
-		m.(*Client).sewanSchemaTooler.SchemaTools.DeleteTerraformResource(d)
+		sewanSchemaTools.DeleteTerraformResource(d)
 	} else {
 		if readError == nil {
-			readError = m.(*Client).sewanSchemaTooler.SchemaTools.UpdateLocalResourceState(apiCreationResponse,
-				d,
-				m.(*Client).sewanSchemaTooler)
+			readError = sewanSchemaTools.UpdateLocalResourceState(apiCreationResponse,
+				d, sewanSchemaTooler)
 		}
+	}
+	if readError == nil {
+		readError = sewanSchemaTools.UpdateVdcResourcesNames(d)
 	}
 	return readError
 }

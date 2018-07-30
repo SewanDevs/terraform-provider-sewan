@@ -4,7 +4,7 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
-func resource_vm_disk() *schema.Resource {
+func resourceVm_disk() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			NAME_FIELD: &schema.Schema{
@@ -31,7 +31,7 @@ func resource_vm_disk() *schema.Resource {
 	}
 }
 
-func resource_vm_nic() *schema.Resource {
+func resourceVm_nic() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			VLAN_NAME_FIELD: &schema.Schema{
@@ -50,12 +50,12 @@ func resource_vm_nic() *schema.Resource {
 	}
 }
 
-func resource_vm() *schema.Resource {
+func resourceVm() *schema.Resource {
 	return &schema.Resource{
-		Create: resource_vm_create,
-		Read:   resource_vm_read,
-		Update: resource_vm_update,
-		Delete: resource_vm_delete,
+		Create: resourceVm_create,
+		Read:   resourceVm_read,
+		Update: resourceVm_update,
+		Delete: resourceVm_delete,
 		Schema: map[string]*schema.Schema{
 			NAME_FIELD: &schema.Schema{
 				Type:     schema.TypeString,
@@ -92,12 +92,12 @@ func resource_vm() *schema.Resource {
 			DISKS_FIELD: &schema.Schema{
 				Type:     schema.TypeList,
 				Optional: true,
-				Elem:     resource_vm_disk(),
+				Elem:     resourceVm_disk(),
 			},
 			NICS_FIELD: &schema.Schema{
 				Type:     schema.TypeList,
 				Optional: true,
-				Elem:     resource_vm_nic(),
+				Elem:     resourceVm_nic(),
 			},
 			VDC_FIELD: &schema.Schema{
 				Type:     schema.TypeString,
@@ -151,7 +151,7 @@ func resource_vm() *schema.Resource {
 	}
 }
 
-func resource_vm_create(d *schema.ResourceData, m interface{}) error {
+func resourceVm_create(d *schema.ResourceData, m interface{}) error {
 	var creationError error
 	creationError = nil
 	var apiCreationResponse map[string]interface{}
@@ -172,7 +172,7 @@ func resource_vm_create(d *schema.ResourceData, m interface{}) error {
 	return creationError
 }
 
-func resource_vm_read(d *schema.ResourceData, m interface{}) error {
+func resourceVm_read(d *schema.ResourceData, m interface{}) error {
 	var readError error
 	readError = nil
 	var resource_exists bool
@@ -199,7 +199,7 @@ func resource_vm_read(d *schema.ResourceData, m interface{}) error {
 	return readError
 }
 
-func resource_vm_update(d *schema.ResourceData, m interface{}) error {
+func resourceVm_update(d *schema.ResourceData, m interface{}) error {
 	var updateError error
 	updateError = nil
 	sewan := m.(*Client).sewan
@@ -212,7 +212,7 @@ func resource_vm_update(d *schema.ResourceData, m interface{}) error {
 	return updateError
 }
 
-func resource_vm_delete(d *schema.ResourceData, m interface{}) error {
+func resourceVm_delete(d *schema.ResourceData, m interface{}) error {
 	var deleteError error
 	deleteError = nil
 	sewan := m.(*Client).sewan

@@ -23,7 +23,7 @@ func TestResourceVmCreate(t *testing.T) {
 			errors.New(VM_CREATION_FAILURE),
 		},
 	}
-	vm_res := resource_vm()
+	vm_res := resourceVm()
 	d := vm_res.TestResourceData()
 	config := Config{
 		Api_token: "4242",
@@ -52,7 +52,7 @@ func TestResourceVmCreate(t *testing.T) {
 
 	for _, testCase := range testCases {
 		apiTooler.Api = testCase.TC_apier
-		err = resource_vm_create(d, m_struct)
+		err = resourceVm_create(d, m_struct)
 		switch {
 		case err == nil || testCase.Creation_Err == nil:
 			if !(err == nil && testCase.Creation_Err == nil) {
@@ -93,7 +93,7 @@ func TestResourceVmRead(t *testing.T) {
 			false,
 		},
 	}
-	vm_res := resource_vm()
+	vm_res := resourceVm()
 	d := vm_res.TestResourceData()
 	config := Config{
 		Api_token: "4242",
@@ -122,7 +122,7 @@ func TestResourceVmRead(t *testing.T) {
 
 	for _, testCase := range testCases {
 		apiTooler.Api = testCase.TC_apier
-		err = resource_vm_read(d, m_struct)
+		err = resourceVm_read(d, m_struct)
 		switch {
 		case err == nil || testCase.Read_Err == nil:
 			if !(err == nil && testCase.Read_Err == nil) {
@@ -154,7 +154,7 @@ func TestResourceVmUpdate(t *testing.T) {
 			errors.New(VM_UPDATE_FAILURE),
 		},
 	}
-	vm_res := resource_vm()
+	vm_res := resourceVm()
 	d := vm_res.TestResourceData()
 	config := Config{
 		Api_token: "4242",
@@ -183,7 +183,7 @@ func TestResourceVmUpdate(t *testing.T) {
 
 	for _, testCase := range testCases {
 		apiTooler.Api = testCase.TC_apier
-		err = resource_vm_update(d, m_struct)
+		err = resourceVm_update(d, m_struct)
 		switch {
 		case err == nil || testCase.Update_Err == nil:
 			if !(err == nil && testCase.Update_Err == nil) {
@@ -215,7 +215,7 @@ func TestResourceVmDelete(t *testing.T) {
 			errors.New(VM_DELETION_FAILURE),
 		},
 	}
-	vm_res := resource_vm()
+	vm_res := resourceVm()
 	d := vm_res.TestResourceData()
 	config := Config{
 		Api_token: "4242",
@@ -244,7 +244,7 @@ func TestResourceVmDelete(t *testing.T) {
 
 	for _, testCase := range testCases {
 		apiTooler.Api = testCase.TC_apier
-		err = resource_vm_delete(d, m_struct)
+		err = resourceVm_delete(d, m_struct)
 		switch {
 		case err == nil || testCase.Delete_Err == nil:
 			if !(err == nil && testCase.Delete_Err == nil) {

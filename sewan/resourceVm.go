@@ -4,7 +4,7 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
-func resourceVm_disk() *schema.Resource {
+func resourceVmDisk() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			NAME_FIELD: &schema.Schema{
@@ -31,7 +31,7 @@ func resourceVm_disk() *schema.Resource {
 	}
 }
 
-func resourceVm_nic() *schema.Resource {
+func resourceVmNic() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			VLAN_NAME_FIELD: &schema.Schema{
@@ -52,10 +52,10 @@ func resourceVm_nic() *schema.Resource {
 
 func resourceVm() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceVm_create,
-		Read:   resourceVm_read,
-		Update: resourceVm_update,
-		Delete: resourceVm_delete,
+		Create: resourceVmCreate,
+		Read:   resourceVmRead,
+		Update: resourceVmUpdate,
+		Delete: resourceVmDelete,
 		Schema: map[string]*schema.Schema{
 			NAME_FIELD: &schema.Schema{
 				Type:     schema.TypeString,
@@ -92,12 +92,12 @@ func resourceVm() *schema.Resource {
 			DISKS_FIELD: &schema.Schema{
 				Type:     schema.TypeList,
 				Optional: true,
-				Elem:     resourceVm_disk(),
+				Elem:     resourceVmDisk(),
 			},
 			NICS_FIELD: &schema.Schema{
 				Type:     schema.TypeList,
 				Optional: true,
-				Elem:     resourceVm_nic(),
+				Elem:     resourceVmNic(),
 			},
 			VDC_FIELD: &schema.Schema{
 				Type:     schema.TypeString,
@@ -151,7 +151,7 @@ func resourceVm() *schema.Resource {
 	}
 }
 
-func resourceVm_create(d *schema.ResourceData, m interface{}) error {
+func resourceVmCreate(d *schema.ResourceData, m interface{}) error {
 	var creationError error
 	creationError = nil
 	var apiCreationResponse map[string]interface{}
@@ -172,7 +172,7 @@ func resourceVm_create(d *schema.ResourceData, m interface{}) error {
 	return creationError
 }
 
-func resourceVm_read(d *schema.ResourceData, m interface{}) error {
+func resourceVmRead(d *schema.ResourceData, m interface{}) error {
 	var readError error
 	readError = nil
 	var resource_exists bool
@@ -187,7 +187,7 @@ func resourceVm_read(d *schema.ResourceData, m interface{}) error {
 		VM_RESOURCE_TYPE,
 		sewan)
 
-	if resource_exists == false {
+	if !resource_exists {
 		m.(*Client).sewanSchemaTooler.SchemaTools.DeleteTerraformResource(d)
 	} else {
 		if readError == nil {
@@ -199,7 +199,7 @@ func resourceVm_read(d *schema.ResourceData, m interface{}) error {
 	return readError
 }
 
-func resourceVm_update(d *schema.ResourceData, m interface{}) error {
+func resourceVmUpdate(d *schema.ResourceData, m interface{}) error {
 	var updateError error
 	updateError = nil
 	sewan := m.(*Client).sewan
@@ -212,7 +212,7 @@ func resourceVm_update(d *schema.ResourceData, m interface{}) error {
 	return updateError
 }
 
-func resourceVm_delete(d *schema.ResourceData, m interface{}) error {
+func resourceVmDelete(d *schema.ResourceData, m interface{}) error {
 	var deleteError error
 	deleteError = nil
 	sewan := m.(*Client).sewan

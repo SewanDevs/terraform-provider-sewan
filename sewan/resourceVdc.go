@@ -98,7 +98,7 @@ func resourceVdcRead(d *schema.ResourceData, m interface{}) error {
 		VDC_RESOURCE_TYPE,
 		sewan)
 
-	if resource_exists == false {
+	if !resource_exists {
 		sewanSchemaTools.DeleteTerraformResource(d)
 	} else {
 		if readError == nil {

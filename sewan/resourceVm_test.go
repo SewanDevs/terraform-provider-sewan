@@ -52,7 +52,7 @@ func TestResourceVmCreate(t *testing.T) {
 
 	for _, testCase := range testCases {
 		apiTooler.Api = testCase.TC_apier
-		err = resourceVm_create(d, m_struct)
+		err = resourceVmCreate(d, m_struct)
 		switch {
 		case err == nil || testCase.Creation_Err == nil:
 			if !(err == nil && testCase.Creation_Err == nil) {
@@ -122,7 +122,7 @@ func TestResourceVmRead(t *testing.T) {
 
 	for _, testCase := range testCases {
 		apiTooler.Api = testCase.TC_apier
-		err = resourceVm_read(d, m_struct)
+		err = resourceVmRead(d, m_struct)
 		switch {
 		case err == nil || testCase.Read_Err == nil:
 			if !(err == nil && testCase.Read_Err == nil) {
@@ -183,7 +183,7 @@ func TestResourceVmUpdate(t *testing.T) {
 
 	for _, testCase := range testCases {
 		apiTooler.Api = testCase.TC_apier
-		err = resourceVm_update(d, m_struct)
+		err = resourceVmUpdate(d, m_struct)
 		switch {
 		case err == nil || testCase.Update_Err == nil:
 			if !(err == nil && testCase.Update_Err == nil) {
@@ -244,7 +244,7 @@ func TestResourceVmDelete(t *testing.T) {
 
 	for _, testCase := range testCases {
 		apiTooler.Api = testCase.TC_apier
-		err = resourceVm_delete(d, m_struct)
+		err = resourceVmDelete(d, m_struct)
 		switch {
 		case err == nil || testCase.Delete_Err == nil:
 			if !(err == nil && testCase.Delete_Err == nil) {

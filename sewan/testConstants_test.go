@@ -1,6 +1,6 @@
 package sewan
 
-import(
+import (
 	sdk "gitlab.com/sewan_go_sdk"
 )
 
@@ -73,16 +73,16 @@ var (
 )
 
 const (
-	VDC_CREATION_FAILURE = "VDC creation failed."
-	VDC_READ_FAILURE     = "VDC read failed."
-	VDC_UPDATE_FAILURE   = "VDC update failed."
-	VDC_DELETION_FAILURE = "VDC deletion failed."
-	VM_CREATION_FAILURE  = "VM creation failed."
-	VM_READ_FAILURE      = "VM read failed."
-	VM_UPDATE_FAILURE    = "VM update failed."
-	VM_DELETION_FAILURE  = "VM deletion failed."
-	UNIT_TEST_API_URL    = "https://unitTestApiUrl.org"
-	ERROR_TEST_RESULT_DIFFS = sdk.ERROR_TEST_RESULT_DIFFS
+	VDC_CREATION_FAILURE                 = "VDC creation failed."
+	VDC_READ_FAILURE                     = "VDC read failed."
+	VDC_UPDATE_FAILURE                   = "VDC update failed."
+	VDC_DELETION_FAILURE                 = "VDC deletion failed."
+	VM_CREATION_FAILURE                  = "VM creation failed."
+	VM_READ_FAILURE                      = "VM read failed."
+	VM_UPDATE_FAILURE                    = "VM update failed."
+	VM_DELETION_FAILURE                  = "VM deletion failed."
+	UNIT_TEST_API_URL                    = "https://unitTestApiUrl.org"
+	ERROR_TEST_RESULT_DIFFS              = sdk.ERROR_TEST_RESULT_DIFFS
 	ERROR_TC_ID_AND_WRONG_VDC_UPDATE_ERR = "\n\nTC %d : VDC update error was incorrect,"
-	ERROR_TC_ID_AND_WRONG_VM_UPDATE_ERR = "\n\nTC %d : VM update error was incorrect,"
+	ERROR_TC_ID_AND_WRONG_VM_UPDATE_ERR  = "\n\nTC %d : VM update error was incorrect,"
 )

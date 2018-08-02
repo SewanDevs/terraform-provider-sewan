@@ -2,15 +2,15 @@ package sewan
 
 import (
 	"errors"
-	sdk "gitlab.com/sewan_go_sdk"
 	"github.com/hashicorp/terraform/helper/schema"
+	sdk "gitlab.com/sewan_go_sdk"
 	"testing"
 )
 
-func vdcCRUDTestInit() (*Client,*schema.ResourceData) {
+func vdcCRUDTestInit() (*Client, *schema.ResourceData) {
 	vdcResource := resourceVdc()
 	d := vdcResource.TestResourceData()
-	return ResourceCRUDTestInit(),d
+	return ResourceCRUDTestInit(), d
 }
 
 func TestResourceVdcCreate(t *testing.T) {
@@ -31,11 +31,11 @@ func TestResourceVdcCreate(t *testing.T) {
 		},
 	}
 	var (
-		err error
+		err        error
 		metaStruct *Client
-		d *schema.ResourceData
+		d          *schema.ResourceData
 	)
-	metaStruct,d = vdcCRUDTestInit()
+	metaStruct, d = vdcCRUDTestInit()
 	for _, testCase := range testCases {
 		metaStruct.sewanApiTooler.Api = testCase.TC_apier
 		err = resourceVdcCreate(d, metaStruct)
@@ -80,11 +80,11 @@ func TestResourceVdcRead(t *testing.T) {
 		},
 	}
 	var (
-		err error
+		err        error
 		metaStruct *Client
-		d *schema.ResourceData
+		d          *schema.ResourceData
 	)
-	metaStruct,d = vdcCRUDTestInit()
+	metaStruct, d = vdcCRUDTestInit()
 	for _, testCase := range testCases {
 		metaStruct.sewanApiTooler.Api = testCase.TC_apier
 		err = resourceVdcRead(d, metaStruct)
@@ -120,11 +120,11 @@ func TestResourceVdcUpdate(t *testing.T) {
 		},
 	}
 	var (
-		err error
+		err        error
 		metaStruct *Client
-		d *schema.ResourceData
+		d          *schema.ResourceData
 	)
-	metaStruct,d = vdcCRUDTestInit()
+	metaStruct, d = vdcCRUDTestInit()
 	for _, testCase := range testCases {
 		metaStruct.sewanApiTooler.Api = testCase.TC_apier
 		err = resourceVdcUpdate(d, metaStruct)
@@ -160,11 +160,11 @@ func TestResourceVdcDelete(t *testing.T) {
 		},
 	}
 	var (
-		err error
+		err        error
 		metaStruct *Client
-		d *schema.ResourceData
+		d          *schema.ResourceData
 	)
-	metaStruct,d = vdcCRUDTestInit()
+	metaStruct, d = vdcCRUDTestInit()
 	for _, testCase := range testCases {
 		metaStruct.sewanApiTooler.Api = testCase.TC_apier
 		err = resourceVdcDelete(d, metaStruct)

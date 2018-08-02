@@ -126,11 +126,11 @@ func TestResourceVdcRead(t *testing.T) {
 		switch {
 		case err == nil || testCase.Read_Err == nil:
 			if !(err == nil && testCase.Read_Err == nil) {
-				t.Errorf("\n\nTC %d : VDC update error was incorrect,"+
+				t.Errorf(ERROR_TC_ID_AND_WRONG_VDC_UPDATE_ERR+
 					ERROR_TEST_RESULT_DIFFS, testCase.Id, err, testCase.Read_Err)
 			}
 		case err.Error() != testCase.Read_Err.Error():
-			t.Errorf("\n\nTC %d : VDC update error was incorrect,"+
+			t.Errorf(ERROR_TC_ID_AND_WRONG_VDC_UPDATE_ERR+
 				ERROR_TEST_RESULT_DIFFS,
 				testCase.Id, err.Error(), testCase.Read_Err.Error())
 		}
@@ -187,11 +187,11 @@ func TestResourceVdcUpdate(t *testing.T) {
 		switch {
 		case err == nil || testCase.Update_Err == nil:
 			if !(err == nil && testCase.Update_Err == nil) {
-				t.Errorf("\n\nTC %d : VDC update error was incorrect,"+
+				t.Errorf(ERROR_TC_ID_AND_WRONG_VDC_UPDATE_ERR+
 					ERROR_TEST_RESULT_DIFFS, testCase.Id, err, testCase.Update_Err)
 			}
 		case err.Error() != testCase.Update_Err.Error():
-			t.Errorf("\n\nTC %d : VDC update error was incorrect,"+
+			t.Errorf(ERROR_TC_ID_AND_WRONG_VDC_UPDATE_ERR+
 				ERROR_TEST_RESULT_DIFFS,
 				testCase.Id, err.Error(), testCase.Update_Err.Error())
 		}

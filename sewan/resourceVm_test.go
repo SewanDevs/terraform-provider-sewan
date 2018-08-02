@@ -3,8 +3,15 @@ package sewan
 import (
 	"errors"
 	sdk "gitlab.com/sewan_go_sdk"
+	"github.com/hashicorp/terraform/helper/schema"
 	"testing"
 )
+
+func vmCRUDTestInit() (*Client,*schema.ResourceData) {
+	vmResource := resourceVm()
+	d := vmResource.TestResourceData()
+	return ResourceCRUDTestInit(),d
+}
 
 func TestResourceVmCreate(t *testing.T) {
 	testCases := []struct {
@@ -23,36 +30,15 @@ func TestResourceVmCreate(t *testing.T) {
 			errors.New(VM_CREATION_FAILURE),
 		},
 	}
-	vm_res := resourceVm()
-	d := vm_res.TestResourceData()
-	config := Config{
-		Api_token: "4242",
-		Api_url:   UNIT_TEST_API_URL,
-	}
-	apiTooler := sdk.APITooler{}
-	clientTooler := sdk.ClientTooler{
-		Client: sdk.HttpClienter{},
-	}
-	templatesTooler := sdk.TemplatesTooler{
-		TemplatesTools: sdk.Template_Templater{},
-	}
-	schemaTooler := sdk.SchemaTooler{
-		SchemaTools: sdk.Schema_Schemaer{},
-	}
-	api := apiTooler.New(
-		config.Api_token,
-		config.Api_url,
+	var (
+		err error
+		metaStruct *Client
+		d *schema.ResourceData
 	)
-	m_struct := &Client{api,
-		&apiTooler,
-		&clientTooler,
-		&templatesTooler,
-		&schemaTooler}
-	var err error
-
+	metaStruct,d = vmCRUDTestInit()
 	for _, testCase := range testCases {
-		apiTooler.Api = testCase.TC_apier
-		err = resourceVmCreate(d, m_struct)
+		metaStruct.sewanApiTooler.Api = testCase.TC_apier
+		err = resourceVmCreate(d, metaStruct)
 		switch {
 		case err == nil || testCase.Creation_Err == nil:
 			if !(err == nil && testCase.Creation_Err == nil) {
@@ -93,36 +79,15 @@ func TestResourceVmRead(t *testing.T) {
 			false,
 		},
 	}
-	vm_res := resourceVm()
-	d := vm_res.TestResourceData()
-	config := Config{
-		Api_token: "4242",
-		Api_url:   UNIT_TEST_API_URL,
-	}
-	apiTooler := sdk.APITooler{}
-	clientTooler := sdk.ClientTooler{
-		Client: sdk.HttpClienter{},
-	}
-	templatesTooler := sdk.TemplatesTooler{
-		TemplatesTools: sdk.Template_Templater{},
-	}
-	schemaTooler := sdk.SchemaTooler{
-		SchemaTools: sdk.Schema_Schemaer{},
-	}
-	api := apiTooler.New(
-		config.Api_token,
-		config.Api_url,
+	var (
+		err error
+		metaStruct *Client
+		d *schema.ResourceData
 	)
-	m_struct := &Client{api,
-		&apiTooler,
-		&clientTooler,
-		&templatesTooler,
-		&schemaTooler}
-	var err error
-
+	metaStruct,d = vmCRUDTestInit()
 	for _, testCase := range testCases {
-		apiTooler.Api = testCase.TC_apier
-		err = resourceVmRead(d, m_struct)
+		metaStruct.sewanApiTooler.Api = testCase.TC_apier
+		err = resourceVmRead(d, metaStruct)
 		switch {
 		case err == nil || testCase.Read_Err == nil:
 			if !(err == nil && testCase.Read_Err == nil) {
@@ -154,36 +119,15 @@ func TestResourceVmUpdate(t *testing.T) {
 			errors.New(VM_UPDATE_FAILURE),
 		},
 	}
-	vm_res := resourceVm()
-	d := vm_res.TestResourceData()
-	config := Config{
-		Api_token: "4242",
-		Api_url:   UNIT_TEST_API_URL,
-	}
-	apiTooler := sdk.APITooler{}
-	clientTooler := sdk.ClientTooler{
-		Client: sdk.HttpClienter{},
-	}
-	templatesTooler := sdk.TemplatesTooler{
-		TemplatesTools: sdk.Template_Templater{},
-	}
-	schemaTooler := sdk.SchemaTooler{
-		SchemaTools: sdk.Schema_Schemaer{},
-	}
-	api := apiTooler.New(
-		config.Api_token,
-		config.Api_url,
+	var (
+		err error
+		metaStruct *Client
+		d *schema.ResourceData
 	)
-	m_struct := &Client{api,
-		&apiTooler,
-		&clientTooler,
-		&templatesTooler,
-		&schemaTooler}
-	var err error
-
+	metaStruct,d = vmCRUDTestInit()
 	for _, testCase := range testCases {
-		apiTooler.Api = testCase.TC_apier
-		err = resourceVmUpdate(d, m_struct)
+		metaStruct.sewanApiTooler.Api = testCase.TC_apier
+		err = resourceVmUpdate(d, metaStruct)
 		switch {
 		case err == nil || testCase.Update_Err == nil:
 			if !(err == nil && testCase.Update_Err == nil) {
@@ -215,36 +159,15 @@ func TestResourceVmDelete(t *testing.T) {
 			errors.New(VM_DELETION_FAILURE),
 		},
 	}
-	vm_res := resourceVm()
-	d := vm_res.TestResourceData()
-	config := Config{
-		Api_token: "4242",
-		Api_url:   UNIT_TEST_API_URL,
-	}
-	apiTooler := sdk.APITooler{}
-	clientTooler := sdk.ClientTooler{
-		Client: sdk.HttpClienter{},
-	}
-	templatesTooler := sdk.TemplatesTooler{
-		TemplatesTools: sdk.Template_Templater{},
-	}
-	schemaTooler := sdk.SchemaTooler{
-		SchemaTools: sdk.Schema_Schemaer{},
-	}
-	api := apiTooler.New(
-		config.Api_token,
-		config.Api_url,
+	var (
+		err error
+		metaStruct *Client
+		d *schema.ResourceData
 	)
-	m_struct := &Client{api,
-		&apiTooler,
-		&clientTooler,
-		&templatesTooler,
-		&schemaTooler}
-	var err error
-
+	metaStruct,d = vmCRUDTestInit()
 	for _, testCase := range testCases {
-		apiTooler.Api = testCase.TC_apier
-		err = resourceVmDelete(d, m_struct)
+		metaStruct.sewanApiTooler.Api = testCase.TC_apier
+		err = resourceVmDelete(d, metaStruct)
 		switch {
 		case err == nil || testCase.Delete_Err == nil:
 			if !(err == nil && testCase.Delete_Err == nil) {

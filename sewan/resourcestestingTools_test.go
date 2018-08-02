@@ -4,7 +4,7 @@ import (
 	sdk "gitlab.com/sewan_go_sdk"
 )
 
-func ResourceCRUDTestInit() (*Client) {
+func ResourceCRUDTestInit() *Client {
 	config := Config{
 		Api_token: "4242",
 		Api_url:   UNIT_TEST_API_URL,

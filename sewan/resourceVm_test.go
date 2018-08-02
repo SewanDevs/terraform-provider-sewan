@@ -2,15 +2,15 @@ package sewan
 
 import (
 	"errors"
-	sdk "gitlab.com/sewan_go_sdk"
 	"github.com/hashicorp/terraform/helper/schema"
+	sdk "gitlab.com/sewan_go_sdk"
 	"testing"
 )
 
-func vmCRUDTestInit() (*Client,*schema.ResourceData) {
+func vmCRUDTestInit() (*Client, *schema.ResourceData) {
 	vmResource := resourceVm()
 	d := vmResource.TestResourceData()
-	return ResourceCRUDTestInit(),d
+	return ResourceCRUDTestInit(), d
 }
 
 func TestResourceVmCreate(t *testing.T) {
@@ -31,11 +31,11 @@ func TestResourceVmCreate(t *testing.T) {
 		},
 	}
 	var (
-		err error
+		err        error
 		metaStruct *Client
-		d *schema.ResourceData
+		d          *schema.ResourceData
 	)
-	metaStruct,d = vmCRUDTestInit()
+	metaStruct, d = vmCRUDTestInit()
 	for _, testCase := range testCases {
 		metaStruct.sewanApiTooler.Api = testCase.TC_apier
 		err = resourceVmCreate(d, metaStruct)
@@ -80,11 +80,11 @@ func TestResourceVmRead(t *testing.T) {
 		},
 	}
 	var (
-		err error
+		err        error
 		metaStruct *Client
-		d *schema.ResourceData
+		d          *schema.ResourceData
 	)
-	metaStruct,d = vmCRUDTestInit()
+	metaStruct, d = vmCRUDTestInit()
 	for _, testCase := range testCases {
 		metaStruct.sewanApiTooler.Api = testCase.TC_apier
 		err = resourceVmRead(d, metaStruct)
@@ -120,11 +120,11 @@ func TestResourceVmUpdate(t *testing.T) {
 		},
 	}
 	var (
-		err error
+		err        error
 		metaStruct *Client
-		d *schema.ResourceData
+		d          *schema.ResourceData
 	)
-	metaStruct,d = vmCRUDTestInit()
+	metaStruct, d = vmCRUDTestInit()
 	for _, testCase := range testCases {
 		metaStruct.sewanApiTooler.Api = testCase.TC_apier
 		err = resourceVmUpdate(d, metaStruct)
@@ -160,11 +160,11 @@ func TestResourceVmDelete(t *testing.T) {
 		},
 	}
 	var (
-		err error
+		err        error
 		metaStruct *Client
-		d *schema.ResourceData
+		d          *schema.ResourceData
 	)
-	metaStruct,d = vmCRUDTestInit()
+	metaStruct, d = vmCRUDTestInit()
 	for _, testCase := range testCases {
 		metaStruct.sewanApiTooler.Api = testCase.TC_apier
 		err = resourceVmDelete(d, metaStruct)

@@ -70,7 +70,6 @@ func (apier VDC_successfull_CRUD_operations_AirDrumAPIer) ValidateStatus(api *sd
 func (apier VDC_successfull_CRUD_operations_AirDrumAPIer) ResourceInstanceCreate(d *schema.ResourceData,
 	clientTooler *sdk.ClientTooler,
 	templatesTooler *sdk.TemplatesTooler,
-	schemaTools *sdk.SchemaTooler,
 	resourceType string,
 	api *sdk.API) (error,
 	interface{}) {
@@ -138,7 +137,6 @@ func (apier VDC_failure_CRUD_operations_AirDrumAPIer) ValidateStatus(api *sdk.AP
 func (apier VDC_failure_CRUD_operations_AirDrumAPIer) ResourceInstanceCreate(d *schema.ResourceData,
 	clientTooler *sdk.ClientTooler,
 	templatesTooler *sdk.TemplatesTooler,
-	schemaTools *sdk.SchemaTooler,
 	resourceType string,
 	api *sdk.API) (error,
 	interface{}) {
@@ -206,7 +204,6 @@ func (apier VDC_readfailure_CRUD_operations_AirDrumAPIer) ValidateStatus(api *sd
 func (apier VDC_readfailure_CRUD_operations_AirDrumAPIer) ResourceInstanceCreate(d *schema.ResourceData,
 	clientTooler *sdk.ClientTooler,
 	templatesTooler *sdk.TemplatesTooler,
-	schemaTools *sdk.SchemaTooler,
 	resourceType string,
 	api *sdk.API) (error,
 	interface{}) {

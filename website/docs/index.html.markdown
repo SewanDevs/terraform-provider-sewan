@@ -59,7 +59,7 @@ resource "sewan_clouddc_vm" "template-created-vm" {
   depends_on = ["sewan_clouddc_vdc.vdc-example"]
   count = 10
   name = "template-created-vm"
-  instance_number = "${count.index}"
+  instance_number = "${count.index + 1}"
   nics=[
     {
       vlan="vlan name"

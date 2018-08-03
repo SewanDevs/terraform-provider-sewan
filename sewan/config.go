@@ -6,41 +6,41 @@ import (
 )
 
 const (
-	VM_RESOURCE_TYPE      = sdk.VM_RESOURCE_TYPE
-	VDC_RESOURCE_TYPE     = sdk.VDC_FIELD
-	NAME_FIELD            = sdk.NAME_FIELD
-	ENTERPRISE_FIELD      = sdk.ENTERPRISE_FIELD
-	DATACENTER_FIELD      = sdk.DATACENTER_FIELD
-	VDC_RESOURCE_FIELD    = sdk.VDC_RESOURCE_FIELD
-	RESOURCE_FIELD        = sdk.RESOURCE_FIELD
-	TOTAL_FIELD           = sdk.TOTAL_FIELD
-	USED_FIELD            = sdk.USED_FIELD
-	SLUG_FIELD            = sdk.SLUG_FIELD
-	STATE_FIELD           = sdk.STATE_FIELD
-	OS_FIELD              = sdk.OS_FIELD
-	RAM_FIELD             = sdk.RAM_FIELD
-	CPU_FIELD             = sdk.CPU_FIELD
-	DISKS_FIELD           = sdk.DISKS_FIELD
-	V_DISK_FIELD          = sdk.V_DISK_FIELD
-	SIZE_FIELD            = sdk.SIZE_FIELD
-	STORAGE_CLASS_FIELD   = sdk.STORAGE_CLASS_FIELD
-	NICS_FIELD            = sdk.NICS_FIELD
-	VLAN_NAME_FIELD       = sdk.VLAN_NAME_FIELD
-	MAC_ADRESS_FIELD      = sdk.MAC_ADRESS_FIELD
-	CONNECTED_FIELD       = sdk.CONNECTED_FIELD
-	VDC_FIELD             = sdk.VDC_FIELD
-	BOOT_FIELD            = sdk.BOOT_FIELD
-	TOKEN_FIELD           = sdk.TOKEN_FIELD
-	BACKUP_FIELD          = sdk.BACKUP_FIELD
-	DISK_IMAGE_FIELD      = sdk.DISK_IMAGE_FIELD
-	PLATFORM_NAME_FIELD   = sdk.PLATFORM_NAME_FIELD
-	BACKUP_SIZE_FIELD     = sdk.BACKUP_SIZE_FIELD
-	COMMENT_FIELD         = sdk.COMMENT_FIELD
-	TEMPLATE_FIELD        = sdk.TEMPLATE_FIELD
-	ID_FIELD              = sdk.ID_FIELD
-	DYNAMIC_FIELD         = sdk.DYNAMIC_FIELD
-	OUTSOURCING_FIELD     = sdk.OUTSOURCING_FIELD
-	INSTANCE_NUMBER_FIELD = sdk.INSTANCE_NUMBER_FIELD
+	vdcResourceField    = sdk.VdcResourceField
+	vdcField            = sdk.VdcField
+	nameField           = sdk.NameField
+	enterpriseField     = sdk.EnterpriseField
+	datacenterField     = sdk.DatacenterField
+	resourceField       = sdk.ResourceField
+	totalField          = sdk.TotalField
+	usedField           = sdk.UsedField
+	slugField           = sdk.SlugField
+	stateField          = sdk.StateField
+	osField             = sdk.OsField
+	ramField            = sdk.RamField
+	cpuField            = sdk.CpuField
+	disksField          = sdk.DisksField
+	vDiskField          = sdk.VDiskField
+	sizeField           = sdk.SizeField
+	storageClassField   = sdk.StorageClassField
+	nicsField           = sdk.NicsField
+	vlanNameField       = sdk.VlanNameField
+	macAdressField      = sdk.MacAdressField
+	connectedField      = sdk.ConnectedField
+	bootField           = sdk.BootField
+	tokenField          = sdk.TokenField
+	backupField         = sdk.BackupField
+	diskImageField      = sdk.DiskImageField
+	platformNameField   = sdk.PlatformNameField
+	backupSizeField     = sdk.BackupSizeField
+	commentField        = sdk.CommentField
+	templateField       = sdk.TemplateField
+	idField             = sdk.IdField
+	dynamicField        = sdk.DynamicField
+	outsourcingField    = sdk.OutsourcingField
+	instanceNumberField = sdk.InstanceNumberField
+	vmResourceType      = sdk.VmResourceType
+	vdcResourceType     = sdk.VdcResourceType
 )
 
 type Config struct {
@@ -59,12 +59,13 @@ type Client struct {
 	sewanApiTooler       *sdk.APITooler
 	sewanClientTooler    *sdk.ClientTooler
 	sewanTemplatesTooler *sdk.TemplatesTooler
+	sewanResourceTooler  *sdk.ResourceTooler
 	sewanSchemaTooler    *sdk.SchemaTooler
 }
 
 func (c *Config) Client() (*Client, error) {
 	apiTooler := sdk.APITooler{
-		Api: sdk.AirDrumResources_Apier{},
+		Api: sdk.AirDrumResourcesApier{},
 	}
 	clientTooler := sdk.ClientTooler{
 		Client: sdk.HttpClienter{},
@@ -73,18 +74,21 @@ func (c *Config) Client() (*Client, error) {
 		TemplatesTools: sdk.Template_Templater{},
 	}
 	schemaTooler := sdk.SchemaTooler{
-		SchemaTools: sdk.Schema_Schemaer{},
+		SchemaTools: sdk.SchemaSchemaer{},
+	}
+	resourceTooler := sdk.ResourceTooler{
+		Resource: sdk.ResourceResourceer{},
 	}
 	api := apiTooler.New(
 		c.Api_token,
 		c.Api_url,
 	)
-	err := apiTooler.CheckStatus(api)
-
+	err := apiTooler.CheckCloudDcApiStatus(api, &clientTooler, &resourceTooler)
 	return &Client{api,
 			&apiTooler,
 			&clientTooler,
 			&templatesTooler,
+			&resourceTooler,
 			&schemaTooler},
 		err
 }

@@ -37,7 +37,7 @@ resource "sewan_clouddc_vm" "template-created-vm" {
 //
 // TEMPLATE-LESS RESOURCES
 //
-resource "sewan_clouddc_vm" VM_RESOURCE_TYPE {
+resource "sewan_clouddc_vm" vmResourceField {
   depends_on = ["sewan_clouddc_vdc.vdc-example"]
   count = 10
   ram = 1 //GiB

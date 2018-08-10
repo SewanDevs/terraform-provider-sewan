@@ -2,9 +2,16 @@ package sewan
 
 import (
 	"errors"
+	"github.com/hashicorp/terraform/helper/schema"
 	sdk "gitlab.com/sewan_go_sdk"
 	"testing"
 )
+
+func vmCRUDTestInit() (*Client, *schema.ResourceData) {
+	vmResource := resourceVm()
+	d := vmResource.TestResourceData()
+	return ResourceCRUDTestInit(), d
+}
 
 func TestResourceVmCreate(t *testing.T) {
 	testCases := []struct {
@@ -14,54 +21,33 @@ func TestResourceVmCreate(t *testing.T) {
 	}{
 		{
 			1,
-			VM_successfull_CRUD_operations_AirDrumAPIer{},
+			VMSuccessfullCrudOperationsAirDrumAPIer{},
 			nil,
 		},
 		{
 			2,
-			VM_failure_CRUD_operations_AirDrumAPIer{},
-			errors.New(VM_CREATION_FAILURE),
+			VMFailureCrudOperationsAirDrumAPIer{},
+			errors.New(vdcCreationFailure),
 		},
 	}
-	vm_res := resourceVm()
-	d := vm_res.TestResourceData()
-	config := Config{
-		Api_token: "4242",
-		Api_url:   UNIT_TEST_API_URL,
-	}
-	apiTooler := sdk.APITooler{}
-	clientTooler := sdk.ClientTooler{
-		Client: sdk.HttpClienter{},
-	}
-	templatesTooler := sdk.TemplatesTooler{
-		TemplatesTools: sdk.Template_Templater{},
-	}
-	schemaTooler := sdk.SchemaTooler{
-		SchemaTools: sdk.Schema_Schemaer{},
-	}
-	api := apiTooler.New(
-		config.Api_token,
-		config.Api_url,
+	var (
+		err        error
+		metaStruct *Client
+		d          *schema.ResourceData
 	)
-	m_struct := &Client{api,
-		&apiTooler,
-		&clientTooler,
-		&templatesTooler,
-		&schemaTooler}
-	var err error
-
+	metaStruct, d = vmCRUDTestInit()
 	for _, testCase := range testCases {
-		apiTooler.Api = testCase.TC_apier
-		err = resourceVm_create(d, m_struct)
+		metaStruct.sewanApiTooler.Api = testCase.TC_apier
+		err = resourceVmCreate(d, metaStruct)
 		switch {
 		case err == nil || testCase.Creation_Err == nil:
 			if !(err == nil && testCase.Creation_Err == nil) {
 				t.Errorf("\n\nTC %d : VM creation error was incorrect,"+
-					"\n\rgot: \"%s\"\n\rwant: \"%s\"", testCase.Id, err, testCase.Creation_Err)
+					errTestResultDiffs, testCase.Id, err, testCase.Creation_Err)
 			}
 		case err.Error() != testCase.Creation_Err.Error():
 			t.Errorf("\n\nTC %d : VM creation error was incorrect,"+
-				"\n\rgot: \"%s\"\n\rwant: \"%s\"",
+				errTestResultDiffs,
 				testCase.Id, err.Error(), testCase.Creation_Err.Error())
 		}
 	}
@@ -69,69 +55,49 @@ func TestResourceVmCreate(t *testing.T) {
 
 func TestResourceVmRead(t *testing.T) {
 	testCases := []struct {
-		Id         int
-		TC_apier   sdk.APIer
-		Read_Err   error
-		Res_exists bool
+		Id       int
+		TC_apier sdk.APIer
+		Read_Err error
 	}{
 		{
 			1,
-			VM_successfull_CRUD_operations_AirDrumAPIer{},
+			VMSuccessfullCrudOperationsAirDrumAPIer{},
 			nil,
-			true,
 		},
 		{
 			2,
-			VM_failure_CRUD_operations_AirDrumAPIer{},
+			VMFailureCrudOperationsAirDrumAPIer{},
 			nil,
-			false,
 		},
 		{
 			3,
-			VM_readfailure_CRUD_operations_AirDrumAPIer{},
-			errors.New(VM_READ_FAILURE),
-			false,
+			VMReadFailureCrudOperationsAirDrumAPIer{},
+			errors.New(vdcReadFailure),
+		},
+		{
+			4,
+			VMNotFoundErrorOnReadOperationsAirDrumAPIer{},
+			nil,
 		},
 	}
-	vm_res := resourceVm()
-	d := vm_res.TestResourceData()
-	config := Config{
-		Api_token: "4242",
-		Api_url:   UNIT_TEST_API_URL,
-	}
-	apiTooler := sdk.APITooler{}
-	clientTooler := sdk.ClientTooler{
-		Client: sdk.HttpClienter{},
-	}
-	templatesTooler := sdk.TemplatesTooler{
-		TemplatesTools: sdk.Template_Templater{},
-	}
-	schemaTooler := sdk.SchemaTooler{
-		SchemaTools: sdk.Schema_Schemaer{},
-	}
-	api := apiTooler.New(
-		config.Api_token,
-		config.Api_url,
+	var (
+		err        error
+		metaStruct *Client
+		d          *schema.ResourceData
 	)
-	m_struct := &Client{api,
-		&apiTooler,
-		&clientTooler,
-		&templatesTooler,
-		&schemaTooler}
-	var err error
-
+	metaStruct, d = vmCRUDTestInit()
 	for _, testCase := range testCases {
-		apiTooler.Api = testCase.TC_apier
-		err = resourceVm_read(d, m_struct)
+		metaStruct.sewanApiTooler.Api = testCase.TC_apier
+		err = resourceVmRead(d, metaStruct)
 		switch {
 		case err == nil || testCase.Read_Err == nil:
 			if !(err == nil && testCase.Read_Err == nil) {
-				t.Errorf("\n\nTC %d : VM update error was incorrect,"+
-					"\n\rgot: \"%s\"\n\rwant: \"%s\"", testCase.Id, err, testCase.Read_Err)
+				t.Errorf(errorTcIdAndWrongVmUpdateError+
+					errTestResultDiffs, testCase.Id, err, testCase.Read_Err)
 			}
 		case err.Error() != testCase.Read_Err.Error():
-			t.Errorf("\n\nTC %d : VM update error was incorrect,"+
-				"\n\rgot: \"%s\"\n\rwant: \"%s\"",
+			t.Errorf(errorTcIdAndWrongVmUpdateError+
+				errTestResultDiffs,
 				testCase.Id, err.Error(), testCase.Read_Err.Error())
 		}
 	}
@@ -145,54 +111,33 @@ func TestResourceVmUpdate(t *testing.T) {
 	}{
 		{
 			1,
-			VM_successfull_CRUD_operations_AirDrumAPIer{},
+			VMSuccessfullCrudOperationsAirDrumAPIer{},
 			nil,
 		},
 		{
 			2,
-			VM_failure_CRUD_operations_AirDrumAPIer{},
-			errors.New(VM_UPDATE_FAILURE),
+			VMFailureCrudOperationsAirDrumAPIer{},
+			errors.New(vdcUpdateFailure),
 		},
 	}
-	vm_res := resourceVm()
-	d := vm_res.TestResourceData()
-	config := Config{
-		Api_token: "4242",
-		Api_url:   UNIT_TEST_API_URL,
-	}
-	apiTooler := sdk.APITooler{}
-	clientTooler := sdk.ClientTooler{
-		Client: sdk.HttpClienter{},
-	}
-	templatesTooler := sdk.TemplatesTooler{
-		TemplatesTools: sdk.Template_Templater{},
-	}
-	schemaTooler := sdk.SchemaTooler{
-		SchemaTools: sdk.Schema_Schemaer{},
-	}
-	api := apiTooler.New(
-		config.Api_token,
-		config.Api_url,
+	var (
+		err        error
+		metaStruct *Client
+		d          *schema.ResourceData
 	)
-	m_struct := &Client{api,
-		&apiTooler,
-		&clientTooler,
-		&templatesTooler,
-		&schemaTooler}
-	var err error
-
+	metaStruct, d = vmCRUDTestInit()
 	for _, testCase := range testCases {
-		apiTooler.Api = testCase.TC_apier
-		err = resourceVm_update(d, m_struct)
+		metaStruct.sewanApiTooler.Api = testCase.TC_apier
+		err = resourceVmUpdate(d, metaStruct)
 		switch {
 		case err == nil || testCase.Update_Err == nil:
 			if !(err == nil && testCase.Update_Err == nil) {
-				t.Errorf("\n\nTC %d : VM update error was incorrect,"+
-					"\n\rgot: \"%s\"\n\rwant: \"%s\"", testCase.Id, err, testCase.Update_Err)
+				t.Errorf(errorTcIdAndWrongVmUpdateError+
+					errTestResultDiffs, testCase.Id, err, testCase.Update_Err)
 			}
 		case err.Error() != testCase.Update_Err.Error():
-			t.Errorf("\n\nTC %d : VM update error was incorrect,"+
-				"\n\rgot: \"%s\"\n\rwant: \"%s\"",
+			t.Errorf(errorTcIdAndWrongVmUpdateError+
+				errTestResultDiffs,
 				testCase.Id, err.Error(), testCase.Update_Err.Error())
 		}
 	}
@@ -206,54 +151,33 @@ func TestResourceVmDelete(t *testing.T) {
 	}{
 		{
 			1,
-			VM_successfull_CRUD_operations_AirDrumAPIer{},
+			VMSuccessfullCrudOperationsAirDrumAPIer{},
 			nil,
 		},
 		{
 			2,
-			VM_failure_CRUD_operations_AirDrumAPIer{},
-			errors.New(VM_DELETION_FAILURE),
+			VMFailureCrudOperationsAirDrumAPIer{},
+			errors.New(vmDeletionFailure),
 		},
 	}
-	vm_res := resourceVm()
-	d := vm_res.TestResourceData()
-	config := Config{
-		Api_token: "4242",
-		Api_url:   UNIT_TEST_API_URL,
-	}
-	apiTooler := sdk.APITooler{}
-	clientTooler := sdk.ClientTooler{
-		Client: sdk.HttpClienter{},
-	}
-	templatesTooler := sdk.TemplatesTooler{
-		TemplatesTools: sdk.Template_Templater{},
-	}
-	schemaTooler := sdk.SchemaTooler{
-		SchemaTools: sdk.Schema_Schemaer{},
-	}
-	api := apiTooler.New(
-		config.Api_token,
-		config.Api_url,
+	var (
+		err        error
+		metaStruct *Client
+		d          *schema.ResourceData
 	)
-	m_struct := &Client{api,
-		&apiTooler,
-		&clientTooler,
-		&templatesTooler,
-		&schemaTooler}
-	var err error
-
+	metaStruct, d = vmCRUDTestInit()
 	for _, testCase := range testCases {
-		apiTooler.Api = testCase.TC_apier
-		err = resourceVm_delete(d, m_struct)
+		metaStruct.sewanApiTooler.Api = testCase.TC_apier
+		err = resourceVmDelete(d, metaStruct)
 		switch {
 		case err == nil || testCase.Delete_Err == nil:
 			if !(err == nil && testCase.Delete_Err == nil) {
 				t.Errorf("\n\nTC %d : VM deletion error was incorrect,"+
-					"\n\rgot: \"%s\"\n\rwant: \"%s\"", testCase.Id, err, testCase.Delete_Err)
+					errTestResultDiffs, testCase.Id, err, testCase.Delete_Err)
 			}
 		case err.Error() != testCase.Delete_Err.Error():
 			t.Errorf("\n\nTC %d : VM deletion error was incorrect,"+
-				"\n\rgot: \"%s\"\n\rwant: \"%s\"",
+				errTestResultDiffs,
 				testCase.Id, err.Error(), testCase.Delete_Err.Error())
 		}
 	}

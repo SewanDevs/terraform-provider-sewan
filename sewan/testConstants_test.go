@@ -1,81 +1,84 @@
 package sewan
 
 var (
-	TEST_VDC_MAP = map[string]interface{}{
-		NAME_FIELD:       "Unit test vdc resource",
-		ENTERPRISE_FIELD: "unit test enterprise",
-		DATACENTER_FIELD: "dc1",
-		VDC_RESOURCE_FIELD: []interface{}{
+	testVdcMap = map[string]interface{}{
+		nameField:       "Unit test vdc resource",
+		enterpriseField: "unit test enterprise",
+		datacenterField: "dc1",
+		vdcResourceField: []interface{}{
 			map[string]interface{}{
-				RESOURCE_FIELD: RAM_FIELD,
-				TOTAL_FIELD:    20,
+				resourceField: ramField,
+				totalField:    20,
 			},
 			map[string]interface{}{
-				RESOURCE_FIELD: CPU_FIELD,
-				TOTAL_FIELD:    1,
+				resourceField: cpuField,
+				totalField:    1,
 			},
 			map[string]interface{}{
-				RESOURCE_FIELD: "storage_enterprise",
-				TOTAL_FIELD:    10,
+				resourceField: "storage_enterprise",
+				totalField:    10,
 			},
 			map[string]interface{}{
-				RESOURCE_FIELD: "storage_performance",
-				TOTAL_FIELD:    10,
+				resourceField: "storage_performance",
+				totalField:    10,
 			},
 			map[string]interface{}{
-				RESOURCE_FIELD: "storage_high_performance",
-				TOTAL_FIELD:    10,
+				resourceField: "storage_high_performance",
+				totalField:    10,
 			},
 		},
 	}
-	NO_TEMPLATE_VM_MAP = map[string]interface{}{
-		NAME_FIELD:       "Unit test vm",
-		ENTERPRISE_FIELD: "unit test enterprise",
-		STATE_FIELD:      "UP",
-		OS_FIELD:         "Debian",
-		RAM_FIELD:        8,
-		CPU_FIELD:        4,
-		DISKS_FIELD: []interface{}{
+	noTemplateVmMap = map[string]interface{}{
+		nameField:       "Unit test vm",
+		enterpriseField: "unit test enterprise",
+		stateField:      "UP",
+		osField:         "Debian",
+		ramField:        8,
+		cpuField:        4,
+		disksField: []interface{}{
 			map[string]interface{}{
-				NAME_FIELD: "disk 1",
-				SIZE_FIELD: 24,
-				SLUG_FIELD: SLUG_FIELD,
+				nameField: "disk 1",
+				sizeField: 24,
+				slugField: slugField,
 			},
 		},
-		NICS_FIELD: []interface{}{
+		nicsField: []interface{}{
 			map[string]interface{}{
-				VLAN_NAME_FIELD:  "vlan 1 update",
-				MAC_ADRESS_FIELD: "24",
-				CONNECTED_FIELD:  true,
+				vlanNameField:  "vlan 1 update",
+				macAdressField: "24",
+				connectedField: true,
 			},
 			map[string]interface{}{
-				VLAN_NAME_FIELD:  "vlan 2",
-				MAC_ADRESS_FIELD: "24",
-				CONNECTED_FIELD:  true,
+				vlanNameField:  "vlan 2",
+				macAdressField: "24",
+				connectedField: true,
 			},
 		},
-		VDC_FIELD:           VDC_FIELD,
-		BOOT_FIELD:          "on disk",
-		STORAGE_CLASS_FIELD: "storage_enterprise",
-		SLUG_FIELD:          "42",
-		TOKEN_FIELD:         "424242",
-		BACKUP_FIELD:        "backup-no_backup",
-		DISK_IMAGE_FIELD:    "",
-		PLATFORM_NAME_FIELD: "42",
-		BACKUP_SIZE_FIELD:   42,
-		COMMENT_FIELD:       "42",
-		DYNAMIC_FIELD:       "42",
+		vdcField:          vdcField,
+		bootField:         "on disk",
+		storageClassField: "storage_enterprise",
+		slugField:         "42",
+		tokenField:        "424242",
+		backupField:       "backup-no_backup",
+		diskImageField:    "",
+		platformNameField: "42",
+		backupSizeField:   42,
+		commentField:      "42",
+		dynamicField:      "42",
 	}
 )
 
 const (
-	VDC_CREATION_FAILURE = "VDC creation failed."
-	VDC_READ_FAILURE     = "VDC read failed."
-	VDC_UPDATE_FAILURE   = "VDC update failed."
-	VDC_DELETION_FAILURE = "VDC deletion failed."
-	VM_CREATION_FAILURE  = "VM creation failed."
-	VM_READ_FAILURE      = "VM read failed."
-	VM_UPDATE_FAILURE    = "VM update failed."
-	VM_DELETION_FAILURE  = "VM deletion failed."
-	UNIT_TEST_API_URL    = "https://unitTestApiUrl.org"
+	vdcCreationFailure              = "VDC creation failed."
+	vdcReadFailure                  = "VDC read failed."
+	vdcUpdateFailure                = "VDC update failed."
+	vdcDeletionFailure              = "VDC deletion failed."
+	vmCreationFailure               = "VM creation failed."
+	vmReadFailure                   = "VM read failed."
+	vmUpdateFailure                 = "VM update failed."
+	vmDeletionFailure               = "VM deletion failed."
+	unitTestApiUrl                  = "https://unitTestApiUrl.org"
+	errTestResultDiffs              = "\n\rGot: \"%s\"\n\rWant: \"%s\""
+	errorTcIdAndWrongVdcUpdateError = "\n\nTC %d : VDC update error was incorrect,"
+	errorTcIdAndWrongVmUpdateError  = "\n\nTC %d : VM update error was incorrect,"
 )

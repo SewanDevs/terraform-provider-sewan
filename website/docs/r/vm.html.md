@@ -20,7 +20,7 @@ resource "sewan_clouddc_vm" "template-created-vm" {
   depends_on = ["sewan_clouddc_vdc.vdc-example"]
   count = 10
   name = "template-created-vm"
-  instance_number = "${count.index}"
+  instance_number = "${count.index + 1}"
   nics=[
     {
       vlan="vlan 1"
@@ -37,7 +37,7 @@ resource "sewan_clouddc_vm" "template-created-vm" {
 //
 // TEMPLATE-LESS RESOURCES
 //
-resource "sewan_clouddc_vm" VM_RESOURCE_TYPE {
+resource "sewan_clouddc_vm" vmResourceField {
   depends_on = ["sewan_clouddc_vdc.vdc-example"]
   count = 10
   ram = 1 //GiB
@@ -86,7 +86,7 @@ To consult the list of available templates for your company or create new ones, 
 
 **Warning :** Do not put dynamic name or the override configuration file will be inaccurate. As terraform does not provide access to meta resource data such as resource count index, it is not possible to pass "${count.index}" or other dynamic variable in resource name field to prevent wrong resource name field value in override file. So this information must be passed through a specific field : `instance_number`
 
-* `instance_number` - *(Required, string)* only one accepted value : "${count.index}"
+* `instance_number` - *(Required, string)* only one accepted value : "${count.index + 1}"
 
 **Warning :** No autocheck available to validate the field value.
 

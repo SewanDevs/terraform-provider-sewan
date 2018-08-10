@@ -21,13 +21,13 @@ func TestResourceVmCreate(t *testing.T) {
 	}{
 		{
 			1,
-			VM_successfull_CRUD_operations_AirDrumAPIer{},
+			VMSuccessfullCrudOperationsAirDrumAPIer{},
 			nil,
 		},
 		{
 			2,
-			VM_failure_CRUD_operations_AirDrumAPIer{},
-			errors.New(VM_CREATION_FAILURE),
+			VMFailureCrudOperationsAirDrumAPIer{},
+			errors.New(vdcCreationFailure),
 		},
 	}
 	var (
@@ -43,11 +43,11 @@ func TestResourceVmCreate(t *testing.T) {
 		case err == nil || testCase.Creation_Err == nil:
 			if !(err == nil && testCase.Creation_Err == nil) {
 				t.Errorf("\n\nTC %d : VM creation error was incorrect,"+
-					ERROR_TEST_RESULT_DIFFS, testCase.Id, err, testCase.Creation_Err)
+					errTestResultDiffs, testCase.Id, err, testCase.Creation_Err)
 			}
 		case err.Error() != testCase.Creation_Err.Error():
 			t.Errorf("\n\nTC %d : VM creation error was incorrect,"+
-				ERROR_TEST_RESULT_DIFFS,
+				errTestResultDiffs,
 				testCase.Id, err.Error(), testCase.Creation_Err.Error())
 		}
 	}
@@ -55,28 +55,29 @@ func TestResourceVmCreate(t *testing.T) {
 
 func TestResourceVmRead(t *testing.T) {
 	testCases := []struct {
-		Id         int
-		TC_apier   sdk.APIer
-		Read_Err   error
-		Res_exists bool
+		Id       int
+		TC_apier sdk.APIer
+		Read_Err error
 	}{
 		{
 			1,
-			VM_successfull_CRUD_operations_AirDrumAPIer{},
+			VMSuccessfullCrudOperationsAirDrumAPIer{},
 			nil,
-			true,
 		},
 		{
 			2,
-			VM_failure_CRUD_operations_AirDrumAPIer{},
+			VMFailureCrudOperationsAirDrumAPIer{},
 			nil,
-			false,
 		},
 		{
 			3,
-			VM_readfailure_CRUD_operations_AirDrumAPIer{},
-			errors.New(VM_READ_FAILURE),
-			false,
+			VMReadFailureCrudOperationsAirDrumAPIer{},
+			errors.New(vdcReadFailure),
+		},
+		{
+			4,
+			VMNotFoundErrorOnReadOperationsAirDrumAPIer{},
+			nil,
 		},
 	}
 	var (
@@ -91,12 +92,12 @@ func TestResourceVmRead(t *testing.T) {
 		switch {
 		case err == nil || testCase.Read_Err == nil:
 			if !(err == nil && testCase.Read_Err == nil) {
-				t.Errorf(ERROR_TC_ID_AND_WRONG_VM_UPDATE_ERR+
-					ERROR_TEST_RESULT_DIFFS, testCase.Id, err, testCase.Read_Err)
+				t.Errorf(errorTcIdAndWrongVmUpdateError+
+					errTestResultDiffs, testCase.Id, err, testCase.Read_Err)
 			}
 		case err.Error() != testCase.Read_Err.Error():
-			t.Errorf(ERROR_TC_ID_AND_WRONG_VM_UPDATE_ERR+
-				ERROR_TEST_RESULT_DIFFS,
+			t.Errorf(errorTcIdAndWrongVmUpdateError+
+				errTestResultDiffs,
 				testCase.Id, err.Error(), testCase.Read_Err.Error())
 		}
 	}
@@ -110,13 +111,13 @@ func TestResourceVmUpdate(t *testing.T) {
 	}{
 		{
 			1,
-			VM_successfull_CRUD_operations_AirDrumAPIer{},
+			VMSuccessfullCrudOperationsAirDrumAPIer{},
 			nil,
 		},
 		{
 			2,
-			VM_failure_CRUD_operations_AirDrumAPIer{},
-			errors.New(VM_UPDATE_FAILURE),
+			VMFailureCrudOperationsAirDrumAPIer{},
+			errors.New(vdcUpdateFailure),
 		},
 	}
 	var (
@@ -131,12 +132,12 @@ func TestResourceVmUpdate(t *testing.T) {
 		switch {
 		case err == nil || testCase.Update_Err == nil:
 			if !(err == nil && testCase.Update_Err == nil) {
-				t.Errorf(ERROR_TC_ID_AND_WRONG_VM_UPDATE_ERR+
-					ERROR_TEST_RESULT_DIFFS, testCase.Id, err, testCase.Update_Err)
+				t.Errorf(errorTcIdAndWrongVmUpdateError+
+					errTestResultDiffs, testCase.Id, err, testCase.Update_Err)
 			}
 		case err.Error() != testCase.Update_Err.Error():
-			t.Errorf(ERROR_TC_ID_AND_WRONG_VM_UPDATE_ERR+
-				ERROR_TEST_RESULT_DIFFS,
+			t.Errorf(errorTcIdAndWrongVmUpdateError+
+				errTestResultDiffs,
 				testCase.Id, err.Error(), testCase.Update_Err.Error())
 		}
 	}
@@ -150,13 +151,13 @@ func TestResourceVmDelete(t *testing.T) {
 	}{
 		{
 			1,
-			VM_successfull_CRUD_operations_AirDrumAPIer{},
+			VMSuccessfullCrudOperationsAirDrumAPIer{},
 			nil,
 		},
 		{
 			2,
-			VM_failure_CRUD_operations_AirDrumAPIer{},
-			errors.New(VM_DELETION_FAILURE),
+			VMFailureCrudOperationsAirDrumAPIer{},
+			errors.New(vmDeletionFailure),
 		},
 	}
 	var (
@@ -172,11 +173,11 @@ func TestResourceVmDelete(t *testing.T) {
 		case err == nil || testCase.Delete_Err == nil:
 			if !(err == nil && testCase.Delete_Err == nil) {
 				t.Errorf("\n\nTC %d : VM deletion error was incorrect,"+
-					ERROR_TEST_RESULT_DIFFS, testCase.Id, err, testCase.Delete_Err)
+					errTestResultDiffs, testCase.Id, err, testCase.Delete_Err)
 			}
 		case err.Error() != testCase.Delete_Err.Error():
 			t.Errorf("\n\nTC %d : VM deletion error was incorrect,"+
-				ERROR_TEST_RESULT_DIFFS,
+				errTestResultDiffs,
 				testCase.Id, err.Error(), testCase.Delete_Err.Error())
 		}
 	}

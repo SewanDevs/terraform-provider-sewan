@@ -7,7 +7,7 @@ import (
 func ResourceCRUDTestInit() *Client {
 	config := Config{
 		Api_token: "4242",
-		Api_url:   UNIT_TEST_API_URL,
+		Api_url:   unitTestApiUrl,
 	}
 	apiTooler := sdk.APITooler{}
 	clientTooler := sdk.ClientTooler{
@@ -16,8 +16,11 @@ func ResourceCRUDTestInit() *Client {
 	templatesTooler := sdk.TemplatesTooler{
 		TemplatesTools: sdk.Template_Templater{},
 	}
+	resourceTooler := sdk.ResourceTooler{
+		Resource: sdk.ResourceResourceer{},
+	}
 	schemaTooler := sdk.SchemaTooler{
-		SchemaTools: sdk.Schema_Schemaer{},
+		SchemaTools: sdk.SchemaSchemaer{},
 	}
 	api := apiTooler.New(
 		config.Api_token,
@@ -27,6 +30,7 @@ func ResourceCRUDTestInit() *Client {
 		&apiTooler,
 		&clientTooler,
 		&templatesTooler,
+		&resourceTooler,
 		&schemaTooler}
 	return metaStruct
 }

@@ -1,5 +1,6 @@
 mode: set
-gitlab.com/terraform-provider-sewan/sewan/config.go:66.44,94.2 8 0
+gitlab.com/terraform-provider-sewan/main.go:9.13,11.51 1 0
+gitlab.com/terraform-provider-sewan/main.go:11.51,13.4 1 0
 gitlab.com/terraform-provider-sewan/sewan/provider.go:7.34,16.2 1 1
 gitlab.com/terraform-provider-sewan/sewan/provider.go:18.49,31.2 1 1
 gitlab.com/terraform-provider-sewan/sewan/provider.go:33.69,39.2 2 0
@@ -27,3 +28,4 @@ gitlab.com/terraform-provider-sewan/sewan/resourcesCRUD.go:48.29,55.2 1 1
 gitlab.com/terraform-provider-sewan/sewan/resourcesCRUD.go:59.29,65.16 2 1
 gitlab.com/terraform-provider-sewan/sewan/resourcesCRUD.go:68.2,68.12 1 1
 gitlab.com/terraform-provider-sewan/sewan/resourcesCRUD.go:65.16,67.3 1 1
+gitlab.com/terraform-provider-sewan/sewan/config.go:66.44,94.2 8 0

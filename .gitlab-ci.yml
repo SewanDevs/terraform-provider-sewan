@@ -1,25 +1,19 @@
 image: golang
 
+
 stages:
-  - gofmt
-  - test
+  - fmtAndUnitTest
   - sonar
 
-gofmt:
-  stage: gofmt
-  script:
-    - gofmtError=$(gofmt -l $(find . -name '*.go'))
-    - if [ ! $gofmtError = "" ]; then
-    -   echo "gofmt condition not matched, run \"\$\$gofmt -w \$(find . -name '*.go')\" before any commit."
-    -   exit 1
-    - fi
-
-tests:
+# NB about symbolic link : https://redmine.priv.sewan.fr/issues/37334
+fmt_and_unit_tests:
   image: $DOCKER_REGISTRY/sidevops/docker/utils/terraform-ci:latest
-  stage: test
+  stage: fmtAndUnitTest
+  before_script:
+    - ln -s $CI_PROJECT_DIR $GOPATH/src/gitlab.com/
+    - cd $GOPATH/src/gitlab.com/$CI_PROJECT_NAME
   script:
-    - cd sewan
-    - go test -coverprofile=coverage.out
+    - make test
 
 sonarqube_preview:
   image: $DOCKER_REGISTRY/sidevops/docker/utils/sonar-ci:latest

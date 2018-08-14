@@ -29,7 +29,7 @@ website/node_modules
 website/vendor
 
 # Unit test frameworks file
-*.out
+#*.out
 *.html
 
 # Test exclusions

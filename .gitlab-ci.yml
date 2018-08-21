@@ -58,7 +58,7 @@ release-process:
     - git remote set-url origin git@gitlab.priv.sewan.fr:rd/sewan_go_sdk.git
     - git fetch origin --prune
     - git checkout -b $ReleaseBranchName
-    - rm .gitlab-ci.yml sonar-project.properties
+    - rm .gitlab-ci.yml
     - sed -i 's/gitlab.com\/rd/github.com\/SewanDevs/g' $(find . -name '*.go')
     - gofmt -l $(find . -name '*.go')
     - git add .

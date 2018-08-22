@@ -12,7 +12,9 @@ Provides a virtual data center (VDC).
 
 ## Example Usage
 
-It creates 10 instance of the described vdc with a dynamic name field.
+It creates an instance of the described vdc with a dynamic name field.
+
+*Warning : multiple vdc instances are not supported as vm dependence to vdc are unique.*
 
 ```hcl
 resource "sewan_clouddc_vdc" "vdc-example" {
@@ -63,4 +65,4 @@ The following attributes are exported :
 
 ## Import
 
-Instance import is not supported.
+Instance import is not yet supported.

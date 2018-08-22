@@ -72,29 +72,34 @@ resource "sewan_clouddc_vm" vmResourceField {
 }
 ```
 
-## Argument Reference
+## Arguments Reference
 
 ### VM creation with Sewan's cloud data center own templates
 
 To consult the list of available templates for your company or create new ones, access your company account on [cloud-datacenter.fr](https://cloud-datacenter.fr).
 
-**NB 1** : After the creation from a template, an override file (< template name >\_override.tf.json, [terraform configuration override official doc](https://www.terraform.io/docs/configuration/override.html)) is created to enable the modification of all template provided parameters. This file is currently generated in the current terraform initialized terraform folder, it does not yet support the remote state feature. An example of override file is available on the annexe of this page.
+#### Resource configuration generated override file
+* After the creation from a template, an override file (< template name >\_override.tf.json, [terraform configuration override official doc](https://www.terraform.io/docs/configuration/override.html)) is created to enable the modification of all template provided parameters. This file is currently generated in the current terraform initialized terraform folder, it does not yet support the remote state feature. An example of override file is available at the annexe of this page.
+* The template created vm **resource override file must be deleted manually when all related vm are deleted with "terraform destroy" cmd**.
+* Modification of existing resource created from template must be done in override file.
 
-**NB 2** : The template created vm resource override file must deleted manually when all related vm are deleted with "terraform destroy" cmd.
+#### Arguments
+* `depends_on` and `count` fields are terraform resource [meta parameters](https://www.terraform.io/docs/configuration/resources.html#meta-parameters).
 
 * `name` - *(Required, string)* vm name
 
-**Warning :** Do not put dynamic name or the override configuration file will be inaccurate. As terraform does not provide access to meta resource data such as resource count index, it is not possible to pass "${count.index}" or other dynamic variable in resource name field to prevent wrong resource name field value in override file. So this information must be passed through a specific field : `instance_number`
+  **Warning 1 :** Do not put dynamic name or the override configuration file will be inaccurate. As terraform does not provide access to meta resource data such as resource count index, it is not possible to pass "${count.index}" or other dynamic variable in resource name field. It prevents wrong resource name field value in override file. So this information must be passed through a specific field : `instance_number`
 
-* `instance_number` - *(Required, string)* only one accepted value : "${count.index + 1}"
+* `instance_number` - *(Required, string)* **only one accepted value** : "${count.index + 1}"
 
-**Warning :** No autocheck available to validate the field value.
+  **Warning 2 :** No autocheck available to validate the field value.
 
 * `template` - *(Required, string)* optional field required for creating a vm from a template
 * Arguments handled by the template
   * `os` - Can not be set as it is template provided
   * `ram` - *(Optional, string)* template provided value can be modified, value unit : GiB
   * `cpu` - *(Optional, string)* template provided value can be modified
+
 
 * `disks` - *(Optional, list of maps)* disks allocated to the vm, minimum of 1 is required
   * `name` - *(Required, string)* disk name
@@ -106,6 +111,8 @@ To consult the list of available templates for your company or create new ones, 
 * `nics` - *(Optional, list of maps)* network interfaces allocated to the vm, can be nil
   * `vlan` - *(Required, string)* nic vlan name
   * `connected` - *(Optional, boolean)* nic status
+
+
 * `vdc` - *(Required, string)* vm's virtual data center name
 * `boot` - *(Optional, string)* boot mode (accepted values : "", "on disk")
 * `storage_class` - *(Required, string)* type of template created disks storage type (accepted values : "storage_enterprise", "storage_performance", "storage_high_performance") [more infos](https://www.sewan.fr/cloud-data-center/)
@@ -140,11 +147,12 @@ The following attributes are exported :
 
 ## Import
 
-Instance import is not yet supported, coming soon.
+Instance import is not yet supported.
 
 ## Annexe : vm template override generated file
 
 In order to make resources post-creation modification, this file must be modified prior to initial configuration file (see [terraform configuration override official doc](https://www.terraform.io/docs/configuration/override.html)).
+The choose of json format is justified by the absence of file creation tool of hashicorp hcl [configuration language](https://github.com/hashicorp/hcl).
 
 ```json
 {"resource":

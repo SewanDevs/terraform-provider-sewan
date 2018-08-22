@@ -8,9 +8,9 @@ description: |-
 
 # Sewan Provider
 
-The Sewan provider is used to interact with [Sewan's cloud data center](https://www.sewan.fr/cloud-data-center/) API to provide virtual data centers (vdc) and virtual machines (vm).
+The Sewan provider is used to interact with [Sewan's cloud data center](https://www.sewan.fr/cloud-data-center/) (clouddc) API to provide virtual data centers (vdc) and virtual machines (vm).
 
-Use the navigation to the left to read about the available data sources.
+Use the navigation to the left to read about the available data sources, pay attention to vm created from sewan's clouddc template that does not have a standard terraform resource behavior.
 
 ## Get an api token for your company
 
@@ -110,6 +110,3 @@ resource "sewan_clouddc_vm" "vm" {
   boot = "on disk"
 }
 ```
-## SonarQube analysis
-
-[temporary results url](https://sonarcloud.io/organizations/jeanlefou-github/projects?sort=security)

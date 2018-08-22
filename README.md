@@ -1,11 +1,9 @@
-Terraform Provider
-==================
+Sewan Terraform Provider
+========================
 
-- Website: https://www.terraform.io
-- [![Gitter chat](https://badges.gitter.im/hashicorp-terraform/Lobby.png)](https://gitter.im/hashicorp-terraform/Lobby)
-
-
-<img src="https://cdn.rawgit.com/hashicorp/terraform-website/master/content/source/assets/images/logo-hashicorp.svg" width="600px">
+- Webistes : https://www.sewan.fr, https://www.terraform.io
+- Travis build : [![Build Status](https://travis-ci.com/SewanDevs/terraform-provider-sewan.svg?branch=github_release)](https://travis-ci.com/SewanDevs/terraform-provider-sewan)
+- SonarQube analysis : ![Sonar Status](https://sonarcloud.io/api/project_badges/measure?project=terraform-provider-sewan-key&metric=alert_status)
 
 Maintainers
 -----------
@@ -16,53 +14,45 @@ Requirements
 ------------
 
 -	[Terraform](https://www.terraform.io/downloads.html) 0.10.x
--	[Go](https://golang.org/doc/install) 1.8 (to build the provider plugin)
+-	[Go](https://golang.org/doc/install) 1.10.x
 
 Usage
 ---------------------
 
-```
-# For example, restrict sewan version in 0.1.x
-provider "sewan" {
-  version = "~> 0.1"
-}
-```
+Take a look in the website folder to get fully explained examples and documentation.
 
 Building The Provider
 ---------------------
+* [Install terraform](https://www.terraform.io/intro/getting-started/install.html)
 
-* Set up [Go](http://www.golang.org) your dev environment (version 1.8+ is *required*). You'll also need to correctly setup a [GOPATH](http://golang.org/doc/code.html#GOPATH), as well as adding `$GOPATH/bin` to your `$PATH`.
+* Set up [Go](http://www.golang.org) your dev environment with version 1.10.x . You'll also need to correctly setup a [GOPATH](http://golang.org/doc/code.html#GOPATH), as well as adding `$GOPATH/bin` to your `$PATH`.
 
-* Clone Sewan's sdk and terraform plugin repositories to: `$GOPATH/src/github.com/SewanDevs/`
-
+* Clone Sewan's sdk and terraform plugin repositories to: `$GOPATH/src/github.com/SewanDevs/` and terraform sources
 ```sh
-$ mkdir -p $GOPATH/src/github.com/SewanDevs/
-$ cd $GOPATH/src/github.com/SewanDevs/
-$ git clone git@github.com:SewanDevs/sewan_go_sdk.git
-$ git clone git@github.com:SewanDevs/terraform-provider-sewan.git
+git clone https://github.com/SewanDevs/sewan_go_sdk.git $GOPATH/src/github.com/SewanDevs/sewan_go_sdk
+git clone https://github.com/SewanDevs/terraform-provider-sewan.git $GOPATH/src/github.com/SewanDevs/terraform-provider-sewan
+git clone https://github.com/hashicorp/terraform.git $GOPATH/src/github.com/hashicorp/terraform
 ```
 
 * Install additional library used in unit test:
 ```sh
-$ go get -u github.com/google/go-cmp/cmp
+go get -u github.com/google/go-cmp/cmp
 ```
 
 * **Optional steps :**
 
-To run unit tests of the provider ans sdk, run `make test`.
-
+  To run unit tests of the provider ans sdk, run `make test`.
 ```sh
-$ cd $GOPATH/src/github.com/SewanDevs/terraform-provider-sewan.git
-$ make test
+cd $GOPATH/src/github.com/SewanDevs/terraform-provider-sewan
+make test
 ```
 
 * Provider compilation
 
-This will build the provider and put the provider binary in the `$GOPATH/bin` directory.
-
+  This will build the provider and put the provider binary in the `$GOPATH/bin` directory.
 ```sh
-$ cd $GOPATH/src/github.com/SewanDevs/terraform-provider-sewan
-$ make build
+cd $GOPATH/src/github.com/SewanDevs/terraform-provider-sewan
+make build
 ```
 
 Use the docker image for Sewan's plugin

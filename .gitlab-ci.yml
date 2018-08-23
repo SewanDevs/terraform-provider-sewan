@@ -65,7 +65,7 @@ release-process:
     - git commit -m "Gitlab \"release-process\" pipeline job, update import path to match github ones and rm pipeline files."
     - git checkout github_release
     - git pull
-    - git merge --strategy-option ours --no-edit $ReleaseBranchName
+    - git merge --strategy-option theirs --no-edit $ReleaseBranchName
     - git push
   only:
     refs:

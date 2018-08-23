@@ -65,7 +65,7 @@ release-process:
     - git checkout github_release
     - git pull
     - git merge --strategy-option theirs --no-edit $ReleaseBranchName
-    - gofmt -l $(find . -name '*.go')
+    - make fmt
     - git add *
     - git commit --amend --no-edit
     - git push

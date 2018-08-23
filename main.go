@@ -1,9 +1,9 @@
 package main
 
 import (
+	"github.com/SewanDevs/terraform-provider-sewan/sewan"
 	"github.com/hashicorp/terraform/plugin"
 	"github.com/hashicorp/terraform/terraform"
-	"github.com/SewanDevs/terraform-provider-sewan/sewan"
 )
 
 func main() {

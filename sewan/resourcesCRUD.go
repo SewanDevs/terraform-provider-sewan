@@ -1,8 +1,8 @@
 package sewan
 
 import (
-	"github.com/hashicorp/terraform/helper/schema"
 	sdk "github.com/SewanDevs/sewan_go_sdk"
+	"github.com/hashicorp/terraform/helper/schema"
 )
 
 func createResource(d *schema.ResourceData,

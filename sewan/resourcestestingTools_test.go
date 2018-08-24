@@ -1,7 +1,7 @@
 package sewan
 
 import (
-	sdk "gitlab.com/rd/sewan_go_sdk"
+	sdk "github.com/SewanDevs/sewan_go_sdk"
 )
 
 func ResourceCRUDTestInit() *Client {

@@ -5,6 +5,8 @@ Sewan Terraform Provider
 - Travis build : [![Build Status](https://travis-ci.com/SewanDevs/terraform-provider-sewan.svg?branch=github_release)](https://travis-ci.com/SewanDevs/terraform-provider-sewan)
 - SonarQube analysis : ![Sonar Status](https://sonarcloud.io/api/project_badges/measure?project=terraform-provider-sewan-key&metric=alert_status)
 
+<img src="http://entreprises.smallizbeautiful.fr/logo/Sewan-Communications.jpg" width="500px">
+
 Maintainers
 -----------
 
@@ -20,6 +22,16 @@ Usage
 ---------------------
 
 Take a look in the website folder to get fully explained examples and documentation.
+
+Use the docker image for Sewan's plugin
+---------------------------
+
+```sh
+docker pull sewan/terraform-provider-sewan
+```
+
+[Docker image description and source](https://hub.docker.com/r/sewan/terraform-provider-sewan/)
+
 
 Building The Provider
 ---------------------
@@ -54,7 +66,3 @@ make test
 cd $GOPATH/src/github.com/SewanDevs/terraform-provider-sewan
 make build
 ```
-
-Use the docker image for Sewan's plugin
----------------------------
-*< available soon>*

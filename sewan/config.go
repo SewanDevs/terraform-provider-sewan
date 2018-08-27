@@ -17,8 +17,8 @@ const (
 	slugField           = sdk.SlugField
 	stateField          = sdk.StateField
 	osField             = sdk.OsField
-	ramField            = sdk.RamField
-	cpuField            = sdk.CpuField
+	RAMField            = sdk.RAMField
+	cpuField            = sdk.CPUField
 	disksField          = sdk.DisksField
 	vDiskField          = sdk.VDiskField
 	sizeField           = sdk.SizeField
@@ -35,17 +35,17 @@ const (
 	backupSizeField     = sdk.BackupSizeField
 	commentField        = sdk.CommentField
 	templateField       = sdk.TemplateField
-	idField             = sdk.IdField
+	idField             = sdk.IDField
 	dynamicField        = sdk.DynamicField
 	outsourcingField    = sdk.OutsourcingField
 	instanceNumberField = sdk.InstanceNumberField
-	vmResourceType      = sdk.VmResourceType
+	vmResourceType      = sdk.VMResourceType
 	vdcResourceType     = sdk.VdcResourceType
 )
 
 type Config struct {
-	Api_token string
-	Api_url   string
+	APIToken string
+	APIURL   string
 }
 
 type API struct {
@@ -55,23 +55,23 @@ type API struct {
 }
 
 type Client struct {
-	sewan                *sdk.API
-	sewanApiTooler       *sdk.APITooler
-	sewanClientTooler    *sdk.ClientTooler
-	sewanTemplatesTooler *sdk.TemplatesTooler
-	sewanResourceTooler  *sdk.ResourceTooler
-	sewanSchemaTooler    *sdk.SchemaTooler
+	sewan                     *sdk.API
+	sewanAPIImplementerTooler *sdk.APITooler
+	sewanClientTooler         *sdk.ClientTooler
+	sewanTemplatesTooler      *sdk.TemplatesTooler
+	sewanResourceTooler       *sdk.ResourceTooler
+	sewanSchemaTooler         *sdk.SchemaTooler
 }
 
 func (c *Config) Client() (*Client, error) {
 	apiTooler := sdk.APITooler{
-		Api: sdk.AirDrumResourcesApier{},
+		APIImplementer: sdk.AirDrumResourcesAPI{},
 	}
 	clientTooler := sdk.ClientTooler{
-		Client: sdk.HttpClienter{},
+		Client: sdk.HTTPClienter{},
 	}
 	templatesTooler := sdk.TemplatesTooler{
-		TemplatesTools: sdk.Template_Templater{},
+		TemplatesTools: sdk.TemplateTemplater{},
 	}
 	schemaTooler := sdk.SchemaTooler{
 		SchemaTools: sdk.SchemaSchemaer{},
@@ -80,10 +80,10 @@ func (c *Config) Client() (*Client, error) {
 		Resource: sdk.ResourceResourceer{},
 	}
 	api := apiTooler.New(
-		c.Api_token,
-		c.Api_url,
+		c.APIToken,
+		c.APIURL,
 	)
-	err := apiTooler.CheckCloudDcApiStatus(api, &clientTooler, &resourceTooler)
+	err := apiTooler.CheckCloudDcAPIStatus(api, &clientTooler, &resourceTooler)
 	return &Client{api,
 			&apiTooler,
 			&clientTooler,

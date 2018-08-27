@@ -4,7 +4,7 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
-func resourceVmDisk() *schema.Resource {
+func resourceVMDisk() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			nameField: &schema.Schema{
@@ -30,7 +30,7 @@ func resourceVmDisk() *schema.Resource {
 		},
 	}
 }
-func resourceVmNic() *schema.Resource {
+func resourceVMNic() *schema.Resource {
 	return &schema.Resource{
 		Schema: map[string]*schema.Schema{
 			vlanNameField: &schema.Schema{
@@ -48,12 +48,12 @@ func resourceVmNic() *schema.Resource {
 		},
 	}
 }
-func resourceVm() *schema.Resource {
+func resourceVM() *schema.Resource {
 	return &schema.Resource{
-		Create: resourceVmCreate,
-		Read:   resourceVmRead,
-		Update: resourceVmUpdate,
-		Delete: resourceVmDelete,
+		Create: resourceVMCreate,
+		Read:   resourceVMRead,
+		Update: resourceVMUpdate,
+		Delete: resourceVMDelete,
 		Schema: map[string]*schema.Schema{
 			nameField: &schema.Schema{
 				Type:     schema.TypeString,
@@ -79,7 +79,7 @@ func resourceVm() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			ramField: &schema.Schema{
+			RAMField: &schema.Schema{
 				Type:     schema.TypeInt,
 				Optional: true,
 			},
@@ -90,12 +90,12 @@ func resourceVm() *schema.Resource {
 			disksField: &schema.Schema{
 				Type:     schema.TypeList,
 				Optional: true,
-				Elem:     resourceVmDisk(),
+				Elem:     resourceVMDisk(),
 			},
 			nicsField: &schema.Schema{
 				Type:     schema.TypeList,
 				Optional: true,
-				Elem:     resourceVmNic(),
+				Elem:     resourceVMNic(),
 			},
 			vdcField: &schema.Schema{
 				Type:     schema.TypeString,
@@ -148,15 +148,15 @@ func resourceVm() *schema.Resource {
 		},
 	}
 }
-func resourceVmCreate(d *schema.ResourceData, m interface{}) error {
+func resourceVMCreate(d *schema.ResourceData, m interface{}) error {
 	return createResource(d, m, vmResourceType)
 }
-func resourceVmRead(d *schema.ResourceData, m interface{}) error {
+func resourceVMRead(d *schema.ResourceData, m interface{}) error {
 	return readResource(d, m, vmResourceType)
 }
-func resourceVmUpdate(d *schema.ResourceData, m interface{}) error {
+func resourceVMUpdate(d *schema.ResourceData, m interface{}) error {
 	return updateResource(d, m, vmResourceType)
 }
-func resourceVmDelete(d *schema.ResourceData, m interface{}) error {
+func resourceVMDelete(d *schema.ResourceData, m interface{}) error {
 	return deleteResource(d, m, vmResourceType)
 }

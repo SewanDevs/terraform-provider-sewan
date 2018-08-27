@@ -8,16 +8,16 @@ import (
 )
 
 func vmCRUDTestInit() (*Client, *schema.ResourceData) {
-	vmResource := resourceVm()
+	vmResource := resourceVM()
 	d := vmResource.TestResourceData()
 	return ResourceCRUDTestInit(), d
 }
 
-func TestResourceVmCreate(t *testing.T) {
+func TestResourceVMCreate(t *testing.T) {
 	testCases := []struct {
-		Id           int
-		TC_apier     sdk.APIer
-		Creation_Err error
+		ID          int
+		TC_apier    sdk.APIer
+		CreationErr error
 	}{
 		{
 			1,
@@ -37,27 +37,27 @@ func TestResourceVmCreate(t *testing.T) {
 	)
 	metaStruct, d = vmCRUDTestInit()
 	for _, testCase := range testCases {
-		metaStruct.sewanApiTooler.Api = testCase.TC_apier
-		err = resourceVmCreate(d, metaStruct)
+		metaStruct.sewanAPIImplementerTooler.APIImplementer = testCase.TC_apier
+		err = resourceVMCreate(d, metaStruct)
 		switch {
-		case err == nil || testCase.Creation_Err == nil:
-			if !(err == nil && testCase.Creation_Err == nil) {
+		case err == nil || testCase.CreationErr == nil:
+			if !(err == nil && testCase.CreationErr == nil) {
 				t.Errorf("\n\nTC %d : VM creation error was incorrect,"+
-					errTestResultDiffs, testCase.Id, err, testCase.Creation_Err)
+					errTestResultDiffs, testCase.ID, err, testCase.CreationErr)
 			}
-		case err.Error() != testCase.Creation_Err.Error():
+		case err.Error() != testCase.CreationErr.Error():
 			t.Errorf("\n\nTC %d : VM creation error was incorrect,"+
 				errTestResultDiffs,
-				testCase.Id, err.Error(), testCase.Creation_Err.Error())
+				testCase.ID, err.Error(), testCase.CreationErr.Error())
 		}
 	}
 }
 
-func TestResourceVmRead(t *testing.T) {
+func TestResourceVMRead(t *testing.T) {
 	testCases := []struct {
-		Id       int
+		ID       int
 		TC_apier sdk.APIer
-		Read_Err error
+		ReadErr  error
 	}{
 		{
 			1,
@@ -87,27 +87,27 @@ func TestResourceVmRead(t *testing.T) {
 	)
 	metaStruct, d = vmCRUDTestInit()
 	for _, testCase := range testCases {
-		metaStruct.sewanApiTooler.Api = testCase.TC_apier
-		err = resourceVmRead(d, metaStruct)
+		metaStruct.sewanAPIImplementerTooler.APIImplementer = testCase.TC_apier
+		err = resourceVMRead(d, metaStruct)
 		switch {
-		case err == nil || testCase.Read_Err == nil:
-			if !(err == nil && testCase.Read_Err == nil) {
-				t.Errorf(errorTcIdAndWrongVmUpdateError+
-					errTestResultDiffs, testCase.Id, err, testCase.Read_Err)
+		case err == nil || testCase.ReadErr == nil:
+			if !(err == nil && testCase.ReadErr == nil) {
+				t.Errorf(errorTcIDAndWrongVmUpdateError+
+					errTestResultDiffs, testCase.ID, err, testCase.ReadErr)
 			}
-		case err.Error() != testCase.Read_Err.Error():
-			t.Errorf(errorTcIdAndWrongVmUpdateError+
+		case err.Error() != testCase.ReadErr.Error():
+			t.Errorf(errorTcIDAndWrongVmUpdateError+
 				errTestResultDiffs,
-				testCase.Id, err.Error(), testCase.Read_Err.Error())
+				testCase.ID, err.Error(), testCase.ReadErr.Error())
 		}
 	}
 }
 
 func TestResourceVmUpdate(t *testing.T) {
 	testCases := []struct {
-		Id         int
-		TC_apier   sdk.APIer
-		Update_Err error
+		ID        int
+		TC_apier  sdk.APIer
+		UpdateErr error
 	}{
 		{
 			1,
@@ -127,27 +127,27 @@ func TestResourceVmUpdate(t *testing.T) {
 	)
 	metaStruct, d = vmCRUDTestInit()
 	for _, testCase := range testCases {
-		metaStruct.sewanApiTooler.Api = testCase.TC_apier
-		err = resourceVmUpdate(d, metaStruct)
+		metaStruct.sewanAPIImplementerTooler.APIImplementer = testCase.TC_apier
+		err = resourceVMUpdate(d, metaStruct)
 		switch {
-		case err == nil || testCase.Update_Err == nil:
-			if !(err == nil && testCase.Update_Err == nil) {
-				t.Errorf(errorTcIdAndWrongVmUpdateError+
-					errTestResultDiffs, testCase.Id, err, testCase.Update_Err)
+		case err == nil || testCase.UpdateErr == nil:
+			if !(err == nil && testCase.UpdateErr == nil) {
+				t.Errorf(errorTcIDAndWrongVmUpdateError+
+					errTestResultDiffs, testCase.ID, err, testCase.UpdateErr)
 			}
-		case err.Error() != testCase.Update_Err.Error():
-			t.Errorf(errorTcIdAndWrongVmUpdateError+
+		case err.Error() != testCase.UpdateErr.Error():
+			t.Errorf(errorTcIDAndWrongVmUpdateError+
 				errTestResultDiffs,
-				testCase.Id, err.Error(), testCase.Update_Err.Error())
+				testCase.ID, err.Error(), testCase.UpdateErr.Error())
 		}
 	}
 }
 
 func TestResourceVmDelete(t *testing.T) {
 	testCases := []struct {
-		Id         int
-		TC_apier   sdk.APIer
-		Delete_Err error
+		ID        int
+		TC_apier  sdk.APIer
+		DeleteErr error
 	}{
 		{
 			1,
@@ -167,18 +167,18 @@ func TestResourceVmDelete(t *testing.T) {
 	)
 	metaStruct, d = vmCRUDTestInit()
 	for _, testCase := range testCases {
-		metaStruct.sewanApiTooler.Api = testCase.TC_apier
-		err = resourceVmDelete(d, metaStruct)
+		metaStruct.sewanAPIImplementerTooler.APIImplementer = testCase.TC_apier
+		err = resourceVMDelete(d, metaStruct)
 		switch {
-		case err == nil || testCase.Delete_Err == nil:
-			if !(err == nil && testCase.Delete_Err == nil) {
+		case err == nil || testCase.DeleteErr == nil:
+			if !(err == nil && testCase.DeleteErr == nil) {
 				t.Errorf("\n\nTC %d : VM deletion error was incorrect,"+
-					errTestResultDiffs, testCase.Id, err, testCase.Delete_Err)
+					errTestResultDiffs, testCase.ID, err, testCase.DeleteErr)
 			}
-		case err.Error() != testCase.Delete_Err.Error():
+		case err.Error() != testCase.DeleteErr.Error():
 			t.Errorf("\n\nTC %d : VM deletion error was incorrect,"+
 				errTestResultDiffs,
-				testCase.Id, err.Error(), testCase.Delete_Err.Error())
+				testCase.ID, err.Error(), testCase.DeleteErr.Error())
 		}
 	}
 }

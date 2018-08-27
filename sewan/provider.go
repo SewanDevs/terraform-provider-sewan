@@ -8,7 +8,7 @@ func Provider() *schema.Provider {
 	return &schema.Provider{
 		Schema: providerSchema(),
 		ResourcesMap: map[string]*schema.Resource{
-			"sewan_clouddc_vm":  resourceVm(),
+			"sewan_clouddc_vm":  resourceVM(),
 			"sewan_clouddc_vdc": resourceVdc(),
 		},
 		ConfigureFunc: providerConfigure,
@@ -32,8 +32,8 @@ func providerSchema() map[string]*schema.Schema {
 
 func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	config := Config{
-		Api_token: d.Get("api_token").(string),
-		Api_url:   d.Get("api_url").(string),
+		APIToken: d.Get("api_token").(string),
+		APIURL:   d.Get("api_url").(string),
 	}
 	return config.Client()
 }

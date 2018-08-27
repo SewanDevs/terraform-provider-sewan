@@ -7,7 +7,7 @@ var (
 		datacenterField: "dc1",
 		vdcResourceField: []interface{}{
 			map[string]interface{}{
-				resourceField: ramField,
+				resourceField: RAMField,
 				totalField:    20,
 			},
 			map[string]interface{}{
@@ -28,12 +28,12 @@ var (
 			},
 		},
 	}
-	noTemplateVmMap = map[string]interface{}{
+	noTemplateVMMap = map[string]interface{}{
 		nameField:       "Unit test vm",
 		enterpriseField: "unit test enterprise",
 		stateField:      "UP",
 		osField:         "Debian",
-		ramField:        8,
+		RAMField:        8,
 		cpuField:        4,
 		disksField: []interface{}{
 			map[string]interface{}{
@@ -77,8 +77,8 @@ const (
 	vmReadFailure                   = "VM read failed."
 	vmUpdateFailure                 = "VM update failed."
 	vmDeletionFailure               = "VM deletion failed."
-	unitTestApiUrl                  = "https://unitTestApiUrl.org"
+	unitTestAPIURL                  = "https://unitTestAPIURL.org"
 	errTestResultDiffs              = "\n\rGot: \"%s\"\n\rWant: \"%s\""
-	errorTcIdAndWrongVdcUpdateError = "\n\nTC %d : VDC update error was incorrect,"
-	errorTcIdAndWrongVmUpdateError  = "\n\nTC %d : VM update error was incorrect,"
+	errorTcIDAndWrongVdcUpdateError = "\n\nTC %d : VDC update error was incorrect,"
+	errorTcIDAndWrongVmUpdateError  = "\n\nTC %d : VM update error was incorrect,"
 )

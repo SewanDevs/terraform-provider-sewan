@@ -21,7 +21,7 @@ Contact the support.
 ```hcl
 provider "sewan" {
   api_token = "your-company token"
-  api_url = "https://cloud-datacenter.fr/api/clouddc/"
+  apiURL = "https://cloud-datacenter.fr/api/clouddc/"
 }
 
 resource "sewan_clouddc_vdc" "vdc-example" {

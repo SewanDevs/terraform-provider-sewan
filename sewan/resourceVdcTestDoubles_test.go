@@ -3,7 +3,7 @@ package sewan
 import (
 	"errors"
 	"github.com/hashicorp/terraform/helper/schema"
-	sdk "gitlab.com/rd/sewan-sdk-go"
+	sdk "github.com/SewanDevs/sewan-sdk-go"
 )
 
 type VdcSuccessfullCrudOperationsAirDrumAPIer struct{}

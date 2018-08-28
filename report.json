@@ -1,48 +1,48 @@
-{"Time":"2018-08-28T11:46:03.265850493+02:00","Action":"run","Package":"gitlab.com/rd/terraform-provider-sewan","Test":"TestMain"}
-{"Time":"2018-08-28T11:46:03.266098516+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan","Test":"TestMain","Output":"=== RUN   TestMain\n"}
-{"Time":"2018-08-28T11:46:03.266136195+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan","Test":"TestMain","Output":"--- PASS: TestMain (0.00s)\n"}
-{"Time":"2018-08-28T11:46:03.266154329+02:00","Action":"pass","Package":"gitlab.com/rd/terraform-provider-sewan","Test":"TestMain","Elapsed":0}
-{"Time":"2018-08-28T11:46:03.266172082+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan","Output":"PASS\n"}
-{"Time":"2018-08-28T11:46:03.266184899+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan","Output":"coverage: 0.0% of statements\n"}
-{"Time":"2018-08-28T11:46:03.268037047+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan","Output":"ok  \tgitlab.com/rd/terraform-provider-sewan\t0.011s\tcoverage: 0.0% of statements\n"}
-{"Time":"2018-08-28T11:46:03.268084797+02:00","Action":"pass","Package":"gitlab.com/rd/terraform-provider-sewan","Elapsed":0.011}
-{"Time":"2018-08-28T11:46:03.284336978+02:00","Action":"run","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestProvider"}
-{"Time":"2018-08-28T11:46:03.284396391+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestProvider","Output":"=== RUN   TestProvider\n"}
-{"Time":"2018-08-28T11:46:03.284815319+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestProvider","Output":"--- PASS: TestProvider (0.00s)\n"}
-{"Time":"2018-08-28T11:46:03.284871825+02:00","Action":"pass","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestProvider","Elapsed":0}
-{"Time":"2018-08-28T11:46:03.284894709+02:00","Action":"run","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVdcCreate"}
-{"Time":"2018-08-28T11:46:03.284910729+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVdcCreate","Output":"=== RUN   TestResourceVdcCreate\n"}
-{"Time":"2018-08-28T11:46:03.285055492+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVdcCreate","Output":"--- PASS: TestResourceVdcCreate (0.00s)\n"}
-{"Time":"2018-08-28T11:46:03.285089121+02:00","Action":"pass","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVdcCreate","Elapsed":0}
-{"Time":"2018-08-28T11:46:03.285107978+02:00","Action":"run","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVdcRead"}
-{"Time":"2018-08-28T11:46:03.285122698+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVdcRead","Output":"=== RUN   TestResourceVdcRead\n"}
-{"Time":"2018-08-28T11:46:03.285225798+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVdcRead","Output":"--- PASS: TestResourceVdcRead (0.00s)\n"}
-{"Time":"2018-08-28T11:46:03.285253493+02:00","Action":"pass","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVdcRead","Elapsed":0}
-{"Time":"2018-08-28T11:46:03.285271098+02:00","Action":"run","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVdcUpdate"}
-{"Time":"2018-08-28T11:46:03.285286794+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVdcUpdate","Output":"=== RUN   TestResourceVdcUpdate\n"}
-{"Time":"2018-08-28T11:46:03.285310033+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVdcUpdate","Output":"--- PASS: TestResourceVdcUpdate (0.00s)\n"}
-{"Time":"2018-08-28T11:46:03.285329459+02:00","Action":"pass","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVdcUpdate","Elapsed":0}
-{"Time":"2018-08-28T11:46:03.285345996+02:00","Action":"run","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVdcDelete"}
-{"Time":"2018-08-28T11:46:03.285374888+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVdcDelete","Output":"=== RUN   TestResourceVdcDelete\n"}
-{"Time":"2018-08-28T11:46:03.285399125+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVdcDelete","Output":"--- PASS: TestResourceVdcDelete (0.00s)\n"}
-{"Time":"2018-08-28T11:46:03.285417886+02:00","Action":"pass","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVdcDelete","Elapsed":0}
-{"Time":"2018-08-28T11:46:03.285434846+02:00","Action":"run","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVMCreate"}
-{"Time":"2018-08-28T11:46:03.285450092+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVMCreate","Output":"=== RUN   TestResourceVMCreate\n"}
-{"Time":"2018-08-28T11:46:03.28554657+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVMCreate","Output":"--- PASS: TestResourceVMCreate (0.00s)\n"}
-{"Time":"2018-08-28T11:46:03.285581307+02:00","Action":"pass","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVMCreate","Elapsed":0}
-{"Time":"2018-08-28T11:46:03.285599298+02:00","Action":"run","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVMRead"}
-{"Time":"2018-08-28T11:46:03.28561436+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVMRead","Output":"=== RUN   TestResourceVMRead\n"}
-{"Time":"2018-08-28T11:46:03.285751277+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVMRead","Output":"--- PASS: TestResourceVMRead (0.00s)\n"}
-{"Time":"2018-08-28T11:46:03.285779834+02:00","Action":"pass","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVMRead","Elapsed":0}
-{"Time":"2018-08-28T11:46:03.285797679+02:00","Action":"run","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVmUpdate"}
-{"Time":"2018-08-28T11:46:03.285818736+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVmUpdate","Output":"=== RUN   TestResourceVmUpdate\n"}
-{"Time":"2018-08-28T11:46:03.285839886+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVmUpdate","Output":"--- PASS: TestResourceVmUpdate (0.00s)\n"}
-{"Time":"2018-08-28T11:46:03.285857673+02:00","Action":"pass","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVmUpdate","Elapsed":0}
-{"Time":"2018-08-28T11:46:03.285873674+02:00","Action":"run","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVmDelete"}
-{"Time":"2018-08-28T11:46:03.285887679+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVmDelete","Output":"=== RUN   TestResourceVmDelete\n"}
-{"Time":"2018-08-28T11:46:03.285906554+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVmDelete","Output":"--- PASS: TestResourceVmDelete (0.00s)\n"}
-{"Time":"2018-08-28T11:46:03.285922328+02:00","Action":"pass","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVmDelete","Elapsed":0}
-{"Time":"2018-08-28T11:46:03.28593704+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Output":"PASS\n"}
-{"Time":"2018-08-28T11:46:03.286097938+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Output":"coverage: 75.0% of statements\n"}
-{"Time":"2018-08-28T11:46:03.287415227+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Output":"ok  \tgitlab.com/rd/terraform-provider-sewan/sewan\t0.009s\tcoverage: 75.0% of statements\n"}
-{"Time":"2018-08-28T11:46:03.287456976+02:00","Action":"pass","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Elapsed":0.009}
+{"Time":"2018-08-28T15:20:17.633366519+02:00","Action":"run","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestProvider"}
+{"Time":"2018-08-28T15:20:17.63364873+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestProvider","Output":"=== RUN   TestProvider\n"}
+{"Time":"2018-08-28T15:20:17.634092148+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestProvider","Output":"--- PASS: TestProvider (0.00s)\n"}
+{"Time":"2018-08-28T15:20:17.634134909+02:00","Action":"pass","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestProvider","Elapsed":0}
+{"Time":"2018-08-28T15:20:17.634155869+02:00","Action":"run","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVdcCreate"}
+{"Time":"2018-08-28T15:20:17.634173245+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVdcCreate","Output":"=== RUN   TestResourceVdcCreate\n"}
+{"Time":"2018-08-28T15:20:17.634373447+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVdcCreate","Output":"--- PASS: TestResourceVdcCreate (0.00s)\n"}
+{"Time":"2018-08-28T15:20:17.634403682+02:00","Action":"pass","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVdcCreate","Elapsed":0}
+{"Time":"2018-08-28T15:20:17.634418207+02:00","Action":"run","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVdcRead"}
+{"Time":"2018-08-28T15:20:17.634430526+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVdcRead","Output":"=== RUN   TestResourceVdcRead\n"}
+{"Time":"2018-08-28T15:20:17.634572701+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVdcRead","Output":"--- PASS: TestResourceVdcRead (0.00s)\n"}
+{"Time":"2018-08-28T15:20:17.63460038+02:00","Action":"pass","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVdcRead","Elapsed":0}
+{"Time":"2018-08-28T15:20:17.634613463+02:00","Action":"run","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVdcUpdate"}
+{"Time":"2018-08-28T15:20:17.634624424+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVdcUpdate","Output":"=== RUN   TestResourceVdcUpdate\n"}
+{"Time":"2018-08-28T15:20:17.634640242+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVdcUpdate","Output":"--- PASS: TestResourceVdcUpdate (0.00s)\n"}
+{"Time":"2018-08-28T15:20:17.634654952+02:00","Action":"pass","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVdcUpdate","Elapsed":0}
+{"Time":"2018-08-28T15:20:17.634667683+02:00","Action":"run","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVdcDelete"}
+{"Time":"2018-08-28T15:20:17.63467954+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVdcDelete","Output":"=== RUN   TestResourceVdcDelete\n"}
+{"Time":"2018-08-28T15:20:17.634696544+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVdcDelete","Output":"--- PASS: TestResourceVdcDelete (0.00s)\n"}
+{"Time":"2018-08-28T15:20:17.634711199+02:00","Action":"pass","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVdcDelete","Elapsed":0}
+{"Time":"2018-08-28T15:20:17.634723586+02:00","Action":"run","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVMCreate"}
+{"Time":"2018-08-28T15:20:17.63473558+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVMCreate","Output":"=== RUN   TestResourceVMCreate\n"}
+{"Time":"2018-08-28T15:20:17.634934426+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVMCreate","Output":"--- PASS: TestResourceVMCreate (0.00s)\n"}
+{"Time":"2018-08-28T15:20:17.634963895+02:00","Action":"pass","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVMCreate","Elapsed":0}
+{"Time":"2018-08-28T15:20:17.634991163+02:00","Action":"run","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVMRead"}
+{"Time":"2018-08-28T15:20:17.635004216+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVMRead","Output":"=== RUN   TestResourceVMRead\n"}
+{"Time":"2018-08-28T15:20:17.635220476+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVMRead","Output":"--- PASS: TestResourceVMRead (0.00s)\n"}
+{"Time":"2018-08-28T15:20:17.63524572+02:00","Action":"pass","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVMRead","Elapsed":0}
+{"Time":"2018-08-28T15:20:17.635259594+02:00","Action":"run","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVmUpdate"}
+{"Time":"2018-08-28T15:20:17.635271863+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVmUpdate","Output":"=== RUN   TestResourceVmUpdate\n"}
+{"Time":"2018-08-28T15:20:17.635288675+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVmUpdate","Output":"--- PASS: TestResourceVmUpdate (0.00s)\n"}
+{"Time":"2018-08-28T15:20:17.63530371+02:00","Action":"pass","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVmUpdate","Elapsed":0}
+{"Time":"2018-08-28T15:20:17.635316175+02:00","Action":"run","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVmDelete"}
+{"Time":"2018-08-28T15:20:17.635328159+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVmDelete","Output":"=== RUN   TestResourceVmDelete\n"}
+{"Time":"2018-08-28T15:20:17.635345009+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVmDelete","Output":"--- PASS: TestResourceVmDelete (0.00s)\n"}
+{"Time":"2018-08-28T15:20:17.635358345+02:00","Action":"pass","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Test":"TestResourceVmDelete","Elapsed":0}
+{"Time":"2018-08-28T15:20:17.635371348+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Output":"PASS\n"}
+{"Time":"2018-08-28T15:20:17.63561266+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Output":"coverage: 75.0% of statements\n"}
+{"Time":"2018-08-28T15:20:17.638583645+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Output":"ok  \tgitlab.com/rd/terraform-provider-sewan/sewan\t0.013s\tcoverage: 75.0% of statements\n"}
+{"Time":"2018-08-28T15:20:17.638628873+02:00","Action":"pass","Package":"gitlab.com/rd/terraform-provider-sewan/sewan","Elapsed":0.014}
+{"Time":"2018-08-28T15:20:17.744036014+02:00","Action":"run","Package":"gitlab.com/rd/terraform-provider-sewan","Test":"TestMain"}
+{"Time":"2018-08-28T15:20:17.744116564+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan","Test":"TestMain","Output":"=== RUN   TestMain\n"}
+{"Time":"2018-08-28T15:20:17.744162165+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan","Test":"TestMain","Output":"--- PASS: TestMain (0.00s)\n"}
+{"Time":"2018-08-28T15:20:17.744182704+02:00","Action":"pass","Package":"gitlab.com/rd/terraform-provider-sewan","Test":"TestMain","Elapsed":0}
+{"Time":"2018-08-28T15:20:17.744204057+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan","Output":"PASS\n"}
+{"Time":"2018-08-28T15:20:17.744224418+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan","Output":"coverage: 0.0% of statements\n"}
+{"Time":"2018-08-28T15:20:17.747793999+02:00","Action":"output","Package":"gitlab.com/rd/terraform-provider-sewan","Output":"ok  \tgitlab.com/rd/terraform-provider-sewan\t0.012s\tcoverage: 0.0% of statements\n"}
+{"Time":"2018-08-28T15:20:17.747845946+02:00","Action":"pass","Package":"gitlab.com/rd/terraform-provider-sewan","Elapsed":0.012}

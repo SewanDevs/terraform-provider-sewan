@@ -1,6 +1,11 @@
 mode: set
-gitlab.com/rd/terraform-provider-sewan/main.go:9.13,11.51 1 0
-gitlab.com/rd/terraform-provider-sewan/main.go:11.51,13.4 1 0
+gitlab.com/rd/terraform-provider-sewan/sewan/resourceVm.go:7.40,32.2 1 1
+gitlab.com/rd/terraform-provider-sewan/sewan/resourceVm.go:33.39,50.2 1 1
+gitlab.com/rd/terraform-provider-sewan/sewan/resourceVm.go:51.36,150.2 1 1
+gitlab.com/rd/terraform-provider-sewan/sewan/resourceVm.go:151.68,153.2 1 1
+gitlab.com/rd/terraform-provider-sewan/sewan/resourceVm.go:154.66,156.2 1 1
+gitlab.com/rd/terraform-provider-sewan/sewan/resourceVm.go:157.68,159.2 1 1
+gitlab.com/rd/terraform-provider-sewan/sewan/resourceVm.go:160.68,162.2 1 1
 gitlab.com/rd/terraform-provider-sewan/sewan/resourcesCRUD.go:10.29,17.16 2 1
 gitlab.com/rd/terraform-provider-sewan/sewan/resourcesCRUD.go:20.2,22.39 1 1
 gitlab.com/rd/terraform-provider-sewan/sewan/resourcesCRUD.go:17.16,19.3 1 1
@@ -22,10 +27,5 @@ gitlab.com/rd/terraform-provider-sewan/sewan/resourceVdc.go:64.69,66.2 1 1
 gitlab.com/rd/terraform-provider-sewan/sewan/resourceVdc.go:67.67,69.2 1 1
 gitlab.com/rd/terraform-provider-sewan/sewan/resourceVdc.go:70.69,72.2 1 1
 gitlab.com/rd/terraform-provider-sewan/sewan/resourceVdc.go:73.69,75.2 1 1
-gitlab.com/rd/terraform-provider-sewan/sewan/resourceVm.go:7.40,32.2 1 1
-gitlab.com/rd/terraform-provider-sewan/sewan/resourceVm.go:33.39,50.2 1 1
-gitlab.com/rd/terraform-provider-sewan/sewan/resourceVm.go:51.36,150.2 1 1
-gitlab.com/rd/terraform-provider-sewan/sewan/resourceVm.go:151.68,153.2 1 1
-gitlab.com/rd/terraform-provider-sewan/sewan/resourceVm.go:154.66,156.2 1 1
-gitlab.com/rd/terraform-provider-sewan/sewan/resourceVm.go:157.68,159.2 1 1
-gitlab.com/rd/terraform-provider-sewan/sewan/resourceVm.go:160.68,162.2 1 1
+gitlab.com/rd/terraform-provider-sewan/main.go:9.13,11.51 1 0
+gitlab.com/rd/terraform-provider-sewan/main.go:11.51,13.4 1 0

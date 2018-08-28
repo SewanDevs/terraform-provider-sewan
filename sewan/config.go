@@ -2,7 +2,6 @@ package sewan
 
 import (
 	sdk "gitlab.com/rd/sewan_go_sdk"
-	"net/http"
 )
 
 const (
@@ -17,7 +16,7 @@ const (
 	slugField           = sdk.SlugField
 	stateField          = sdk.StateField
 	osField             = sdk.OsField
-	RAMField            = sdk.RAMField
+	ramField            = sdk.RAMField
 	cpuField            = sdk.CPUField
 	disksField          = sdk.DisksField
 	vDiskField          = sdk.VDiskField
@@ -43,18 +42,12 @@ const (
 	vdcResourceType     = sdk.VdcResourceType
 )
 
-type Config struct {
+type configStruct struct {
 	APIToken string
 	APIURL   string
 }
 
-type API struct {
-	Token  string
-	URL    string
-	Client *http.Client
-}
-
-type Client struct {
+type clientStruct struct {
 	sewan                     *sdk.API
 	sewanAPIImplementerTooler *sdk.APITooler
 	sewanClientTooler         *sdk.ClientTooler
@@ -63,7 +56,7 @@ type Client struct {
 	sewanSchemaTooler         *sdk.SchemaTooler
 }
 
-func (c *Config) Client() (*Client, error) {
+func (c *configStruct) clientStruct() (*clientStruct, error) {
 	apiTooler := sdk.APITooler{
 		APIImplementer: sdk.AirDrumResourcesAPI{},
 	}
@@ -83,8 +76,8 @@ func (c *Config) Client() (*Client, error) {
 		c.APIToken,
 		c.APIURL,
 	)
-	err := apiTooler.CheckCloudDcAPIStatus(api, &clientTooler, &resourceTooler)
-	return &Client{api,
+	err := apiTooler.CheckCloudDcStatus(api, &clientTooler, &resourceTooler)
+	return &clientStruct{api,
 			&apiTooler,
 			&clientTooler,
 			&templatesTooler,

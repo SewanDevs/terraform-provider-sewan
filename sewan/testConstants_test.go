@@ -7,7 +7,7 @@ var (
 		datacenterField: "dc1",
 		vdcResourceField: []interface{}{
 			map[string]interface{}{
-				resourceField: RAMField,
+				resourceField: ramField,
 				totalField:    20,
 			},
 			map[string]interface{}{
@@ -33,7 +33,7 @@ var (
 		enterpriseField: "unit test enterprise",
 		stateField:      "UP",
 		osField:         "Debian",
-		RAMField:        8,
+		ramField:        8,
 		cpuField:        4,
 		disksField: []interface{}{
 			map[string]interface{}{
@@ -80,5 +80,5 @@ const (
 	unitTestAPIURL                  = "https://unitTestAPIURL.org"
 	errTestResultDiffs              = "\n\rGot: \"%s\"\n\rWant: \"%s\""
 	errorTcIDAndWrongVdcUpdateError = "\n\nTC %d : VDC update error was incorrect,"
-	errorTcIDAndWrongVmUpdateError  = "\n\nTC %d : VM update error was incorrect,"
+	errorTcIDAndWrongVMUpdateError  = "\n\nTC %d : VM update error was incorrect,"
 )

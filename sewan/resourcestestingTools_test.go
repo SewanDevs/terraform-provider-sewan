@@ -4,8 +4,8 @@ import (
 	sdk "gitlab.com/rd/sewan_go_sdk"
 )
 
-func ResourceCRUDTestInit() *Client {
-	config := Config{
+func resourceCRUDTestInit() *clientStruct {
+	config := configStruct{
 		APIToken: "4242",
 		APIURL:   unitTestAPIURL,
 	}
@@ -26,7 +26,7 @@ func ResourceCRUDTestInit() *Client {
 		config.APIToken,
 		config.APIURL,
 	)
-	metaStruct := &Client{api,
+	metaStruct := &clientStruct{api,
 		&apiTooler,
 		&clientTooler,
 		&templatesTooler,

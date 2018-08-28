@@ -7,16 +7,16 @@ import (
 	"testing"
 )
 
-func vdcCRUDTestInit() (*Client, *schema.ResourceData) {
+func vdcCRUDTestInit() (*clientStruct, *schema.ResourceData) {
 	vdcResource := resourceVdc()
 	d := vdcResource.TestResourceData()
-	return ResourceCRUDTestInit(), d
+	return resourceCRUDTestInit(), d
 }
 
 func TestResourceVdcCreate(t *testing.T) {
 	testCases := []struct {
 		ID          int
-		TC_apier    sdk.APIer
+		TCApier     sdk.APIer
 		CreationErr error
 	}{
 		{
@@ -32,12 +32,12 @@ func TestResourceVdcCreate(t *testing.T) {
 	}
 	var (
 		err        error
-		metaStruct *Client
+		metaStruct *clientStruct
 		d          *schema.ResourceData
 	)
 	metaStruct, d = vdcCRUDTestInit()
 	for _, testCase := range testCases {
-		metaStruct.sewanAPIImplementerTooler.APIImplementer = testCase.TC_apier
+		metaStruct.sewanAPIImplementerTooler.APIImplementer = testCase.TCApier
 		err = resourceVdcCreate(d, metaStruct)
 		switch {
 		case err == nil || testCase.CreationErr == nil:
@@ -55,9 +55,9 @@ func TestResourceVdcCreate(t *testing.T) {
 
 func TestResourceVdcRead(t *testing.T) {
 	testCases := []struct {
-		ID       int
-		TC_apier sdk.APIer
-		ReadErr  error
+		ID      int
+		TCApier sdk.APIer
+		ReadErr error
 	}{
 		{
 			1,
@@ -82,12 +82,12 @@ func TestResourceVdcRead(t *testing.T) {
 	}
 	var (
 		err        error
-		metaStruct *Client
+		metaStruct *clientStruct
 		d          *schema.ResourceData
 	)
 	metaStruct, d = vdcCRUDTestInit()
 	for _, testCase := range testCases {
-		metaStruct.sewanAPIImplementerTooler.APIImplementer = testCase.TC_apier
+		metaStruct.sewanAPIImplementerTooler.APIImplementer = testCase.TCApier
 		err = resourceVdcRead(d, metaStruct)
 		switch {
 		case err == nil || testCase.ReadErr == nil:
@@ -106,7 +106,7 @@ func TestResourceVdcRead(t *testing.T) {
 func TestResourceVdcUpdate(t *testing.T) {
 	testCases := []struct {
 		ID        int
-		TC_apier  sdk.APIer
+		TCApier   sdk.APIer
 		UpdateErr error
 	}{
 		{
@@ -122,12 +122,12 @@ func TestResourceVdcUpdate(t *testing.T) {
 	}
 	var (
 		err        error
-		metaStruct *Client
+		metaStruct *clientStruct
 		d          *schema.ResourceData
 	)
 	metaStruct, d = vdcCRUDTestInit()
 	for _, testCase := range testCases {
-		metaStruct.sewanAPIImplementerTooler.APIImplementer = testCase.TC_apier
+		metaStruct.sewanAPIImplementerTooler.APIImplementer = testCase.TCApier
 		err = resourceVdcUpdate(d, metaStruct)
 		switch {
 		case err == nil || testCase.UpdateErr == nil:
@@ -146,7 +146,7 @@ func TestResourceVdcUpdate(t *testing.T) {
 func TestResourceVdcDelete(t *testing.T) {
 	testCases := []struct {
 		ID        int
-		TC_apier  sdk.APIer
+		TCApier   sdk.APIer
 		DeleteErr error
 	}{
 		{
@@ -162,12 +162,12 @@ func TestResourceVdcDelete(t *testing.T) {
 	}
 	var (
 		err        error
-		metaStruct *Client
+		metaStruct *clientStruct
 		d          *schema.ResourceData
 	)
 	metaStruct, d = vdcCRUDTestInit()
 	for _, testCase := range testCases {
-		metaStruct.sewanAPIImplementerTooler.APIImplementer = testCase.TC_apier
+		metaStruct.sewanAPIImplementerTooler.APIImplementer = testCase.TCApier
 		err = resourceVdcDelete(d, metaStruct)
 		switch {
 		case err == nil || testCase.DeleteErr == nil:

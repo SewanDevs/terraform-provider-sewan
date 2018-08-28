@@ -7,16 +7,16 @@ import (
 	"testing"
 )
 
-func vmCRUDTestInit() (*Client, *schema.ResourceData) {
+func vmCRUDTestInit() (*clientStruct, *schema.ResourceData) {
 	vmResource := resourceVM()
 	d := vmResource.TestResourceData()
-	return ResourceCRUDTestInit(), d
+	return resourceCRUDTestInit(), d
 }
 
 func TestResourceVMCreate(t *testing.T) {
 	testCases := []struct {
 		ID          int
-		TC_apier    sdk.APIer
+		TCApier     sdk.APIer
 		CreationErr error
 	}{
 		{
@@ -32,12 +32,12 @@ func TestResourceVMCreate(t *testing.T) {
 	}
 	var (
 		err        error
-		metaStruct *Client
+		metaStruct *clientStruct
 		d          *schema.ResourceData
 	)
 	metaStruct, d = vmCRUDTestInit()
 	for _, testCase := range testCases {
-		metaStruct.sewanAPIImplementerTooler.APIImplementer = testCase.TC_apier
+		metaStruct.sewanAPIImplementerTooler.APIImplementer = testCase.TCApier
 		err = resourceVMCreate(d, metaStruct)
 		switch {
 		case err == nil || testCase.CreationErr == nil:
@@ -55,9 +55,9 @@ func TestResourceVMCreate(t *testing.T) {
 
 func TestResourceVMRead(t *testing.T) {
 	testCases := []struct {
-		ID       int
-		TC_apier sdk.APIer
-		ReadErr  error
+		ID      int
+		TCApier sdk.APIer
+		ReadErr error
 	}{
 		{
 			1,
@@ -82,21 +82,21 @@ func TestResourceVMRead(t *testing.T) {
 	}
 	var (
 		err        error
-		metaStruct *Client
+		metaStruct *clientStruct
 		d          *schema.ResourceData
 	)
 	metaStruct, d = vmCRUDTestInit()
 	for _, testCase := range testCases {
-		metaStruct.sewanAPIImplementerTooler.APIImplementer = testCase.TC_apier
+		metaStruct.sewanAPIImplementerTooler.APIImplementer = testCase.TCApier
 		err = resourceVMRead(d, metaStruct)
 		switch {
 		case err == nil || testCase.ReadErr == nil:
 			if !(err == nil && testCase.ReadErr == nil) {
-				t.Errorf(errorTcIDAndWrongVmUpdateError+
+				t.Errorf(errorTcIDAndWrongVMUpdateError+
 					errTestResultDiffs, testCase.ID, err, testCase.ReadErr)
 			}
 		case err.Error() != testCase.ReadErr.Error():
-			t.Errorf(errorTcIDAndWrongVmUpdateError+
+			t.Errorf(errorTcIDAndWrongVMUpdateError+
 				errTestResultDiffs,
 				testCase.ID, err.Error(), testCase.ReadErr.Error())
 		}
@@ -106,7 +106,7 @@ func TestResourceVMRead(t *testing.T) {
 func TestResourceVmUpdate(t *testing.T) {
 	testCases := []struct {
 		ID        int
-		TC_apier  sdk.APIer
+		TCApier   sdk.APIer
 		UpdateErr error
 	}{
 		{
@@ -122,21 +122,21 @@ func TestResourceVmUpdate(t *testing.T) {
 	}
 	var (
 		err        error
-		metaStruct *Client
+		metaStruct *clientStruct
 		d          *schema.ResourceData
 	)
 	metaStruct, d = vmCRUDTestInit()
 	for _, testCase := range testCases {
-		metaStruct.sewanAPIImplementerTooler.APIImplementer = testCase.TC_apier
+		metaStruct.sewanAPIImplementerTooler.APIImplementer = testCase.TCApier
 		err = resourceVMUpdate(d, metaStruct)
 		switch {
 		case err == nil || testCase.UpdateErr == nil:
 			if !(err == nil && testCase.UpdateErr == nil) {
-				t.Errorf(errorTcIDAndWrongVmUpdateError+
+				t.Errorf(errorTcIDAndWrongVMUpdateError+
 					errTestResultDiffs, testCase.ID, err, testCase.UpdateErr)
 			}
 		case err.Error() != testCase.UpdateErr.Error():
-			t.Errorf(errorTcIDAndWrongVmUpdateError+
+			t.Errorf(errorTcIDAndWrongVMUpdateError+
 				errTestResultDiffs,
 				testCase.ID, err.Error(), testCase.UpdateErr.Error())
 		}
@@ -146,7 +146,7 @@ func TestResourceVmUpdate(t *testing.T) {
 func TestResourceVmDelete(t *testing.T) {
 	testCases := []struct {
 		ID        int
-		TC_apier  sdk.APIer
+		TCApier   sdk.APIer
 		DeleteErr error
 	}{
 		{
@@ -162,12 +162,12 @@ func TestResourceVmDelete(t *testing.T) {
 	}
 	var (
 		err        error
-		metaStruct *Client
+		metaStruct *clientStruct
 		d          *schema.ResourceData
 	)
 	metaStruct, d = vmCRUDTestInit()
 	for _, testCase := range testCases {
-		metaStruct.sewanAPIImplementerTooler.APIImplementer = testCase.TC_apier
+		metaStruct.sewanAPIImplementerTooler.APIImplementer = testCase.TCApier
 		err = resourceVMDelete(d, metaStruct)
 		switch {
 		case err == nil || testCase.DeleteErr == nil:

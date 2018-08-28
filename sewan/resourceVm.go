@@ -79,7 +79,7 @@ func resourceVM() *schema.Resource {
 				Type:     schema.TypeString,
 				Optional: true,
 			},
-			RAMField: &schema.Schema{
+			ramField: &schema.Schema{
 				Type:     schema.TypeInt,
 				Optional: true,
 			},

@@ -41,7 +41,7 @@ Building The Provider
 
 * Clone Sewan's sdk and terraform plugin repositories to: `$GOPATH/src/github.com/SewanDevs/` and terraform sources
 ```sh
-git clone https://github.com/SewanDevs/sewan_go_sdk.git $GOPATH/src/github.com/SewanDevs/sewan_go_sdk
+git clone https://github.com/SewanDevs/sewan-sdk-go.git $GOPATH/src/github.com/SewanDevs/sewan-sdk-go
 git clone https://github.com/SewanDevs/terraform-provider-sewan.git $GOPATH/src/github.com/SewanDevs/terraform-provider-sewan
 git clone https://github.com/hashicorp/terraform.git $GOPATH/src/github.com/hashicorp/terraform
 ```

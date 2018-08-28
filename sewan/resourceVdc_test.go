@@ -2,22 +2,23 @@ package sewan
 
 import (
 	"errors"
+	sdk "github.com/SewanDevs/sewan-sdk-go"
 	sdk "github.com/SewanDevs/sewan_go_sdk"
 	"github.com/hashicorp/terraform/helper/schema"
 	"testing"
 )
 
-func vdcCRUDTestInit() (*Client, *schema.ResourceData) {
+func vdcCRUDTestInit() (*clientStruct, *schema.ResourceData) {
 	vdcResource := resourceVdc()
 	d := vdcResource.TestResourceData()
-	return ResourceCRUDTestInit(), d
+	return resourceCRUDTestInit(), d
 }
 
 func TestResourceVdcCreate(t *testing.T) {
 	testCases := []struct {
-		Id           int
-		TC_apier     sdk.APIer
-		Creation_Err error
+		ID          int
+		TCApier     sdk.APIer
+		CreationErr error
 	}{
 		{
 			1,
@@ -32,32 +33,32 @@ func TestResourceVdcCreate(t *testing.T) {
 	}
 	var (
 		err        error
-		metaStruct *Client
+		metaStruct *clientStruct
 		d          *schema.ResourceData
 	)
 	metaStruct, d = vdcCRUDTestInit()
 	for _, testCase := range testCases {
-		metaStruct.sewanApiTooler.Api = testCase.TC_apier
+		metaStruct.sewanAPIImplementerTooler.APIImplementer = testCase.TCApier
 		err = resourceVdcCreate(d, metaStruct)
 		switch {
-		case err == nil || testCase.Creation_Err == nil:
-			if !(err == nil && testCase.Creation_Err == nil) {
+		case err == nil || testCase.CreationErr == nil:
+			if !(err == nil && testCase.CreationErr == nil) {
 				t.Errorf("\n\nTC %d : VDC creation error was incorrect,"+
-					errTestResultDiffs, testCase.Id, err, testCase.Creation_Err)
+					errTestResultDiffs, testCase.ID, err, testCase.CreationErr)
 			}
-		case err.Error() != testCase.Creation_Err.Error():
+		case err.Error() != testCase.CreationErr.Error():
 			t.Errorf("\n\nTC %d : VDC creation error was incorrect,"+
 				errTestResultDiffs,
-				testCase.Id, err.Error(), testCase.Creation_Err.Error())
+				testCase.ID, err.Error(), testCase.CreationErr.Error())
 		}
 	}
 }
 
 func TestResourceVdcRead(t *testing.T) {
 	testCases := []struct {
-		Id       int
-		TC_apier sdk.APIer
-		Read_Err error
+		ID      int
+		TCApier sdk.APIer
+		ReadErr error
 	}{
 		{
 			1,
@@ -82,32 +83,32 @@ func TestResourceVdcRead(t *testing.T) {
 	}
 	var (
 		err        error
-		metaStruct *Client
+		metaStruct *clientStruct
 		d          *schema.ResourceData
 	)
 	metaStruct, d = vdcCRUDTestInit()
 	for _, testCase := range testCases {
-		metaStruct.sewanApiTooler.Api = testCase.TC_apier
+		metaStruct.sewanAPIImplementerTooler.APIImplementer = testCase.TCApier
 		err = resourceVdcRead(d, metaStruct)
 		switch {
-		case err == nil || testCase.Read_Err == nil:
-			if !(err == nil && testCase.Read_Err == nil) {
-				t.Errorf(errorTcIdAndWrongVdcUpdateError+
-					errTestResultDiffs, testCase.Id, err, testCase.Read_Err)
+		case err == nil || testCase.ReadErr == nil:
+			if !(err == nil && testCase.ReadErr == nil) {
+				t.Errorf(errorTcIDAndWrongVdcUpdateError+
+					errTestResultDiffs, testCase.ID, err, testCase.ReadErr)
 			}
-		case err.Error() != testCase.Read_Err.Error():
-			t.Errorf(errorTcIdAndWrongVdcUpdateError+
+		case err.Error() != testCase.ReadErr.Error():
+			t.Errorf(errorTcIDAndWrongVdcUpdateError+
 				errTestResultDiffs,
-				testCase.Id, err.Error(), testCase.Read_Err.Error())
+				testCase.ID, err.Error(), testCase.ReadErr.Error())
 		}
 	}
 }
 
 func TestResourceVdcUpdate(t *testing.T) {
 	testCases := []struct {
-		Id         int
-		TC_apier   sdk.APIer
-		Update_Err error
+		ID        int
+		TCApier   sdk.APIer
+		UpdateErr error
 	}{
 		{
 			1,
@@ -122,32 +123,32 @@ func TestResourceVdcUpdate(t *testing.T) {
 	}
 	var (
 		err        error
-		metaStruct *Client
+		metaStruct *clientStruct
 		d          *schema.ResourceData
 	)
 	metaStruct, d = vdcCRUDTestInit()
 	for _, testCase := range testCases {
-		metaStruct.sewanApiTooler.Api = testCase.TC_apier
+		metaStruct.sewanAPIImplementerTooler.APIImplementer = testCase.TCApier
 		err = resourceVdcUpdate(d, metaStruct)
 		switch {
-		case err == nil || testCase.Update_Err == nil:
-			if !(err == nil && testCase.Update_Err == nil) {
-				t.Errorf(errorTcIdAndWrongVdcUpdateError+
-					errTestResultDiffs, testCase.Id, err, testCase.Update_Err)
+		case err == nil || testCase.UpdateErr == nil:
+			if !(err == nil && testCase.UpdateErr == nil) {
+				t.Errorf(errorTcIDAndWrongVdcUpdateError+
+					errTestResultDiffs, testCase.ID, err, testCase.UpdateErr)
 			}
-		case err.Error() != testCase.Update_Err.Error():
-			t.Errorf(errorTcIdAndWrongVdcUpdateError+
+		case err.Error() != testCase.UpdateErr.Error():
+			t.Errorf(errorTcIDAndWrongVdcUpdateError+
 				errTestResultDiffs,
-				testCase.Id, err.Error(), testCase.Update_Err.Error())
+				testCase.ID, err.Error(), testCase.UpdateErr.Error())
 		}
 	}
 }
 
 func TestResourceVdcDelete(t *testing.T) {
 	testCases := []struct {
-		Id         int
-		TC_apier   sdk.APIer
-		Delete_Err error
+		ID        int
+		TCApier   sdk.APIer
+		DeleteErr error
 	}{
 		{
 			1,
@@ -162,23 +163,23 @@ func TestResourceVdcDelete(t *testing.T) {
 	}
 	var (
 		err        error
-		metaStruct *Client
+		metaStruct *clientStruct
 		d          *schema.ResourceData
 	)
 	metaStruct, d = vdcCRUDTestInit()
 	for _, testCase := range testCases {
-		metaStruct.sewanApiTooler.Api = testCase.TC_apier
+		metaStruct.sewanAPIImplementerTooler.APIImplementer = testCase.TCApier
 		err = resourceVdcDelete(d, metaStruct)
 		switch {
-		case err == nil || testCase.Delete_Err == nil:
-			if !(err == nil && testCase.Delete_Err == nil) {
+		case err == nil || testCase.DeleteErr == nil:
+			if !(err == nil && testCase.DeleteErr == nil) {
 				t.Errorf("\n\nTC %d : VDC deletion error was incorrect,"+
-					errTestResultDiffs, testCase.Id, err, testCase.Delete_Err)
+					errTestResultDiffs, testCase.ID, err, testCase.DeleteErr)
 			}
-		case err.Error() != testCase.Delete_Err.Error():
+		case err.Error() != testCase.DeleteErr.Error():
 			t.Errorf("\n\nTC %d : VDC deletion error was incorrect,"+
 				errTestResultDiffs,
-				testCase.Id, err.Error(), testCase.Delete_Err.Error())
+				testCase.ID, err.Error(), testCase.DeleteErr.Error())
 		}
 	}
 }

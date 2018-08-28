@@ -2,6 +2,7 @@ package sewan
 
 import (
 	"errors"
+	sdk "github.com/SewanDevs/sewan-sdk-go"
 	sdk "github.com/SewanDevs/sewan_go_sdk"
 	"github.com/hashicorp/terraform/helper/schema"
 )
@@ -14,14 +15,14 @@ func (apier VMSuccessfullCrudOperationsAirDrumAPIer) CreateResource(d *schema.Re
 	resourceTools *sdk.ResourceTooler,
 	resourceType string,
 	sewan *sdk.API) (map[string]interface{}, error) {
-	return noTemplateVmMap, nil
+	return noTemplateVMMap, nil
 }
 func (apier VMSuccessfullCrudOperationsAirDrumAPIer) ReadResource(d *schema.ResourceData,
 	clientTooler *sdk.ClientTooler,
 	resourceTools *sdk.ResourceTooler,
 	resourceType string,
 	sewan *sdk.API) (map[string]interface{}, error) {
-	return noTemplateVmMap, nil
+	return noTemplateVMMap, nil
 }
 func (apier VMSuccessfullCrudOperationsAirDrumAPIer) UpdateResource(d *schema.ResourceData,
 	clientTooler *sdk.ClientTooler,

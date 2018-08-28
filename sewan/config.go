@@ -2,7 +2,6 @@ package sewan
 
 import (
 	sdk "gitlab.com/rd/sewan_go_sdk"
-	"net/http"
 )
 
 const (
@@ -17,8 +16,8 @@ const (
 	slugField           = sdk.SlugField
 	stateField          = sdk.StateField
 	osField             = sdk.OsField
-	ramField            = sdk.RamField
-	cpuField            = sdk.CpuField
+	ramField            = sdk.RAMField
+	cpuField            = sdk.CPUField
 	disksField          = sdk.DisksField
 	vDiskField          = sdk.VDiskField
 	sizeField           = sdk.SizeField
@@ -35,43 +34,37 @@ const (
 	backupSizeField     = sdk.BackupSizeField
 	commentField        = sdk.CommentField
 	templateField       = sdk.TemplateField
-	idField             = sdk.IdField
+	idField             = sdk.IDField
 	dynamicField        = sdk.DynamicField
 	outsourcingField    = sdk.OutsourcingField
 	instanceNumberField = sdk.InstanceNumberField
-	vmResourceType      = sdk.VmResourceType
+	vmResourceType      = sdk.VMResourceType
 	vdcResourceType     = sdk.VdcResourceType
 )
 
-type Config struct {
-	Api_token string
-	Api_url   string
+type configStruct struct {
+	APIToken string
+	APIURL   string
 }
 
-type API struct {
-	Token  string
-	URL    string
-	Client *http.Client
+type clientStruct struct {
+	sewan                     *sdk.API
+	sewanAPIImplementerTooler *sdk.APITooler
+	sewanClientTooler         *sdk.ClientTooler
+	sewanTemplatesTooler      *sdk.TemplatesTooler
+	sewanResourceTooler       *sdk.ResourceTooler
+	sewanSchemaTooler         *sdk.SchemaTooler
 }
 
-type Client struct {
-	sewan                *sdk.API
-	sewanApiTooler       *sdk.APITooler
-	sewanClientTooler    *sdk.ClientTooler
-	sewanTemplatesTooler *sdk.TemplatesTooler
-	sewanResourceTooler  *sdk.ResourceTooler
-	sewanSchemaTooler    *sdk.SchemaTooler
-}
-
-func (c *Config) Client() (*Client, error) {
+func (c *configStruct) clientStruct() (*clientStruct, error) {
 	apiTooler := sdk.APITooler{
-		Api: sdk.AirDrumResourcesApier{},
+		APIImplementer: sdk.AirDrumResourcesAPI{},
 	}
 	clientTooler := sdk.ClientTooler{
-		Client: sdk.HttpClienter{},
+		Client: sdk.HTTPClienter{},
 	}
 	templatesTooler := sdk.TemplatesTooler{
-		TemplatesTools: sdk.Template_Templater{},
+		TemplatesTools: sdk.TemplateTemplater{},
 	}
 	schemaTooler := sdk.SchemaTooler{
 		SchemaTools: sdk.SchemaSchemaer{},
@@ -80,11 +73,11 @@ func (c *Config) Client() (*Client, error) {
 		Resource: sdk.ResourceResourceer{},
 	}
 	api := apiTooler.New(
-		c.Api_token,
-		c.Api_url,
+		c.APIToken,
+		c.APIURL,
 	)
-	err := apiTooler.CheckCloudDcApiStatus(api, &clientTooler, &resourceTooler)
-	return &Client{api,
+	err := apiTooler.CheckCloudDcStatus(api, &clientTooler, &resourceTooler)
+	return &clientStruct{api,
 			&apiTooler,
 			&clientTooler,
 			&templatesTooler,

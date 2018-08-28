@@ -14,14 +14,14 @@ func (apier VMSuccessfullCrudOperationsAirDrumAPIer) CreateResource(d *schema.Re
 	resourceTools *sdk.ResourceTooler,
 	resourceType string,
 	sewan *sdk.API) (map[string]interface{}, error) {
-	return noTemplateVmMap, nil
+	return noTemplateVMMap, nil
 }
 func (apier VMSuccessfullCrudOperationsAirDrumAPIer) ReadResource(d *schema.ResourceData,
 	clientTooler *sdk.ClientTooler,
 	resourceTools *sdk.ResourceTooler,
 	resourceType string,
 	sewan *sdk.API) (map[string]interface{}, error) {
-	return noTemplateVmMap, nil
+	return noTemplateVMMap, nil
 }
 func (apier VMSuccessfullCrudOperationsAirDrumAPIer) UpdateResource(d *schema.ResourceData,
 	clientTooler *sdk.ClientTooler,

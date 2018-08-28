@@ -28,7 +28,7 @@ var (
 			},
 		},
 	}
-	noTemplateVmMap = map[string]interface{}{
+	noTemplateVMMap = map[string]interface{}{
 		nameField:       "Unit test vm",
 		enterpriseField: "unit test enterprise",
 		stateField:      "UP",
@@ -77,8 +77,8 @@ const (
 	vmReadFailure                   = "VM read failed."
 	vmUpdateFailure                 = "VM update failed."
 	vmDeletionFailure               = "VM deletion failed."
-	unitTestApiUrl                  = "https://unitTestApiUrl.org"
+	unitTestAPIURL                  = "https://unitTestAPIURL.org"
 	errTestResultDiffs              = "\n\rGot: \"%s\"\n\rWant: \"%s\""
-	errorTcIdAndWrongVdcUpdateError = "\n\nTC %d : VDC update error was incorrect,"
-	errorTcIdAndWrongVmUpdateError  = "\n\nTC %d : VM update error was incorrect,"
+	errorTcIDAndWrongVdcUpdateError = "\n\nTC %d : VDC update error was incorrect,"
+	errorTcIDAndWrongVMUpdateError  = "\n\nTC %d : VM update error was incorrect,"
 )

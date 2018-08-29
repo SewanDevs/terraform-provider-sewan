@@ -10,12 +10,14 @@ fmt_and_unit_tests:
   image: $DOCKER_REGISTRY/sidevops/docker/utils/terraform-ci:latest
   stage: fmtAndUnitTest
   before_script:
+    - go get -u golang.org/x/lint/golint
     - mkdir $GOPATH/src/gitlab.com/rd
     - rm -rf $GOPATH/src/gitlab.com/rd/sewan_go_sdk
     - git clone git@gitlab.priv.sewan.fr:rd/sewan-sdk-go.git $GOPATH/src/gitlab.com/rd/sewan-sdk-go
     - ln -s $CI_PROJECT_DIR $GOPATH/src/gitlab.com/rd/
     - cd $GOPATH/src/gitlab.com/rd/$CI_PROJECT_NAME
   script:
+    - golint -set_exit_status
     - make test
   except:
     refs:

@@ -48,12 +48,12 @@ type configStruct struct {
 }
 
 type clientStruct struct {
-	sewan                     *sdk.API
-	sewanAPIImplementerTooler *sdk.APITooler
-	sewanClientTooler         *sdk.ClientTooler
-	sewanTemplatesTooler      *sdk.TemplatesTooler
-	sewanResourceTooler       *sdk.ResourceTooler
-	sewanSchemaTooler         *sdk.SchemaTooler
+	sewan                *sdk.API
+	sewanAPITooler       *sdk.APITooler
+	sewanClientTooler    *sdk.ClientTooler
+	sewanTemplatesTooler *sdk.TemplatesTooler
+	sewanResourceTooler  *sdk.ResourceTooler
+	sewanSchemaTooler    *sdk.SchemaTooler
 }
 
 func (c *configStruct) clientStruct() (*clientStruct, error) {

@@ -37,7 +37,7 @@ func TestResourceVdcCreate(t *testing.T) {
 	)
 	metaStruct, d = vdcCRUDTestInit()
 	for _, testCase := range testCases {
-		metaStruct.sewanAPIImplementerTooler.APIImplementer = testCase.TCApier
+		metaStruct.sewanAPITooler.APIImplementer = testCase.TCApier
 		err = resourceVdcCreate(d, metaStruct)
 		switch {
 		case err == nil || testCase.CreationErr == nil:
@@ -87,7 +87,7 @@ func TestResourceVdcRead(t *testing.T) {
 	)
 	metaStruct, d = vdcCRUDTestInit()
 	for _, testCase := range testCases {
-		metaStruct.sewanAPIImplementerTooler.APIImplementer = testCase.TCApier
+		metaStruct.sewanAPITooler.APIImplementer = testCase.TCApier
 		err = resourceVdcRead(d, metaStruct)
 		switch {
 		case err == nil || testCase.ReadErr == nil:
@@ -127,7 +127,7 @@ func TestResourceVdcUpdate(t *testing.T) {
 	)
 	metaStruct, d = vdcCRUDTestInit()
 	for _, testCase := range testCases {
-		metaStruct.sewanAPIImplementerTooler.APIImplementer = testCase.TCApier
+		metaStruct.sewanAPITooler.APIImplementer = testCase.TCApier
 		err = resourceVdcUpdate(d, metaStruct)
 		switch {
 		case err == nil || testCase.UpdateErr == nil:
@@ -167,7 +167,7 @@ func TestResourceVdcDelete(t *testing.T) {
 	)
 	metaStruct, d = vdcCRUDTestInit()
 	for _, testCase := range testCases {
-		metaStruct.sewanAPIImplementerTooler.APIImplementer = testCase.TCApier
+		metaStruct.sewanAPITooler.APIImplementer = testCase.TCApier
 		err = resourceVdcDelete(d, metaStruct)
 		switch {
 		case err == nil || testCase.DeleteErr == nil:

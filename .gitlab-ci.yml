@@ -1,14 +1,14 @@
 image: golang
 
 stages:
-  - fmtAndUnitTest
+  - golintFmtAndUnitTest
   - sonar
   - release
 
 # NB about symbolic link : https://redmine.priv.sewan.fr/issues/37334
-fmt_and_unit_tests:
+golint_fmt_and_unit_tests:
   image: $DOCKER_REGISTRY/sidevops/docker/utils/terraform-ci:latest
-  stage: fmtAndUnitTest
+  stage: golintFmtAndUnitTest
   before_script:
     - go get -u golang.org/x/lint/golint
     - mkdir $GOPATH/src/gitlab.com/rd

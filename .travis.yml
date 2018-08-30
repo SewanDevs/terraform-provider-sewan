@@ -13,10 +13,7 @@ notifications:
   email: false
 
 install:
-  - go get -u github.com/google/go-cmp/cmp
   - go get -u golang.org/x/lint/golint
-  - git clone https://github.com/SewanDevs/sewan-sdk-go.git $GOPATH/src/github.com/SewanDevs/sewan-sdk-go
-  - git clone https://github.com/hashicorp/terraform.git $GOPATH/src/github.com/hashicorp/terraform
   - wget https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.2.0.1227-linux.zip
   - unzip sonar-scanner-cli-3.2.0.1227-linux.zip -d /opt
   - export PATH=$PATH:/opt/sonar-scanner-3.2.0.1227-linux/bin

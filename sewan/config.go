@@ -1,7 +1,7 @@
 package sewan
 
 import (
-	sdk "gitlab.com/rd/sewan-sdk-go"
+	sdk "github.com/SewanDevs/sewan-sdk-go"
 )
 
 const (

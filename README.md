@@ -3,10 +3,9 @@ Sewan Terraform Provider
 
 - Webistes : https://www.sewan.fr, https://www.terraform.io
 - Travis build : [![Build Status](https://travis-ci.com/SewanDevs/terraform-provider-sewan.svg?branch=github_release)](https://travis-ci.com/SewanDevs/terraform-provider-sewan)
-- SonarQube analysis : ![Sonar Status](https://sonarcloud.io/api/project_badges/measure?project=terraform-provider-sewan-key&metric=alert_status)
+- SonarQube analysis : [![Sonar Status](https://sonarcloud.io/api/project_badges/measure?project=terraform-provider-sewan-key&metric=alert_status)](https://sonarcloud.io/dashboard?id=terraform-provider-sewan-key)
 - [![Go Report Card](https://goreportcard.com/badge/github.com/SewanDevs/terraform-provider-sewan)](https://goreportcard.com/report/github.com/SewanDevs/terraform-provider-sewan)
-- Snyk security audit :
-[![Known Vulnerabilities](https://snyk.io/test/github/SewanDevs/sewan-sdk-go/badge.svg)](https://snyk.io/test/github/SewanDevs/sewan-sdk-go)
+- [Snyk security audit](https://app.snyk.io) : beta version, no badge available, No known vulnerabilities found.
 
 <img src="http://entreprises.smallizbeautiful.fr/logo/Sewan-Communications.jpg" width="500px">
 

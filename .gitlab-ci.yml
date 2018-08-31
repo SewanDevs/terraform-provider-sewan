@@ -65,8 +65,10 @@ release-process:
     - git fetch origin --prune
     - git checkout -b $ReleaseBranchName
     - rm .gitlab-ci.yml
+    - sed -i 's/gitlab.com\/rd/github.com\/SewanDevs/g' $(find . -name '*.go')
+    - gofmt -l $(find . -name '*.go')
     - git add .
-    - git commit -m "Gitlab \"release-process\" pipeline job, rm .gitlab-ci.yml pipeline file."
+    - git commit -m "Gitlab \"release-process\" pipeline job, update import path to match github ones and rm pipeline files."
     - git checkout github_release
     - git pull
     - git merge --strategy-option theirs --no-edit $ReleaseBranchName

@@ -6,6 +6,8 @@ language:
 go:
   - 1.10.x
 
+sudo: required
+
 git:
 depth: 1
 
@@ -17,10 +19,14 @@ install:
   - wget https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.2.0.1227-linux.zip
   - unzip sonar-scanner-cli-3.2.0.1227-linux.zip -d /opt
   - export PATH=$PATH:/opt/sonar-scanner-3.2.0.1227-linux/bin
+  - curl -sL https://deb.nodesource.com/setup_10.x | sudo -E bash -
+  - sudo apt-get install -y nodejs
+  - sudo npm install -g snyk
 
 script:
-  - golint -set_exit_status
   - make test
+  - snyk test
+  - snyk monitor
   - sonar-scanner
     -Dsonar.login=$SONAR_TOKEN
     -Dsonar.host.url=https://sonarcloud.io

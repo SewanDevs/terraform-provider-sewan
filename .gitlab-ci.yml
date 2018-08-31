@@ -1,14 +1,14 @@
 image: golang
 
 stages:
-  - golintFmtAndUnitTest
+  - golintGovetSnykGofmtUnitTest
   - sonar
   - release
 
 # NB about symbolic link : https://redmine.priv.sewan.fr/issues/37334
-golint_fmt_and_unit_tests:
+golint_govet_snyk_gofmt_unit_tests:
   image: $DOCKER_REGISTRY/sidevops/docker/utils/terraform-ci:latest
-  stage: golintFmtAndUnitTest
+  stage: golintGovetSnykGofmtUnitTest
   before_script:
     - go get -u golang.org/x/lint/golint
     - curl -sL https://deb.nodesource.com/setup_10.x | bash -
@@ -65,9 +65,8 @@ release-process:
     - git fetch origin --prune
     - git checkout -b $ReleaseBranchName
     - rm .gitlab-ci.yml
-    - sed -i 's/gitlab.com\/rd/github.com\/SewanDevs/g' $(find . -name '*.go')
     - git add .
-    - git commit -m "Gitlab \"release-process\" pipeline job, update import path to match github ones and rm pipeline files."
+    - git commit -m "Gitlab \"release-process\" pipeline job, rm .gitlab-ci.yml pipeline file."
     - git checkout github_release
     - git pull
     - git merge --strategy-option theirs --no-edit $ReleaseBranchName

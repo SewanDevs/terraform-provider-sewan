@@ -24,8 +24,8 @@ Requirements
 Usage
 ---------------------
 
-Take a look in [the website folder](https://github.com/SewanDevs/terraform-provider-sewan/blob/github_release/website/docs) to get fully explained examples and documentation :
-- Infrastructure example : [main.tf.example](https://github.com/SewanDevs/terraform-provider-sewan/blob/github_release/main.tf.example)
+Take a look in [the website folder](https://github.com/SewanDevs/terraform-provider-sewan/blob/github_release/website/docs) to get fully explained examples and documentation and [terraform guide](https://www.terraform.io/intro/getting-started):
+- Infrastructure helloworld example : [helloworldInfrastructure folder](https://github.com/SewanDevs/terraform-provider-sewan/blob/github_release/helloworldInfrastructure)
 - [Global Sewan's provider usage](https://github.com/SewanDevs/terraform-provider-sewan/blob/github_release/website/docs/index.html.markdown)
 - [vm (virtual machine) configuration](https://github.com/SewanDevs/terraform-provider-sewan/blob/github_release/website/docs/r/vm.html.md)
 - [vdc (virtual data center) configuration](https://github.com/SewanDevs/terraform-provider-sewan/blob/github_release/website/docs/r/vdc.html.md)
@@ -37,7 +37,7 @@ Use the docker image for Sewan's plugin
 docker pull sewan/terraform-provider-sewan
 ```
 
-[Docker image description and source](https://hub.docker.com/r/sewan/terraform-provider-sewan/)
+[Docker image description and source](https://hub.docker.com/r/sewan/terraform-provider-sewan/), it contains a running environment containing terraform and current plugin, plus an example infrastructure configuration file.
 
 
 Building The Provider

@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"github.com/hashicorp/terraform/helper/schema"
 	"net/http"
-	"strings"
 )
 
 const (
@@ -14,14 +13,24 @@ const (
 
 // API struct represents distant Sewan clouddc API
 type API struct {
-	Token  string
-	URL    string
-	Client *http.Client
+	Token      string
+	URL        string
+	Enterprise string
+	Meta       APIMeta
+	Client     *http.Client
 }
 
-// APITooler contains implementation of APIer interface
+// APITooler contains implementation of APIer and APIInitialyser interfaces
 type APITooler struct {
-	APIImplementer APIer
+	Implementer APIer
+	Initialyser APIInitialyser
+}
+
+// APIMeta stores specific meta data about a clouddc environment
+type APIMeta struct {
+	NonCriticalResourceList []interface{}
+	CriticalResourceList    []interface{}
+	OtherResourceList       []interface{}
 }
 
 // APIer interface is responsible of CRUD operations on Sewan's clouddc resources,
@@ -54,24 +63,75 @@ type APIer interface {
 // AirDrumResourcesAPI implements APIer interface
 type AirDrumResourcesAPI struct{}
 
+// APIInitialyser interface is responsible of initializing an API client
+type APIInitialyser interface {
+	New(token string, url string, enterprise string) *API
+	CheckCloudDcStatus(api *API,
+		clientTooler *ClientTooler,
+		resourceTooler *ResourceTooler) error
+	GetClouddcEnvMeta(api *API,
+		clientTooler *ClientTooler) (*APIMeta, error)
+}
+
+// Initialyser implements APIInitialyser interface
+type Initialyser struct{}
+
 // New creates an API instance
-func (apiTools *APITooler) New(token string, url string) *API {
+func (initialyser Initialyser) New(token string, url string, enterprise string) *API {
 	return &API{
-		Token:  token,
-		URL:    url,
-		Client: &http.Client{},
+		Token:      token,
+		URL:        url,
+		Enterprise: enterprise,
+		Client:     &http.Client{},
 	}
 }
 
 // CheckCloudDcStatus checks availability of clouddc through its API
-func (apiTools *APITooler) CheckCloudDcStatus(api *API,
+func (initialyser Initialyser) CheckCloudDcStatus(api *API,
 	clientTooler *ClientTooler,
 	resourceTooler *ResourceTooler) error {
-	var apiClientErr error
-	apiClientErr = resourceTooler.Resource.validateStatus(api,
+	return resourceTooler.Resource.validateStatus(api,
 		defaultResourceType,
 		*clientTooler)
-	return apiClientErr
+}
+
+// GetClouddcEnvMeta gets Clouddc environnements meta data :
+// * physical clouddc resource lists :
+//		- non critical resource list
+//		- critical resource list (redondant resource for critic uses)
+//		- other resource list (Windows server license, RedHat licenses, etc.)
+func (initialyser Initialyser) GetClouddcEnvMeta(api *API,
+	clientTooler *ClientTooler) (*APIMeta, error) {
+	var (
+		apiMeta                 APIMeta
+		nonCriticalResourceList []interface{}
+		criticalResourceList    []interface{}
+		otherResourceList       []interface{}
+	)
+	resourceMetaDataList,
+		err := clientTooler.Client.getPhysicalResourcesMeta(clientTooler,
+		api)
+	if err != nil {
+		return nil, err
+	}
+	for _, resource := range resourceMetaDataList {
+		switch resource.(map[string]interface{})["cos"] {
+		case "Mono":
+			nonCriticalResourceList = append(nonCriticalResourceList,
+				resource.(map[string]interface{}))
+		case "HA":
+			criticalResourceList = append(criticalResourceList,
+				resource.(map[string]interface{}))
+		default:
+			otherResourceList = append(otherResourceList,
+				resource.(map[string]interface{}))
+		}
+	}
+	apiMeta.NonCriticalResourceList = nonCriticalResourceList
+	apiMeta.CriticalResourceList = criticalResourceList
+	apiMeta.OtherResourceList = otherResourceList
+	// redmine ticket #37823 : resource's lists validation lack
+	return &apiMeta, err
 }
 
 // CreateResource creates Sewan clouddc resource
@@ -162,7 +222,7 @@ func (apier AirDrumResourcesAPI) ReadResource(d *schema.ResourceData,
 		}
 		if resourceType == VdcResourceType {
 			err5 := updateSchemaReadVdcResource(d,
-				readResource.(map[string]interface{}))
+				readResource.(map[string]interface{}), sewan)
 			if err5 != nil {
 				return map[string]interface{}{}, err5
 			}
@@ -177,19 +237,32 @@ func (apier AirDrumResourcesAPI) ReadResource(d *schema.ResourceData,
 // the aim of this function is to rm "<enterprise name>-mono-" name part to
 // simplify terraform user experience
 func updateSchemaReadVdcResource(d *schema.ResourceData,
-	readResource map[string]interface{}) error {
+	readResource map[string]interface{}, api *API) error {
 	var (
-		resourceNamePrefix strings.Builder
-		resourcesList      []interface{}
+		resourcesList []interface{}
 	)
-	resourceNamePrefix.WriteString(readResource[EnterpriseField].(string))
-	resourceNamePrefix.WriteString(monoField)
 	for _, resource := range readResource[VdcResourceField].([]interface{}) {
-		resource.(map[string]interface{})[ResourceField] = strings.TrimPrefix(resource.(map[string]interface{})[ResourceField].(string),
-			resourceNamePrefix.String())
+		resourceName, err := getResourceName(resource.(map[string]interface{})[ResourceField].(string),
+			api.Meta)
+		if err != nil {
+			return err
+		}
+		resource.(map[string]interface{})[ResourceField] = resourceName
 		resourcesList = append(resourcesList, resource)
 	}
 	return d.Set(VdcResourceField, resourcesList)
+}
+
+// getResourceName extracts from APIMeta and returns corresponding resource's name
+func getResourceName(resourceSlug string, meta APIMeta) (string, error) {
+	for _, resource := range meta.NonCriticalResourceList {
+		resourceExistsInMeta := (resource.(map[string]interface{})[SlugField] == resourceSlug)
+		isResourceMonoTyped := resource.(map[string]interface{})[ResourceCosField] == MonoResourceType
+		if resourceExistsInMeta && isResourceMonoTyped {
+			return resource.(map[string]interface{})[NameField].(string), nil
+		}
+	}
+	return "", errResourceNotExist(resourceSlug)
 }
 
 // UpdateResource update Sewan clouddc resource's

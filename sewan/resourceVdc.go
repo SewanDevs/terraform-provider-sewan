@@ -37,10 +37,6 @@ func resourceVdc() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			enterpriseField: &schema.Schema{
-				Type:     schema.TypeString,
-				Required: true,
-			},
 			datacenterField: &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,

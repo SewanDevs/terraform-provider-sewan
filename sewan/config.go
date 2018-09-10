@@ -43,23 +43,26 @@ const (
 )
 
 type configStruct struct {
-	APIToken string
-	APIURL   string
+	APIToken   string
+	APIURL     string
+	Enterprise string
+}
+
+type clientToolerStruct struct {
+	SewanAPITooler       *sdk.APITooler
+	SewanClientTooler    *sdk.ClientTooler
+	SewanTemplatesTooler *sdk.TemplatesTooler
+	SewanResourceTooler  *sdk.ResourceTooler
+	SewanSchemaTooler    *sdk.SchemaTooler
 }
 
 type clientStruct struct {
-	sewan                *sdk.API
-	sewanAPITooler       *sdk.APITooler
-	sewanClientTooler    *sdk.ClientTooler
-	sewanTemplatesTooler *sdk.TemplatesTooler
-	sewanResourceTooler  *sdk.ResourceTooler
-	sewanSchemaTooler    *sdk.SchemaTooler
+	Sewan        *sdk.API
+	ToolerStruct clientToolerStruct
 }
 
-func (c *configStruct) clientStruct() (*clientStruct, error) {
-	apiTooler := sdk.APITooler{
-		APIImplementer: sdk.AirDrumResourcesAPI{},
-	}
+func (c *configStruct) clientStruct(apiTooler *sdk.APITooler) (*clientStruct,
+	error) {
 	clientTooler := sdk.ClientTooler{
 		Client: sdk.HTTPClienter{},
 	}
@@ -72,16 +75,30 @@ func (c *configStruct) clientStruct() (*clientStruct, error) {
 	resourceTooler := sdk.ResourceTooler{
 		Resource: sdk.ResourceResourceer{},
 	}
-	api := apiTooler.New(
+	api := apiTooler.Initialyser.New(
 		c.APIToken,
 		c.APIURL,
+		c.Enterprise,
 	)
-	err := apiTooler.CheckCloudDcStatus(api, &clientTooler, &resourceTooler)
+	err1 := apiTooler.Initialyser.CheckCloudDcStatus(api,
+		&clientTooler,
+		&resourceTooler)
+	if err1 != nil {
+		return nil, err1
+	}
+	clientStructAPIMeta, err2 := apiTooler.Initialyser.GetClouddcEnvMeta(api,
+		&clientTooler)
+	if err2 != nil {
+		return nil, err2
+	}
+	api.Meta = *clientStructAPIMeta
 	return &clientStruct{api,
-			&apiTooler,
-			&clientTooler,
-			&templatesTooler,
-			&resourceTooler,
-			&schemaTooler},
-		err
+			clientToolerStruct{
+				apiTooler,
+				&clientTooler,
+				&templatesTooler,
+				&resourceTooler,
+				&schemaTooler},
+		},
+		nil
 }

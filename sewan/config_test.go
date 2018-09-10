@@ -1,27 +1,75 @@
 package sewan
 
 import (
+	sdk "github.com/SewanDevs/sewan-sdk-go"
+	"github.com/google/go-cmp/cmp"
 	"testing"
 )
 
 func TestClientStruct(t *testing.T) {
-	testConfigStruct := configStruct{"unit test token", "unit test url"}
-	TestclientStruct, err := testConfigStruct.clientStruct()
-	switch {
-	case TestclientStruct.sewan == nil:
-		t.Errorf("clientStruct API is nil, it should be initialized.")
-	case TestclientStruct.sewanAPITooler == nil:
-		t.Errorf("clientStruct APITooler is nil, it should be initialized.")
-	case TestclientStruct.sewanClientTooler == nil:
-		t.Errorf("clientStruct ClientTooler is nil, it should be initialized.")
-	case TestclientStruct.sewanTemplatesTooler == nil:
-		t.Errorf("clientStruct TemplatesTooler is nil, it should be initialized.")
-	case TestclientStruct.sewanResourceTooler == nil:
-		t.Errorf("clientStruct ResourceTooler is nil, it should be initialized.")
-	case TestclientStruct.sewanSchemaTooler == nil:
-		t.Errorf("clientStruct SchemaTooler is nil, it should be initialized.")
-	case err == nil:
-		t.Errorf("err should not be nil as testConfigStruct{} token and url are " +
-			"wrongly formatted")
+	testCases := []struct {
+		ID               int
+		TCConfigStruct   configStruct
+		TCAPIInitialyser sdk.APIInitialyser
+		TCclientStruct   *clientStruct
+		TCErr            error
+	}{
+		{
+			1,
+			configStruct{
+				unitTestToken,
+				unitTestAPIURL,
+				unitTestEnterprise,
+			},
+			initSuccess{},
+			resourceTestInit(),
+			nil,
+		},
+		{
+			2,
+			configStruct{
+				unitTestToken,
+				unitTestAPIURL,
+				unitTestEnterprise,
+			},
+			getEnvMetaFailure{},
+			nil,
+			errGetEnvMetaFailure,
+		},
+		{
+			3,
+			configStruct{
+				unitTestToken,
+				unitTestAPIURL,
+				unitTestEnterprise,
+			},
+			checkCloudDcStatusFailure{},
+			nil,
+			errCheckCloudDcStatusFailure,
+		},
+	}
+	apiTooler := sdk.APITooler{}
+	for _, testCase := range testCases {
+		apiTooler.Initialyser = testCase.TCAPIInitialyser
+		clientStruct, err := testCase.TCConfigStruct.clientStruct(&apiTooler)
+		diffs := cmp.Diff(clientStruct, testCase.TCclientStruct)
+		switch {
+		case err == nil || testCase.TCErr == nil:
+			if !(err == nil && testCase.TCErr == nil) {
+				t.Errorf("\n\nTC %d : TestClientStruct error was incorrect,"+
+					errTestResultDiffs, testCase.ID, err, testCase.TCErr)
+			}
+			if diffs != "" {
+				t.Errorf("\n\nTC %d : Wrong TestClientStruct returned structure (-got +want) \n%s",
+					testCase.ID, diffs)
+			}
+		case err.Error() != testCase.TCErr.Error():
+			t.Errorf("\n\nTC %d : TestClientStruct error was incorrect,"+
+				errTestResultDiffs,
+				testCase.ID, err.Error(), testCase.TCErr.Error())
+		case diffs != "":
+			t.Errorf("\n\nTC %d : Wrong TestClientStruct returned structure (-got +want) \n%s",
+				testCase.ID, diffs)
+		}
 	}
 }

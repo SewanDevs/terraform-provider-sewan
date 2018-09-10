@@ -63,10 +63,6 @@ func resourceVM() *schema.Resource {
 				Type:     schema.TypeInt,
 				Optional: true,
 			},
-			enterpriseField: &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
-			},
 			templateField: &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,

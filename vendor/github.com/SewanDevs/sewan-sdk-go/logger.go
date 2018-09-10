@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-// LoggerCreate is a wrapper used only for plugin developpment debug purpose,
+// LoggerCreate is a wrapper used only for plugin development debug purpose,
 // it must be removed at the end of the develpment cycle, before delivery to prod.
 // It creates a logger that write logs to files in sdk-logs/ folder, stored in
 // current folder.

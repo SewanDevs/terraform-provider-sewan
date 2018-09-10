@@ -2,12 +2,12 @@
 
 
 [[projects]]
-  digest = "1:4bc392ac66efa38cf52ae123dc387f2670dff0230a600b09c7aa3345180f155a"
+  digest = "1:03f1f479344dec0540ba6ce17da2ceacba2eeab2093dee8f9f77b636c832f17c"
   name = "github.com/SewanDevs/sewan-sdk-go"
   packages = ["."]
   pruneopts = "UT"
-  revision = "f8e46ed50c96ca18847be84cf4262154b9140924"
-  version = "v0.1.1"
+  revision = "a330ac6626bd762c47b9b2c82398e283dd2bc71c"
+  version = "v0.1.3"
 
 [[projects]]
   digest = "1:dc2ba13235a4c8f80a40599575a3f10acb4736cb372f1a68b88333c06564471d"
@@ -42,7 +42,7 @@
   version = "v1.0.0"
 
 [[projects]]
-  digest = "1:5329dbc26971f84929e7fcbd6f3ea6109b8aa49aaf2c3f902312eba0f2cc0aca"
+  digest = "1:1808bbdc0c45b7a2beae51e52c6cf96ce72bd006246b4e78a289a7e0b709d4b0"
   name = "github.com/aws/aws-sdk-go"
   packages = [
     "aws",
@@ -78,8 +78,8 @@
     "service/sts",
   ]
   pruneopts = "UT"
-  revision = "9d44c1848f0d4fe8be5920b8851223af8889e4fe"
-  version = "v1.15.25"
+  revision = "1186f7e6f000ce13edff71ed5ecc8b0e27ba38d7"
+  version = "v1.15.33"
 
 [[projects]]
   branch = "master"
@@ -136,6 +136,19 @@
   version = "v1.2.0"
 
 [[projects]]
+  digest = "1:2e3c336fc7fde5c984d2841455a658a6d626450b1754a854b3b32e7a8f49a07a"
+  name = "github.com/google/go-cmp"
+  packages = [
+    "cmp",
+    "cmp/internal/diff",
+    "cmp/internal/function",
+    "cmp/internal/value",
+  ]
+  pruneopts = "UT"
+  revision = "3af367b6b30c263d47e8895973edcca9a49cf029"
+  version = "v0.2.0"
+
+[[projects]]
   digest = "1:0ade334594e69404d80d9d323445d2297ff8161637f9b2d347cc6973d2d6f05b"
   name = "github.com/hashicorp/errwrap"
   packages = ["."]
@@ -164,11 +177,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:37630fa6a9fe688c7b654228adb4b064cba73ae3ca0437aa1568b1cf7d27606f"
+  digest = "1:d900a5ae66a3181783dbf38e4a23505cdabd3e8e881c3d49ae8aa498b571b886"
   name = "github.com/hashicorp/go-hclog"
   packages = ["."]
   pruneopts = "UT"
-  revision = "75ecd6e6d64509d675da33386b15e1174566177b"
+  revision = "e45cbeb79f0411b1cfedd3f226ff69d5d433c762"
 
 [[projects]]
   digest = "1:f668349b83f7d779567c880550534addeca7ebadfdcf44b0b9c39be61864b4b7"
@@ -241,7 +254,7 @@
     "hclparse",
   ]
   pruneopts = "UT"
-  revision = "ed8144cda141c1f06f8ab122baff783b645cfe52"
+  revision = "864f97c8ab203ef9f72a47f231e7d10e52a33ce7"
 
 [[projects]]
   branch = "master"
@@ -418,7 +431,7 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:0174e9b54449e70ccd672176fc3624ad7c7168884d0f9cf7a2332336f7bcb875"
+  digest = "1:60c543e7c7783a581e5e77042475dbaa0401e35fef21efca77911ffbb70c4e53"
   name = "github.com/zclconf/go-cty"
   packages = [
     "cty",
@@ -430,11 +443,11 @@
     "cty/set",
   ]
   pruneopts = "UT"
-  revision = "c2393a5d54f2fe015be2ddb1fc55431f749387de"
+  revision = "cc054f996f8b732f7205fd6f1ef84c39f2720461"
 
 [[projects]]
   branch = "master"
-  digest = "1:b47d087999124a52ba316b33a00f1e76628ad7c43a904f8fd776eab0ad62102f"
+  digest = "1:85b48b8f27bc15a14afda6241dc8415c492d1acf8e14911d5c474517ea60f660"
   name = "golang.org/x/crypto"
   packages = [
     "bcrypt",
@@ -448,11 +461,11 @@
     "openpgp/s2k",
   ]
   pruneopts = "UT"
-  revision = "182538f80094b6a8efaade63a8fd8e0d9d5843dd"
+  revision = "0e37d006457bf46f9e6692014ba72ef82c33022c"
 
 [[projects]]
   branch = "master"
-  digest = "1:07037360fbd8c966f74836e3306f18505ea31cd0e4b8a861294cba2b53c2aa1c"
+  digest = "1:d6c783aadd017eac31b9872bf54213be93c2306e8664ac2c684a88620429d0bc"
   name = "golang.org/x/net"
   packages = [
     "context",
@@ -466,15 +479,15 @@
     "trace",
   ]
   pruneopts = "UT"
-  revision = "8a410e7b638dca158bf9e766925842f6651ff828"
+  revision = "26e67e76b6c3f6ce91f7c52def5af501b4e0f3a2"
 
 [[projects]]
   branch = "master"
-  digest = "1:4b487c782bc804d994e91adbd3d2a8a77a482671efd87b2fde0805adb01a39c0"
+  digest = "1:6eb2645d74b43d9c87b51947df39f7c668a4f422cd512053f7f6f75bfaad0197"
   name = "golang.org/x/sys"
   packages = ["unix"]
   pruneopts = "UT"
-  revision = "49385e6e15226593f68b26af201feec29d5bba22"
+  revision = "d0be0721c37eeb5299f245a996a483160fc36940"
 
 [[projects]]
   digest = "1:a2ab62866c75542dd18d2b069fec854577a20211d7c0ea6ae746072a1dccdd18"
@@ -505,10 +518,10 @@
   name = "google.golang.org/genproto"
   packages = ["googleapis/rpc/status"]
   pruneopts = "UT"
-  revision = "c66870c02cf823ceb633bcd05be3c7cda29976f4"
+  revision = "36d5787dc5356b711fe8f3040271aaf51c35955b"
 
 [[projects]]
-  digest = "1:047efbc3c9a51f3002b0002f92543857d372654a676fb6b01931982cd80467dd"
+  digest = "1:1b6d2676ea895d33cbd1999c75dfc8e25b103c754ccfc66dc06ae845ce3a47bc"
   name = "google.golang.org/grpc"
   packages = [
     ".",
@@ -541,14 +554,15 @@
     "tap",
   ]
   pruneopts = "UT"
-  revision = "32fb0ac620c32ba40a4626ddf94d90d12cce3455"
-  version = "v1.14.0"
+  revision = "8dea3dc473e90c8179e519d91302d0597c0ca1d1"
+  version = "v1.15.0"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
     "github.com/SewanDevs/sewan-sdk-go",
+    "github.com/google/go-cmp/cmp",
     "github.com/hashicorp/terraform/helper/schema",
     "github.com/hashicorp/terraform/plugin",
     "github.com/hashicorp/terraform/terraform",

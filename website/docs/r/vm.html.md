@@ -40,7 +40,7 @@ resource "sewan_clouddc_vm" "template-created-vm" {
 resource "sewan_clouddc_vm" vmResourceField {
   depends_on = ["sewan_clouddc_vdc.vdc-example"]
   count = 10
-  ram = 1 //GiB
+  ram = 1
   cpu = 1
   os = "CentOS"
   name = "vm${count.index}"
@@ -79,8 +79,8 @@ resource "sewan_clouddc_vm" vmResourceField {
 To consult the list of available templates for your company or create new ones, access your company account on [cloud-datacenter.fr](https://cloud-datacenter.fr).
 
 #### Resource configuration generated override file
-* After the creation from a template, an override file (< template name >\_override.tf.json, [terraform configuration override official doc](https://www.terraform.io/docs/configuration/override.html)) is created to enable the modification of all template provided parameters. This file is currently generated in the current terraform initialized terraform folder, it does not yet support the remote state feature. An example of override file is available at the annexe of this page.
-* The template created vm **resource override file must be deleted manually when all related vm are deleted with "terraform destroy" cmd**.
+* After the creation from a template, an override file (< template name >\_override.tf.json, [terraform configuration override official doc](https://www.terraform.io/docs/configuration/override.html)) is created to enable the modification of all template provided parameters. This file is currently generated in the current terraform initialized folder. An example of override file is available at the annexe of this page.
+* The template created **vm resource override file must be deleted manually when all related vm are deleted with "terraform destroy" cmd**.
 * Modification of existing resource created from template must be done in override file.
 
 #### Arguments
@@ -104,7 +104,7 @@ To consult the list of available templates for your company or create new ones, 
 * `disks` - *(Optional, list of maps)* disks allocated to the vm, minimum of 1 is required
   * `name` - *(Required, string)* disk name
   * `size` - *(Required, int)* disk size in GiB
-  * `storage_class` - *(Required, string)* type of virtual disks (accepted values : "Enterprise Storage", "Performance Storage", "High Performance Storage")
+  * `storage_class` - *(Required, string)* type of virtual disks (accepted values : "storage_enterprise", "storage_performance", "storage_high_performance")
 
   **Warning** : **On creation, additional disk can not be created**, only the template provided disks are created. Additional disks can be added once the vm is created.
 
@@ -121,14 +121,14 @@ To consult the list of available templates for your company or create new ones, 
 
 ### VM fully configured by terraform plan file (.tf file)
 
-* `name` - *(Required, string)* vm name
+* `name` - *(Required, string)* vm name (value unit : GiB)
 * `os` - Can not be set as it is template provided
-* `ram` - *(Optional, string)* template provided value can be modified, value unit : GiB
+* `ram` - *(Optional, string)* template provided value can be modified (value unit : GiB)
 * `cpu` - *(Optional, string)* template provided value can be modified
 
 * `disks` - *(Required, list of maps)* disks allocated to the vm, minimum of 1 is required
   * `name` - *(Required, string)* disk name
-  * `size` - *(Required, int)* disk size in GiB
+  * `size` - *(Required, int)* disk size (value unit : GiB)
   * `storage_class` - *(Required, string)* disks storage type (accepted values : "storage_enterprise", "storage_performance", "storage_high_performance") [more infos](https://www.sewan.fr/cloud-data-center/)
 
 * `nics` - *(Optional, list of maps)* network interfaces allocated to the vm, can be nil

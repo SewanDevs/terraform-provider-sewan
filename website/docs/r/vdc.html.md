@@ -19,7 +19,6 @@ It creates an instance of the described vdc with a dynamic name field.
 ```hcl
 resource "sewan_clouddc_vdc" "vdc-example" {
   name = "vdc example"
-  enterprise = "your-company"
   datacenter = "a datacenter"
   vdc_resources=[
   {
@@ -51,7 +50,6 @@ resource "sewan_clouddc_vdc" "vdc-example" {
 The following vdc creation arguments are supported :
 
 * `name` - (Required, string) vdc name
-* `enterprise` - (Required, string) name of your enterprise
 * `datacenter` - (Required, string) name of the datacenter
 * `vdc_resources` - (Required, list of maps) resources allocated to the vdc, minimum of 1 is required
   * `resource` - (Required, string) resource name (accepted resources for storage "storage_enterprise", "storage_performance", "storage_high_performance"), other resources : "ram" & "cpu"

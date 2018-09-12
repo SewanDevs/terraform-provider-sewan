@@ -17,7 +17,9 @@ type ClientTooler struct {
 type Clienter interface {
 	do(api *API, req *http.Request) (*http.Response, error)
 	getTemplatesList(clientTooler *ClientTooler,
-		enterpriseSlug string, api *API) ([]interface{}, error)
+		api *API) ([]interface{}, error)
+	getPhysicalResourcesMeta(clientTooler *ClientTooler,
+		api *API) ([]interface{}, error)
 	handleResponse(resp *http.Response,
 		expectedCode int,
 		expectedBodyFormat string) (interface{}, error)
@@ -32,13 +34,39 @@ func (client HTTPClienter) do(api *API, req *http.Request) (*http.Response, erro
 }
 
 func (client HTTPClienter) getTemplatesList(clientTooler *ClientTooler,
-	enterpriseSlug string, api *API) ([]interface{}, error) {
-	var templatesListURL strings.Builder
-	templatesListURL.WriteString(api.URL)
-	templatesListURL.WriteString("template/?enterprise__slug=")
-	templatesListURL.WriteString(enterpriseSlug)
+	api *API) ([]interface{}, error) {
+	templateList, err := getJSONList(clientTooler, api, "template")
+	if err == errEmptyJSON {
+		return nil, errEmptyTemplateList
+	}
+	return templateList, err
+}
+
+// getPhysicalResourcesMeta returns enterprise physical resource name prefix and suffix,
+// as they can be not consistent from an enterprise environment to another.
+func (client HTTPClienter) getPhysicalResourcesMeta(clientTooler *ClientTooler,
+	api *API) ([]interface{}, error) {
+	resourceList, err := getJSONList(clientTooler, api, "resource")
+	if err == errEmptyJSON {
+		return nil, errEmptyResourcesList
+	}
+	return resourceList, err
+}
+
+// getJSONList returns a json list of parameter listType, accepted listType :
+// * template (returns list of template available within api.Enterprise)
+// * resource (returns physical resources list available within api.Enterprise :
+//		resources for critical datacenter and resources for non-critical datacenters)
+func getJSONList(clientTooler *ClientTooler,
+	api *API,
+	listType string) ([]interface{}, error) {
+	var listURL strings.Builder
+	listURL.WriteString(api.URL)
+	listURL.WriteString(listType)
+	listURL.WriteString(entrepriseSlugHTTPReqParam)
+	listURL.WriteString(api.Enterprise)
 	req, err1 := http.NewRequest("GET",
-		templatesListURL.String(),
+		listURL.String(),
 		nil)
 	if err1 != nil {
 		return nil, err1
@@ -48,21 +76,21 @@ func (client HTTPClienter) getTemplatesList(clientTooler *ClientTooler,
 	if err2 != nil {
 		return nil, err2
 	}
-	templateList, err3 := clientTooler.Client.handleResponse(resp,
+	jsonList, err3 := clientTooler.Client.handleResponse(resp,
 		http.StatusOK,
 		httpJSONContentType)
 	if err3 != nil {
 		return nil, err3
 	}
-	if templateList == nil {
-		return nil, errEmptyTemplateList
+	if jsonList == nil {
+		return nil, errEmptyJSON
 	}
-	return templateList.([]interface{}), nil
+	return jsonList.([]interface{}), nil
 }
 
-// handleResponse formats a reponse body to the "expectedBodyFormat", tests the
+// handleResponse formats a response body to the "expectedBodyFormat", tests the
 // response status code against the "expectedCode".
-// Handled reponse body format : "application/json", "text/html", ""
+// Handled response body format : "application/json", "text/html", ""
 func (client HTTPClienter) handleResponse(resp *http.Response,
 	expectedCode int,
 	expectedBodyFormat string) (interface{}, error) {

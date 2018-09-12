@@ -24,7 +24,6 @@ install:
   - sudo npm install -g snyk
 
 script:
-  - golint -set_exit_status > golint-report.out
   - make test
   - snyk test
   - snyk monitor

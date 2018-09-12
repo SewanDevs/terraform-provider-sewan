@@ -1,6 +1,7 @@
 package sewan
 
 import (
+	sdk "github.com/SewanDevs/sewan-sdk-go"
 	"github.com/hashicorp/terraform/helper/schema"
 )
 
@@ -29,13 +30,23 @@ func providerSchema() map[string]*schema.Schema {
 			Required:    true,
 			Description: "Airdrum API's URL",
 		},
+		enterpriseField: &schema.Schema{
+			Type:        schema.TypeString,
+			Required:    true,
+			Description: "Clouddc session enterprise",
+		},
 	}
 }
 
 func providerConfigure(d *schema.ResourceData) (interface{}, error) {
 	config := configStruct{
-		APIToken: d.Get("api_token").(string),
-		APIURL:   d.Get("api_url").(string),
+		APIToken:   d.Get("api_token").(string),
+		APIURL:     d.Get("api_url").(string),
+		Enterprise: d.Get(enterpriseField).(string),
 	}
-	return config.clientStruct()
+	apiTooler := sdk.APITooler{
+		Implementer: sdk.AirDrumResourcesAPI{},
+		Initialyser: sdk.Initialyser{},
+	}
+	return config.clientStruct(&apiTooler)
 }

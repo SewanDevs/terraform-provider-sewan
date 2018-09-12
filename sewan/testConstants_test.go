@@ -1,5 +1,9 @@
 package sewan
 
+import (
+	"errors"
+)
+
 var (
 	testVdcMap = map[string]interface{}{
 		nameField:       "Unit test vdc resource",
@@ -66,9 +70,26 @@ var (
 		commentField:      "42",
 		dynamicField:      "42",
 	}
+	unitTestNonCriticalResourceList = []interface{}{
+		map[string]interface{}{"nonCriticalResourceElem1": "unit test value"},
+		map[string]interface{}{"nonCriticalResourceElem2": "unit test value"},
+	}
+	unitTestCriticalResourceList = []interface{}{
+		map[string]interface{}{"criticalResourceElem1": "unit test value"},
+		map[string]interface{}{"criticalResourceElem2": "unit test value"},
+	}
+	unitTestOtherResourceList = []interface{}{
+		map[string]interface{}{"otherResourceElem1": "unit test value"},
+		map[string]interface{}{"otherResourceElem2": "unit test value"},
+	}
+	errGetEnvMetaFailure         = errors.New("getEnvMetaFailure error")
+	errCheckCloudDcStatusFailure = errors.New("checkCloudDcStatusFailure error")
 )
 
 const (
+	unitTestAPIURL                  = "https://unitTestAPIURL.org"
+	unitTestToken                   = "unit test token"
+	unitTestEnterprise              = "unit test enterprise"
 	vdcCreationFailure              = "VDC creation failed."
 	vdcReadFailure                  = "VDC read failed."
 	vdcUpdateFailure                = "VDC update failed."
@@ -77,7 +98,6 @@ const (
 	vmReadFailure                   = "VM read failed."
 	vmUpdateFailure                 = "VM update failed."
 	vmDeletionFailure               = "VM deletion failed."
-	unitTestAPIURL                  = "https://unitTestAPIURL.org"
 	errTestResultDiffs              = "\n\rGot: \"%s\"\n\rWant: \"%s\""
 	errorTcIDAndWrongVdcUpdateError = "\n\nTC %d : VDC update error was incorrect,"
 	errorTcIDAndWrongVMUpdateError  = "\n\nTC %d : VM update error was incorrect,"

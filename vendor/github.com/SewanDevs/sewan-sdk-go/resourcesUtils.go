@@ -96,126 +96,6 @@ type vmStruct struct {
 	Outsourcing  string        `json:"outsourcing"`
 }
 
-func vdcInstanceCreate(d *schema.ResourceData) (vdcStruct, error) {
-	var (
-		resourceName strings.Builder
-	)
-	vdc := vdcStruct{
-		Name:         d.Get(NameField).(string),
-		Enterprise:   d.Get(EnterpriseField).(string),
-		Datacenter:   d.Get(DatacenterField).(string),
-		VdcResources: d.Get(VdcResourceField).([]interface{}),
-		Slug:         d.Get(SlugField).(string),
-		DynamicField: d.Get(DynamicField).(string),
-	}
-	for index, resource := range vdc.VdcResources {
-		resourceName.Reset()
-		resourceName.WriteString(vdc.Enterprise)
-		resourceName.WriteString(monoField)
-		resourceName.WriteString(resource.(map[string]interface{})[ResourceField].(string))
-		resource.(map[string]interface{})[ResourceField] = resourceName.String()
-		vdc.VdcResources[index] = resource
-	}
-	return vdc, nil
-}
-
-func getTemplateAndUpdateSchema(templateName string,
-	d *schema.ResourceData,
-	clientTooler *ClientTooler,
-	templatesTooler *TemplatesTooler,
-	api *API) (map[string]interface{}, error) {
-	templateList, err1 := clientTooler.Client.getTemplatesList(clientTooler,
-		d.Get(EnterpriseField).(string),
-		api)
-	if err1 != nil {
-		return map[string]interface{}{}, err1
-	}
-	template, err2 := templatesTooler.TemplatesTools.FetchTemplateFromList(templateName,
-		templateList)
-	if err2 != nil {
-		return map[string]interface{}{}, err2
-	}
-	err3 := templatesTooler.TemplatesTools.validateTemplate(template)
-	if err3 != nil {
-		return map[string]interface{}{}, err3
-	}
-	err4 := templatesTooler.TemplatesTools.updateSchemaFromTemplateOnResourceCreation(d,
-		template)
-	if err4 != nil {
-		return map[string]interface{}{}, err4
-	}
-	return template, nil
-}
-
-func vmInstanceCreate(d *schema.ResourceData,
-	clientTooler *ClientTooler,
-	templatesTooler *TemplatesTooler,
-	api *API) (vmStruct, error) {
-	var (
-		templateError error
-		template      map[string]interface{}
-		templateName  = d.Get(TemplateField).(string)
-		vmName        strings.Builder
-	)
-	vmName.WriteString(d.Get(NameField).(string))
-	if templateName != "" && d.Id() == "" {
-		instanceNumber := d.Get(InstanceNumberField).(int)
-		vmName.WriteString(resourceNameCountSeparator)
-		vmName.WriteString(strconv.Itoa(instanceNumber))
-		template,
-			templateError = getTemplateAndUpdateSchema(templateName,
-			d,
-			clientTooler,
-			templatesTooler,
-			api)
-	}
-	if templateError != nil {
-		return vmStruct{}, templateError
-	}
-	vm := vmStruct{
-		Name:         vmName.String(),
-		Enterprise:   d.Get(EnterpriseField).(string),
-		State:        d.Get(StateField).(string),
-		OS:           d.Get(OsField).(string),
-		RAM:          d.Get(RAMField).(int),
-		CPU:          d.Get(CPUField).(int),
-		Disks:        d.Get(DisksField).([]interface{}),
-		Nics:         d.Get(NicsField).([]interface{}),
-		Vdc:          d.Get(VdcField).(string),
-		Boot:         d.Get(BootField).(string),
-		StorageClass: d.Get(StorageClassField).(string),
-		Slug:         d.Get(SlugField).(string),
-		Token:        d.Get(TokenField).(string),
-		Backup:       d.Get(BackupField).(string),
-		DiskImage:    d.Get(DiskImageField).(string),
-		PlatformName: d.Get(PlatformNameField).(string),
-		BackupSize:   d.Get(BackupSizeField).(int),
-		DynamicField: d.Get(DynamicField).(string),
-	}
-	if d.Id() == "" {
-		dynamicFieldStruct := dynamicFieldStruct{
-			TerraformProvisioned:    true,
-			CreationTemplate:        d.Get(TemplateField).(string),
-			TemplateDisksOnCreation: nil,
-		}
-		if template != nil {
-			dynamicFieldStruct.TemplateDisksOnCreation = template[DisksField].([]interface{})
-			_, err := templatesTooler.TemplatesTools.createVMTemplateOverrideConfig(d,
-				template)
-			if err != nil {
-				return vmStruct{}, err
-			}
-			vm.Template = d.Get(TemplateField).(string)
-		}
-		dynamicFieldJSON, err2 := json.Marshal(dynamicFieldStruct)
-		if err2 != nil {
-			return vmStruct{}, err2
-		}
-		vm.DynamicField = string(dynamicFieldJSON)
-	}
-	return vm, nil
-}
-
 // resourceInstanceCreate creates a resource structure initialized with
 // fields values got from schema.
 // Accepted resource types : "vm", "vdc"
@@ -226,7 +106,7 @@ func (resource ResourceResourceer) resourceInstanceCreate(d *schema.ResourceData
 	api *API) (interface{}, error) {
 	switch resourceType {
 	case VdcResourceType:
-		return vdcInstanceCreate(d)
+		return vdcInstanceCreate(d, api)
 	case VMResourceType:
 		return vmInstanceCreate(d,
 			clientTooler,
@@ -294,4 +174,139 @@ func (resource ResourceResourceer) validateStatus(api *API,
 		http.StatusOK,
 		httpJSONContentType)
 	return err2
+}
+
+func vdcInstanceCreate(d *schema.ResourceData, api *API) (vdcStruct, error) {
+	vdc := vdcStruct{
+		Name:         d.Get(NameField).(string),
+		Enterprise:   api.Enterprise,
+		Datacenter:   d.Get(DatacenterField).(string),
+		VdcResources: d.Get(VdcResourceField).([]interface{}),
+		Slug:         d.Get(SlugField).(string),
+		DynamicField: d.Get(DynamicField).(string),
+	}
+	for index, resource := range vdc.VdcResources {
+		resourceSlug, err := getResourceSlug(resource.(map[string]interface{})[ResourceField].(string),
+			api.Meta)
+		if err != nil {
+			return vdcStruct{}, err
+		}
+		vdc.VdcResources[index].(map[string]interface{})[ResourceField] = resourceSlug
+	}
+	logger := LoggerCreate("vdcCreation.log")
+	logger.Println("vdc = ", vdc)
+	logger.Println("api.Meta = ", api.Meta)
+	return vdc, nil
+}
+
+func getResourceSlug(resourceName string, meta APIMeta) (string, error) {
+	logger := LoggerCreate("getResourceSlug" + resourceName + ".log")
+	for index, resource := range meta.NonCriticalResourceList {
+		logger.Println("index = ", index)
+		logger.Println("resource = ", resource)
+		logger.Println(resource.(map[string]interface{})[NameField])
+		logger.Println(resource.(map[string]interface{})[ResourceCosField])
+		resourceExistsInMeta := (resource.(map[string]interface{})[NameField] == resourceName)
+		isResourceMonoTyped := resource.(map[string]interface{})[ResourceCosField] == MonoResourceType
+		if resourceExistsInMeta && isResourceMonoTyped {
+			return resource.(map[string]interface{})[SlugField].(string), nil
+		}
+	}
+	return "", errResourceNotExist(resourceName)
+}
+
+func getTemplateAndUpdateSchema(templateName string,
+	d *schema.ResourceData,
+	clientTooler *ClientTooler,
+	templatesTooler *TemplatesTooler,
+	api *API) (map[string]interface{}, error) {
+	templateList, err1 := clientTooler.Client.getTemplatesList(clientTooler,
+		api)
+	if err1 != nil {
+		return map[string]interface{}{}, err1
+	}
+	template, err2 := templatesTooler.TemplatesTools.FetchTemplateFromList(templateName,
+		templateList)
+	if err2 != nil {
+		return map[string]interface{}{}, err2
+	}
+	err3 := templatesTooler.TemplatesTools.validateTemplate(template)
+	if err3 != nil {
+		return map[string]interface{}{}, err3
+	}
+	err4 := templatesTooler.TemplatesTools.updateSchemaFromTemplateOnResourceCreation(d,
+		template)
+	if err4 != nil {
+		return map[string]interface{}{}, err4
+	}
+	return template, nil
+}
+
+func vmInstanceCreate(d *schema.ResourceData,
+	clientTooler *ClientTooler,
+	templatesTooler *TemplatesTooler,
+	api *API) (vmStruct, error) {
+	var (
+		templateError error
+		template      map[string]interface{}
+		templateName  = d.Get(TemplateField).(string)
+		vmName        strings.Builder
+	)
+	vmName.WriteString(d.Get(NameField).(string))
+	if templateName != "" && d.Id() == "" {
+		instanceNumber := d.Get(InstanceNumberField).(int)
+		vmName.WriteString(resourceNameCountSeparator)
+		vmName.WriteString(strconv.Itoa(instanceNumber))
+		template,
+			templateError = getTemplateAndUpdateSchema(templateName,
+			d,
+			clientTooler,
+			templatesTooler,
+			api)
+	}
+	if templateError != nil {
+		return vmStruct{}, templateError
+	}
+	vm := vmStruct{
+		Name:         vmName.String(),
+		Enterprise:   api.Enterprise,
+		State:        d.Get(StateField).(string),
+		OS:           d.Get(OsField).(string),
+		RAM:          d.Get(RAMField).(int),
+		CPU:          d.Get(CPUField).(int),
+		Disks:        d.Get(DisksField).([]interface{}),
+		Nics:         d.Get(NicsField).([]interface{}),
+		Vdc:          d.Get(VdcField).(string),
+		Boot:         d.Get(BootField).(string),
+		StorageClass: d.Get(StorageClassField).(string),
+		Slug:         d.Get(SlugField).(string),
+		Token:        d.Get(TokenField).(string),
+		Backup:       d.Get(BackupField).(string),
+		DiskImage:    d.Get(DiskImageField).(string),
+		PlatformName: d.Get(PlatformNameField).(string),
+		BackupSize:   d.Get(BackupSizeField).(int),
+		DynamicField: d.Get(DynamicField).(string),
+	}
+	if d.Id() == "" {
+		dynamicFieldStruct := dynamicFieldStruct{
+			TerraformProvisioned:    true,
+			CreationTemplate:        d.Get(TemplateField).(string),
+			TemplateDisksOnCreation: nil,
+		}
+		if template != nil {
+			dynamicFieldStruct.TemplateDisksOnCreation = template[DisksField].([]interface{})
+			_, err := templatesTooler.TemplatesTools.createVMTemplateOverrideConfig(d,
+				template)
+			if err != nil {
+				return vmStruct{}, err
+			}
+			vm.Template = d.Get(TemplateField).(string)
+		}
+		dynamicFieldJSON, err2 := json.Marshal(dynamicFieldStruct)
+		if err2 != nil {
+			return vmStruct{}, err2
+		}
+		vm.DynamicField = string(dynamicFieldJSON)
+	}
+	return vm, nil
 }

@@ -17,13 +17,15 @@ This provider plugin is maintained by the Sewan's team.
 Requirements
 ------------
 
--	[Terraform](https://www.terraform.io/downloads.html) 0.10.x
--	[Go](https://golang.org/doc/install) 1.10.x
+- [Terraform](https://www.terraform.io/downloads.html) 0.10.x
+- [Go](https://golang.org/doc/install) 1.10.x
+- [golint](https://github.com/golang/lint)
 
 Usage
 ---------------------
 
 Take a look in [the website folder](https://github.com/SewanDevs/terraform-provider-sewan/blob/github_release/website/docs) to get fully explained examples and documentation :
+- Infrastructure example : [main.tf.example](https://github.com/SewanDevs/terraform-provider-sewan/blob/github_release/main.tf.example)
 - [Global Sewan's provider usage](https://github.com/SewanDevs/terraform-provider-sewan/blob/github_release/website/docs/index.html.markdown)
 - [vm (virtual machine) configuration](https://github.com/SewanDevs/terraform-provider-sewan/blob/github_release/website/docs/r/vm.html.md)
 - [vdc (virtual data center) configuration](https://github.com/SewanDevs/terraform-provider-sewan/blob/github_release/website/docs/r/vdc.html.md)
@@ -42,7 +44,12 @@ Building The Provider
 ---------------------
 * [Install terraform](https://www.terraform.io/intro/getting-started/install.html)
 
-* Set up [Go](http://www.golang.org) your dev environment with version 1.10.x . You'll also need to correctly setup a [GOPATH](http://golang.org/doc/code.html#GOPATH), as well as adding `$GOPATH/bin` to your `$PATH`.
+* Set up [Go](https://golang.org/doc/install) in your dev environment with version 1.10.x . You'll also need to correctly setup a [GOPATH](https://github.com/golang/go/wiki/SettingGOPATH) and add `export GOPATH=$HOME/go` and `PATH=$PATH:$GOPATH` to your `$HOME/.bashrc` file, then source it.
+
+* Install golint
+```sh
+go get -u golang.org/x/lint/golint
+```
 
 * Clone Sewan's terraform plugin repositorie to: `$GOPATH/src/github.com/SewanDevs/`
 ```sh
@@ -57,10 +64,23 @@ cd $GOPATH/src/github.com/SewanDevs/terraform-provider-sewan
 make test
 ```
 
-* Provider compilation
+* Provider build
 
-  This will build the provider and put the provider binary in the `$GOPATH/bin` directory.
+  This build the provider and put the provider binary in the `$GOPATH/bin` directory.
+
+  NB : The build fails if any [golint](https://github.com/golang/lint),
+  [gofmt](https://golang.org/cmd/gofmt/) or [govet](https://golang.org/cmd/vet/) issue is found.
 ```sh
 cd $GOPATH/src/github.com/SewanDevs/terraform-provider-sewan
 make build
 ```
+
+* Provider install
+
+  This moves the plugin binary from `$GOPATH/bin` to `$HOME/.terraform.d/plugins`, where terraform's plugins are stored.
+```sh
+make install
+```
+
+  NB : Notice this install is user limited, for system-wide installation,
+  move the plugin binary to /opt/

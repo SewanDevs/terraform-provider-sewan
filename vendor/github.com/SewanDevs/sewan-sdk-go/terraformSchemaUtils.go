@@ -5,7 +5,7 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 	"reflect"
 	"strconv"
-	"strings"
+	//"strings"
 )
 
 // SchemaTooler contains implementation of Schemaer interface
@@ -20,7 +20,7 @@ type Schemaer interface {
 	DeleteTerraformResource(d *schema.ResourceData)
 	UpdateLocalResourceState(resourceState map[string]interface{},
 		d *schema.ResourceData, schemaTools *SchemaTooler) error
-	UpdateVdcResourcesNames(d *schema.ResourceData) error
+	//UpdateVdcResourcesNames(d *schema.ResourceData) error
 	ReadElement(key interface{}, value interface{}) (interface{}, error)
 }
 
@@ -33,14 +33,17 @@ func (schemaer SchemaSchemaer) DeleteTerraformResource(d *schema.ResourceData) {
 }
 
 // UpdateLocalResourceState updates resource state in .tfstate file through schema update
+// - *schema.ResourceData Set error are not handled to ignore possible change of
+//     data structure got from clouddc environment, and to ignore non-relevant
+//     resource data.
 func (schemaer SchemaSchemaer) UpdateLocalResourceState(resourceState map[string]interface{},
 	d *schema.ResourceData, schemaTools *SchemaTooler) error {
 	var (
-		updateError error
-		readValue   interface{}
+		err       error
+		readValue interface{}
 	)
 	for key, value := range resourceState {
-		readValue, updateError = schemaTools.SchemaTools.ReadElement(key, value)
+		readValue, err = schemaTools.SchemaTools.ReadElement(key, value)
 		if key == IDField {
 			var sID string
 			switch {
@@ -55,38 +58,19 @@ func (schemaer SchemaSchemaer) UpdateLocalResourceState(resourceState map[string
 					sID = value.(string)
 				}
 			default:
-				updateError = errors.New("Format of " + key + "(" +
+				err = errors.New("Format of " + key + "(" +
 					reflect.TypeOf(value).Kind().String() + ") not handled.")
 			}
 			d.SetId(sID)
 		} else {
-			updateError = d.Set(key, readValue)
+			d.Set(key, readValue)
+		}
+		if err != nil {
+			return err
 		}
 		readValue = nil
 	}
-	return updateError
-}
-
-// UpdateVdcResourcesNames trims meaningless part of vdc resource name to store
-// a shorter name locally, example :
-// * "<enterprise name>-mono-ram" -> "ram"
-func (schemaer SchemaSchemaer) UpdateVdcResourcesNames(d *schema.ResourceData) error {
-	var (
-		vdcResourcesList       = d.Get(VdcResourceField).([]interface{})
-		vdcResourcesListUpdate = []interface{}{}
-		enterpriseName         = d.Get(EnterpriseField).(string)
-		resourceName           string
-	)
-	for _, resource := range vdcResourcesList {
-		resourceName = resource.(map[string]interface{})[ResourceField].(string)
-		resourceName = strings.Replace(resourceName,
-			enterpriseName, "", 1)
-		resourceName = strings.Replace(resourceName,
-			monoField, "", 1)
-		resource.(map[string]interface{})[ResourceField] = resourceName
-		vdcResourcesListUpdate = append(vdcResourcesListUpdate, resource)
-	}
-	return d.Set(VdcResourceField, vdcResourcesListUpdate)
+	return err
 }
 
 // ReadElement formats Element(key,value) value type to a type accepted by terraform :
@@ -109,7 +93,7 @@ func (schemaer SchemaSchemaer) UpdateVdcResourcesNames(d *schema.ResourceData) e
 func (schemaer SchemaSchemaer) ReadElement(key interface{},
 	value interface{}) (interface{}, error) {
 	var (
-		readError error
+		err       error
 		readValue interface{}
 	)
 	switch valueType := value.(type) {
@@ -127,7 +111,7 @@ func (schemaer SchemaSchemaer) ReadElement(key interface{},
 		var mapItem interface{}
 		for mapKey, mapValue := range valueType {
 			mapItem,
-				readError = schemaer.ReadElement(mapKey,
+				err = schemaer.ReadElement(mapKey,
 				mapValue)
 			readMapValue[mapKey] = mapItem
 		}
@@ -137,7 +121,7 @@ func (schemaer SchemaSchemaer) ReadElement(key interface{},
 		var listItem interface{}
 		for listKey, listValue := range valueType {
 			listItem,
-				readError = schemaer.ReadElement(listKey,
+				err = schemaer.ReadElement(listKey,
 				listValue)
 			readListValue = append(readListValue, listItem)
 		}
@@ -146,9 +130,9 @@ func (schemaer SchemaSchemaer) ReadElement(key interface{},
 		if value == nil {
 			readValue = nil
 		} else {
-			readError = errors.New("Format " +
+			err = errors.New("Format " +
 				reflect.TypeOf(valueType).Kind().String() + " not handled.")
 		}
 	}
-	return readValue, readError
+	return readValue, err
 }

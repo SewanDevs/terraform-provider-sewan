@@ -22,11 +22,11 @@ Contact the support.
 provider "sewan" {
   api_token = "your-company token"
   apiURL = "https://cloud-datacenter.fr/api/clouddc/"
+  enterprise = "your enterprise account's name"
 }
 
 resource "sewan_clouddc_vdc" "vdc-example" {
   name = "vdc example"
-  enterprise = "your-company"
   datacenter = "a datacenter"
   vdc_resources=[
   {
@@ -79,7 +79,7 @@ resource "sewan_clouddc_vm" "template-created-vm" {
 resource "sewan_clouddc_vm" "vm" {
   depends_on = ["sewan_clouddc_vdc.vdc-example"]
   count = 10
-  ram = 1 //GiB
+  ram = 1
   cpu = 1
   os = "CentOS"
   name = "vm-${count.index}"

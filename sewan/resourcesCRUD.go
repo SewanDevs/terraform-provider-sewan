@@ -8,62 +8,62 @@ import (
 func createResource(d *schema.ResourceData,
 	m interface{},
 	resourceType string) error {
-	apiResponse, err := m.(*clientStruct).sewanAPITooler.APIImplementer.CreateResource(d,
-		m.(*clientStruct).sewanClientTooler,
-		m.(*clientStruct).sewanTemplatesTooler,
-		m.(*clientStruct).sewanResourceTooler,
+	apiResponse, err := m.(*clientStruct).ToolerStruct.SewanAPITooler.Implementer.CreateResource(d,
+		m.(*clientStruct).ToolerStruct.SewanClientTooler,
+		m.(*clientStruct).ToolerStruct.SewanTemplatesTooler,
+		m.(*clientStruct).ToolerStruct.SewanResourceTooler,
 		resourceType,
-		m.(*clientStruct).sewan)
+		m.(*clientStruct).Sewan)
 	if err != nil {
 		return err
 	}
-	return m.(*clientStruct).sewanSchemaTooler.SchemaTools.UpdateLocalResourceState(apiResponse,
+	return m.(*clientStruct).ToolerStruct.SewanSchemaTooler.SchemaTools.UpdateLocalResourceState(apiResponse,
 		d,
-		m.(*clientStruct).sewanSchemaTooler)
+		m.(*clientStruct).ToolerStruct.SewanSchemaTooler)
 }
 
 func readResource(d *schema.ResourceData,
 	m interface{},
 	resourceType string) error {
-	apiResponse, err := m.(*clientStruct).sewanAPITooler.APIImplementer.ReadResource(d,
-		m.(*clientStruct).sewanClientTooler,
-		m.(*clientStruct).sewanResourceTooler,
+	apiResponse, err := m.(*clientStruct).ToolerStruct.SewanAPITooler.Implementer.ReadResource(d,
+		m.(*clientStruct).ToolerStruct.SewanClientTooler,
+		m.(*clientStruct).ToolerStruct.SewanResourceTooler,
 		resourceType,
-		m.(*clientStruct).sewan)
+		m.(*clientStruct).Sewan)
 	switch {
 	case err == sdk.ErrResourceNotExist:
-		m.(*clientStruct).sewanSchemaTooler.SchemaTools.DeleteTerraformResource(d)
+		m.(*clientStruct).ToolerStruct.SewanSchemaTooler.SchemaTools.DeleteTerraformResource(d)
 		return nil
 	case err != nil:
 		return err
 	default:
-		return m.(*clientStruct).sewanSchemaTooler.SchemaTools.UpdateLocalResourceState(apiResponse,
+		return m.(*clientStruct).ToolerStruct.SewanSchemaTooler.SchemaTools.UpdateLocalResourceState(apiResponse,
 			d,
-			m.(*clientStruct).sewanSchemaTooler)
+			m.(*clientStruct).ToolerStruct.SewanSchemaTooler)
 	}
 }
 
 func updateResource(d *schema.ResourceData,
 	m interface{},
 	resourceType string) error {
-	return m.(*clientStruct).sewanAPITooler.APIImplementer.UpdateResource(d,
-		m.(*clientStruct).sewanClientTooler,
-		m.(*clientStruct).sewanTemplatesTooler,
-		m.(*clientStruct).sewanResourceTooler,
+	return m.(*clientStruct).ToolerStruct.SewanAPITooler.Implementer.UpdateResource(d,
+		m.(*clientStruct).ToolerStruct.SewanClientTooler,
+		m.(*clientStruct).ToolerStruct.SewanTemplatesTooler,
+		m.(*clientStruct).ToolerStruct.SewanResourceTooler,
 		resourceType,
-		m.(*clientStruct).sewan)
+		m.(*clientStruct).Sewan)
 }
 
 func deleteResource(d *schema.ResourceData,
 	m interface{},
 	resourceType string) error {
-	err := m.(*clientStruct).sewanAPITooler.APIImplementer.DeleteResource(d,
-		m.(*clientStruct).sewanClientTooler,
-		m.(*clientStruct).sewanResourceTooler,
+	err := m.(*clientStruct).ToolerStruct.SewanAPITooler.Implementer.DeleteResource(d,
+		m.(*clientStruct).ToolerStruct.SewanClientTooler,
+		m.(*clientStruct).ToolerStruct.SewanResourceTooler,
 		resourceType,
-		m.(*clientStruct).sewan)
+		m.(*clientStruct).Sewan)
 	if err == nil {
-		m.(*clientStruct).sewanSchemaTooler.SchemaTools.DeleteTerraformResource(d)
+		m.(*clientStruct).ToolerStruct.SewanSchemaTooler.SchemaTools.DeleteTerraformResource(d)
 	}
 	return err
 }

@@ -3,11 +3,9 @@ Sewan's cloud data center go sdk
 
 - Website: https://www.sewan.fr/
 - Travis build : [![Build Status](https://travis-ci.com/SewanDevs/sewan-sdk-go.svg?branch=github_release)](https://travis-ci.com/SewanDevs/sewan-sdk-go)
-- SonarQube analysis : ![Sonar Status](https://sonarcloud.io/api/project_badges/measure?project=sewan-sdk-go&metric=alert_status)
-- Snyk security audit :
-[![Known Vulnerabilities](https://snyk.io/test/github/SewanDevs/sewan-sdk-go/badge.svg)](https://snyk.io/test/github/SewanDevs/sewan-sdk-go)
+- SonarQube analysis : [![Sonar Status](https://sonarcloud.io/api/project_badges/measure?project=sewan-sdk-go&metric=alert_status)](https://sonarcloud.io/dashboard?id=sewan-sdk-go)
 - [![Go Report Card](https://goreportcard.com/badge/github.com/SewanDevs/sewan-sdk-go)](https://goreportcard.com/report/github.com/SewanDevs/sewan-sdk-go)
-
+- [Snyk security audit](https://app.snyk.io) : beta version, no badge available, No known vulnerabilities found.
 
 <img src="http://entreprises.smallizbeautiful.fr/logo/Sewan-Communications.jpg" width="500px">
 

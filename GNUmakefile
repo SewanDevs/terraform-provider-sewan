@@ -8,8 +8,12 @@ default: build
 build: fmtcheck
 	go install
 
+install:
+	mv $(GOPATH)/bin/terraform-provider-sewan ~/.terraform.d/plugins/
+
 test: fmtcheck vet golint
 	go test -i $(TEST) || exit 1
+	go test $(TEST) || exit 1
 	echo $(TEST) | \
 		xargs -t -n4 go test -coverprofile=coverage.out -json > report.json $(TESTARGS) -timeout=30s -parallel=4
 

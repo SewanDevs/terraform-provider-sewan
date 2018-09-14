@@ -16,9 +16,13 @@ func (initialyser initSuccess) CheckCloudDcStatus(api *sdk.API,
 func (initialyser initSuccess) GetClouddcEnvMeta(api *sdk.API,
 	clientTooler *sdk.ClientTooler) (*sdk.APIMeta, error) {
 	return &sdk.APIMeta{
-		NonCriticalResourceList: unitTestNonCriticalResourceList,
-		CriticalResourceList:    unitTestCriticalResourceList,
-		OtherResourceList:       unitTestOtherResourceList,
+		EnterpriseResourceList: enterpriseResourceMetaDataList,
+		DatacenterList:         dataCenterMetaDataList,
+		TemplatesList:          []interface{}{},
+		VlansList:              []interface{}{},
+		SnapshotsList:          []interface{}{},
+		DiskImageList:          []interface{}{},
+		OvaList:                []interface{}{},
 	}, nil
 }
 
@@ -64,9 +68,13 @@ func (initialyser checkCloudDcStatusFailure) CheckCloudDcStatus(api *sdk.API,
 func (initialyser checkCloudDcStatusFailure) GetClouddcEnvMeta(api *sdk.API,
 	clientTooler *sdk.ClientTooler) (*sdk.APIMeta, error) {
 	return &sdk.APIMeta{
-		NonCriticalResourceList: unitTestNonCriticalResourceList,
-		CriticalResourceList:    unitTestCriticalResourceList,
-		OtherResourceList:       unitTestOtherResourceList,
+		EnterpriseResourceList: enterpriseResourceMetaDataList,
+		DatacenterList:         dataCenterMetaDataList,
+		TemplatesList:          []interface{}{},
+		VlansList:              []interface{}{},
+		SnapshotsList:          []interface{}{},
+		DiskImageList:          []interface{}{},
+		OvaList:                []interface{}{},
 	}, nil
 }
 

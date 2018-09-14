@@ -9,7 +9,7 @@ const (
 	vdcField            = sdk.VdcField
 	nameField           = sdk.NameField
 	enterpriseField     = sdk.EnterpriseField
-	datacenterField     = sdk.DatacenterField
+	dataCenterField     = sdk.DataCenterField
 	resourceField       = sdk.ResourceField
 	totalField          = sdk.TotalField
 	usedField           = sdk.UsedField

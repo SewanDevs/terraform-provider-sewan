@@ -14,7 +14,6 @@ golint_govet_snyk_gofmt_unit_tests:
     - curl -sL https://deb.nodesource.com/setup_10.x | bash -
     - apt-get install -y nodejs
     - npm install -g snyk
-    - rm -rf $GOPATH/src/gitlab.com/rd/sewan-sdk-go
     - mkdir -p $GOPATH/src/gitlab.com/rd
     - ln -s $CI_PROJECT_DIR $GOPATH/src/gitlab.com/rd/
     - cd $GOPATH/src/gitlab.com/rd/$CI_PROJECT_NAME

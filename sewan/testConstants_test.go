@@ -64,7 +64,7 @@ var (
 		slugField:         "42",
 		tokenField:        "424242",
 		backupField:       "backup-no_backup",
-		diskImageField:    "",
+		isoField:          "",
 		platformNameField: "42",
 		backupSizeField:   42,
 		commentField:      "42",
@@ -106,10 +106,20 @@ var (
 			"manager":  7,
 		},
 	}
+	unitTestMetaDataList = []interface{}{
+		map[string]interface{}{
+			"id":         4,
+			"enterprise": unitTestEnterprise,
+		},
+		map[string]interface{}{
+			"id":         1,
+			"enterprise": unitTestEnterprise,
+		},
+	}
 	enterpriseResourceMetaDataList = []interface{}{
 		map[string]interface{}{
 			"id":            4,
-			"enterprise":    "unit-test-enterprise",
+			"enterprise":    unitTestEnterprise,
 			"created":       "2017-06-29T12:10:35+02:00",
 			"modified":      "2018-05-28T12:28:42+02:00",
 			"cos":           "Mono",
@@ -122,7 +132,7 @@ var (
 		},
 		map[string]interface{}{
 			"id":            5,
-			"enterprise":    "unit-test-enterprise",
+			"enterprise":    unitTestEnterprise,
 			"created":       "2017-06-29T12:10:35+02:00",
 			"modified":      "2018-05-28T12:28:32+02:00",
 			"cos":           "Mono",
@@ -135,7 +145,7 @@ var (
 		},
 		map[string]interface{}{
 			"id":            6,
-			"enterprise":    "unit-test-enterprise",
+			"enterprise":    unitTestEnterprise,
 			"created":       "2017-06-29T12:10:35+02:00",
 			"modified":      "2018-02-14T17:32:15+01:00",
 			"cos":           "Mono",
@@ -148,7 +158,7 @@ var (
 		},
 		map[string]interface{}{
 			"id":            7,
-			"enterprise":    "unit-test-enterprise",
+			"enterprise":    unitTestEnterprise,
 			"created":       "2017-06-29T12:10:35+02:00",
 			"modified":      "2018-07-31T15:55:06+02:00",
 			"cos":           "Mono",
@@ -161,7 +171,7 @@ var (
 		},
 		map[string]interface{}{
 			"id":            8,
-			"enterprise":    "unit-test-enterprise",
+			"enterprise":    unitTestEnterprise,
 			"created":       "2017-06-29T12:10:35+02:00",
 			"modified":      "2018-02-06T11:02:17+01:00",
 			"cos":           "Mono",
@@ -174,7 +184,7 @@ var (
 		},
 		map[string]interface{}{
 			"id":            305,
-			"enterprise":    "unit-test-enterprise",
+			"enterprise":    unitTestEnterprise,
 			"created":       "2017-10-10T12:19:51+02:00",
 			"modified":      "2017-10-10T12:19:51+02:00",
 			"cos":           "HA",
@@ -187,7 +197,7 @@ var (
 		},
 		map[string]interface{}{
 			"id":            306,
-			"enterprise":    "unit-test-enterprise",
+			"enterprise":    unitTestEnterprise,
 			"created":       "2017-10-10T12:20:11+02:00",
 			"modified":      "2017-10-10T12:20:11+02:00",
 			"cos":           "HA",
@@ -200,7 +210,7 @@ var (
 		},
 		map[string]interface{}{
 			"id":            314,
-			"enterprise":    "unit-test-enterprise",
+			"enterprise":    unitTestEnterprise,
 			"created":       "2018-04-03T16:09:32+02:00",
 			"modified":      "2018-04-24T15:50:56+02:00",
 			"cos":           "HA",
@@ -213,7 +223,7 @@ var (
 		},
 		map[string]interface{}{
 			"id":            315,
-			"enterprise":    "unit-test-enterprise",
+			"enterprise":    unitTestEnterprise,
 			"created":       "2018-04-24T12:35:55+02:00",
 			"modified":      "2018-04-24T15:51:04+02:00",
 			"cos":           "HA",
@@ -226,7 +236,7 @@ var (
 		},
 		map[string]interface{}{
 			"id":            316,
-			"enterprise":    "unit-test-enterprise",
+			"enterprise":    unitTestEnterprise,
 			"created":       "2018-04-24T12:36:15+02:00",
 			"modified":      "2018-04-24T15:51:13+02:00",
 			"cos":           "HA",
@@ -239,7 +249,7 @@ var (
 		},
 		map[string]interface{}{
 			"id":            55,
-			"enterprise":    "unit-test-enterprise",
+			"enterprise":    unitTestEnterprise,
 			"created":       "2017-06-29T12:10:35+02:00",
 			"modified":      "2017-08-10T05:01:03+02:00",
 			"cos":           "Global",
@@ -252,7 +262,7 @@ var (
 		},
 		map[string]interface{}{
 			"id":            196,
-			"enterprise":    "unit-test-enterprise",
+			"enterprise":    unitTestEnterprise,
 			"created":       "2017-06-29T12:10:35+02:00",
 			"modified":      "2018-02-21T12:45:28+01:00",
 			"cos":           "Global",
@@ -265,7 +275,7 @@ var (
 		},
 		map[string]interface{}{
 			"id":            313,
-			"enterprise":    "unit-test-enterprise",
+			"enterprise":    unitTestEnterprise,
 			"created":       "2018-02-15T18:39:17+01:00",
 			"modified":      "2018-02-16T15:50:16+01:00",
 			"cos":           "Global",
@@ -275,6 +285,103 @@ var (
 			"slug":          "sewan-rd-cloud-daatcenter-vdc-rd-licence-redhat",
 			"dynamic_field": nil,
 			"service":       1,
+		},
+	}
+	snapshotMetaDataList = []interface{}{
+		map[string]interface{}{
+			"id":              1,
+			"created":         "2018-09-03T17:32:07+01:00",
+			"slug":            "snapshotslug1",
+			"vm":              "unit-test-enterprise-vm-1",
+			"dynamic_field":   nil,
+			"expiration_date": "20xx-xx-10T16:32:07Z",
+		},
+		map[string]interface{}{
+			"id":              2,
+			"created":         "2018-09-03T17:32:42+01:00",
+			"slug":            "snapshotslug2",
+			"vm":              "unit-test-enterprise-vm-2",
+			"dynamic_field":   nil,
+			"expiration_date": "20xx-xx-10T16:32:28Z",
+		},
+	}
+	isoMetaDataList = []interface{}{
+		map[string]interface{}{
+			"id":            1,
+			"slug":          "iso-slug-1",
+			"enterprise":    unitTestEnterprise,
+			"size":          42, //bytes
+			"name":          "unitTest-iso1.iso",
+			"dynamic_field": nil,
+		},
+		map[string]interface{}{
+			"id":            2,
+			"slug":          "iso-slug-2",
+			"enterprise":    unitTestEnterprise,
+			"size":          42,
+			"name":          "unitTest-iso2.iso",
+			"dynamic_field": nil,
+		},
+	}
+	ovaMetaDataList = []interface{}{
+		map[string]interface{}{
+			"id":   60,
+			"slug": "uniTest-ova-slug1",
+			"ram":  1,
+			"cpu":  1,
+			"nics": 4,
+			"os":   "Linux 64 bits",
+			"disks": []interface{}{
+				map[string]interface{}{
+					"name": "disk0",
+					"size": 4,
+					"slug": "unitTest-slug-disk0",
+				},
+			},
+			"enterprise":    unitTestEnterprise,
+			"name":          "unitTest1.ova",
+			"dynamic_field": nil,
+		},
+		map[string]interface{}{
+			"id":   61,
+			"slug": "uniTest-ova-slug1",
+			"ram":  2,
+			"cpu":  1,
+			"nics": 1,
+			"os":   "Other",
+			"disks": []interface{}{
+				map[string]interface{}{
+					"name": "disk1",
+					"size": 14,
+					"slug": "unitTest-slug-disk1",
+				},
+			},
+			"enterprise":    unitTestEnterprise,
+			"name":          "unitTest2.ova",
+			"dynamic_field": nil,
+		},
+	}
+	vlanMetaDataList = []interface{}{
+		map[string]interface{}{
+			"name":       "unitTest vlan 1",
+			"enterprise": unitTestEnterprise,
+			"type":       "firewall",
+			"slug":       "slug1",
+			"firewall":   nil,
+		},
+		map[string]interface{}{
+			"name":       "unitTest vlan 2",
+			"enterprise": unitTestEnterprise,
+			"type":       "internal",
+			"slug":       "slug2",
+			"firewall":   nil,
+		},
+		map[string]interface{}{
+			"name":       "unitTest vlan 3",
+			"enterprise": unitTestEnterprise,
+			"type":       "internal",
+			"slug":       "slug3",
+			"firewall":   nil,
 		},
 	}
 )

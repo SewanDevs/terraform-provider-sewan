@@ -31,14 +31,15 @@ func resourceCRUDTestInit() *clientStruct {
 		config.APIURL,
 		config.Enterprise,
 	)
-	api.Meta = sdk.APIMeta{
-		EnterpriseResourceList: enterpriseResourceMetaDataList,
-		DatacenterList:         dataCenterMetaDataList,
-		TemplatesList:          []interface{}{},
-		VlansList:              []interface{}{},
-		SnapshotsList:          []interface{}{},
-		DiskImageList:          []interface{}{},
-		OvaList:                []interface{}{},
+	api.Meta = &sdk.APIMeta{
+		EnterpriseResourceList: unitTestMetaDataList,
+		DataCenterList:         unitTestMetaDataList,
+		TemplateList:           unitTestMetaDataList,
+		VlanList:               unitTestMetaDataList,
+		SnapshotList:           unitTestMetaDataList,
+		IsoList:                unitTestMetaDataList,
+		OvaList:                unitTestMetaDataList,
+		BackupPlanList:         unitTestMetaDataList,
 	}
 	return &clientStruct{api,
 		clientToolerStruct{
@@ -77,14 +78,15 @@ func resourceTestInit() *clientStruct {
 		config.APIURL,
 		config.Enterprise,
 	)
-	api.Meta = sdk.APIMeta{
-		EnterpriseResourceList: enterpriseResourceMetaDataList,
-		DatacenterList:         dataCenterMetaDataList,
-		TemplatesList:          []interface{}{},
-		VlansList:              []interface{}{},
-		SnapshotsList:          []interface{}{},
-		DiskImageList:          []interface{}{},
-		OvaList:                []interface{}{},
+	api.Meta = &sdk.APIMeta{
+		EnterpriseResourceList: unitTestMetaDataList,
+		DataCenterList:         unitTestMetaDataList,
+		TemplateList:           unitTestMetaDataList,
+		VlanList:               unitTestMetaDataList,
+		SnapshotList:           unitTestMetaDataList,
+		IsoList:                unitTestMetaDataList,
+		OvaList:                unitTestMetaDataList,
+		BackupPlanList:         unitTestMetaDataList,
 	}
 	return &clientStruct{api,
 		clientToolerStruct{

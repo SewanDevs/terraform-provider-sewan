@@ -29,7 +29,7 @@ const (
 	bootField           = sdk.BootField
 	tokenField          = sdk.TokenField
 	backupField         = sdk.BackupField
-	diskImageField      = sdk.DiskImageField
+	isoField            = sdk.IsoField
 	platformNameField   = sdk.PlatformNameField
 	backupSizeField     = sdk.BackupSizeField
 	commentField        = sdk.CommentField
@@ -91,7 +91,7 @@ func (c *configStruct) clientStruct(apiTooler *sdk.APITooler) (*clientStruct,
 	if err2 != nil {
 		return nil, err2
 	}
-	api.Meta = *clientStructAPIMeta
+	api.Meta = clientStructAPIMeta
 	return &clientStruct{api,
 			clientToolerStruct{
 				apiTooler,

@@ -5,7 +5,6 @@ import (
 	"github.com/hashicorp/terraform/helper/schema"
 	"reflect"
 	"strconv"
-	//"strings"
 )
 
 // SchemaTooler contains implementation of Schemaer interface

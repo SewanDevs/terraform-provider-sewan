@@ -2,12 +2,12 @@
 
 
 [[projects]]
-  digest = "1:03f1f479344dec0540ba6ce17da2ceacba2eeab2093dee8f9f77b636c832f17c"
+  digest = "1:603a996fdc125974731926e29a085414399ba60321fd8cdce13ebfa87d1b9e22"
   name = "github.com/SewanDevs/sewan-sdk-go"
   packages = ["."]
   pruneopts = "UT"
-  revision = "a330ac6626bd762c47b9b2c82398e283dd2bc71c"
-  version = "v0.1.3"
+  revision = "884efccae5321a73b2fa323415869ad58b3a428f"
+  version = "v0.1.4"
 
 [[projects]]
   digest = "1:dc2ba13235a4c8f80a40599575a3f10acb4736cb372f1a68b88333c06564471d"
@@ -42,7 +42,7 @@
   version = "v1.0.0"
 
 [[projects]]
-  digest = "1:1808bbdc0c45b7a2beae51e52c6cf96ce72bd006246b4e78a289a7e0b709d4b0"
+  digest = "1:8fbc2e1f7d74b6a75816f6c9d397c5b5ad150f2f1123d1708c3a21c07c34ff7e"
   name = "github.com/aws/aws-sdk-go"
   packages = [
     "aws",
@@ -78,8 +78,8 @@
     "service/sts",
   ]
   pruneopts = "UT"
-  revision = "1186f7e6f000ce13edff71ed5ecc8b0e27ba38d7"
-  version = "v1.15.33"
+  revision = "34699de98eac41fa94737f6ce7b83d7a621c2634"
+  version = "v1.15.36"
 
 [[projects]]
   branch = "master"
@@ -302,11 +302,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:8090c1e604762fca030d3d9a909e130a3e500389a1567eaf3fefbf24e6134d39"
+  digest = "1:a4826c308e84f5f161b90b54a814f0be7d112b80164b9b884698a6903ea47ab3"
   name = "github.com/hashicorp/yamux"
   packages = ["."]
   pruneopts = "UT"
-  revision = "cc6d2ea263b2471faabce371255777a365bf8306"
+  revision = "7221087c3d281fda5f794e28c2ea4c6e4d5c4558"
 
 [[projects]]
   digest = "1:e22af8c7518e1eab6f2eab2b7d7558927f816262586cd6ed9f349c97a6c285c4"
@@ -514,11 +514,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:077c1c599507b3b3e9156d17d36e1e61928ee9b53a5b420f10f28ebd4a0b275c"
+  digest = "1:4b89f7cb4fa89ee4b8ec3fff8e91105e7f1fee84761edcb063a738e376c53357"
   name = "google.golang.org/genproto"
   packages = ["googleapis/rpc/status"]
   pruneopts = "UT"
-  revision = "36d5787dc5356b711fe8f3040271aaf51c35955b"
+  revision = "4b56f30a1fd96a133a036b62cdd2a249883dd89b"
 
 [[projects]]
   digest = "1:1b6d2676ea895d33cbd1999c75dfc8e25b103c754ccfc66dc06ae845ce3a47bc"

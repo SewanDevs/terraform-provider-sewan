@@ -77,11 +77,11 @@ func resourceVM() *schema.Resource {
 			},
 			ramField: &schema.Schema{
 				Type:     schema.TypeInt,
-				Optional: true,
+				Required: true,
 			},
 			cpuField: &schema.Schema{
 				Type:     schema.TypeInt,
-				Optional: true,
+				Required: true,
 			},
 			disksField: &schema.Schema{
 				Type:     schema.TypeList,
@@ -117,7 +117,7 @@ func resourceVM() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			diskImageField: &schema.Schema{
+			isoField: &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
 			},

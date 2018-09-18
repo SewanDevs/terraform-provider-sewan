@@ -16,7 +16,7 @@ type API struct {
 	Token      string
 	URL        string
 	Enterprise string
-	Meta       APIMeta
+	Meta       *APIMeta
 	Client     *http.Client
 }
 
@@ -28,9 +28,15 @@ type APITooler struct {
 
 // APIMeta stores specific meta data about a clouddc environment
 type APIMeta struct {
-	NonCriticalResourceList []interface{}
-	CriticalResourceList    []interface{}
-	OtherResourceList       []interface{}
+	EnterpriseResourceList []interface{}
+	EnterpriseVdcList      []interface{}
+	DataCenterList         []interface{}
+	TemplateList           []interface{}
+	VlanList               []interface{}
+	SnapshotList           []interface{}
+	IsoList                []interface{}
+	OvaList                []interface{}
+	BackupPlanList         []interface{}
 }
 
 // APIer interface is responsible of CRUD operations on Sewan's clouddc resources,
@@ -71,6 +77,8 @@ type APIInitialyser interface {
 		resourceTooler *ResourceTooler) error
 	GetClouddcEnvMeta(api *API,
 		clientTooler *ClientTooler) (*APIMeta, error)
+	// Add here fields validation
+	//ValidateResourceFieldsValue
 }
 
 // Initialyser implements APIInitialyser interface
@@ -103,35 +111,76 @@ func (initialyser Initialyser) CheckCloudDcStatus(api *API,
 func (initialyser Initialyser) GetClouddcEnvMeta(api *API,
 	clientTooler *ClientTooler) (*APIMeta, error) {
 	var (
-		apiMeta                 APIMeta
-		nonCriticalResourceList []interface{}
-		criticalResourceList    []interface{}
-		otherResourceList       []interface{}
+		apiMeta APIMeta
 	)
 	resourceMetaDataList,
-		err := clientTooler.Client.getPhysicalResourcesMeta(clientTooler,
-		api)
-	if err != nil {
-		return nil, err
+		err1 := clientTooler.Client.getEnvResourceList(clientTooler,
+		api, clouddcEnvironmentResource)
+	if err1 != nil {
+		return nil, err1
 	}
-	for _, resource := range resourceMetaDataList {
-		switch resource.(map[string]interface{})["cos"] {
-		case "Mono":
-			nonCriticalResourceList = append(nonCriticalResourceList,
-				resource.(map[string]interface{}))
-		case "HA":
-			criticalResourceList = append(criticalResourceList,
-				resource.(map[string]interface{}))
-		default:
-			otherResourceList = append(otherResourceList,
-				resource.(map[string]interface{}))
-		}
+	templateList, err2 := clientTooler.Client.getEnvResourceList(clientTooler,
+		api, clouddcEnvironmentTemplate)
+	if err2 != nil {
+		return nil, err2
 	}
-	apiMeta.NonCriticalResourceList = nonCriticalResourceList
-	apiMeta.CriticalResourceList = criticalResourceList
-	apiMeta.OtherResourceList = otherResourceList
+	dataCenterList, err3 := clientTooler.Client.getEnvResourceList(clientTooler,
+		api, clouddcEnvironmentDatacenter)
+	if err3 != nil {
+		return nil, err3
+	}
+	vlanList, err4 := clientTooler.Client.getEnvResourceList(clientTooler,
+		api, clouddcEnvironmentVlan)
+	if err4 != nil {
+		return nil, err4
+	}
+	snapshotList, err5 := clientTooler.Client.getEnvResourceList(clientTooler,
+		api, clouddcEnvironmentSnapshot)
+	if err5 != nil {
+		return nil, err5
+	}
+	isoList, err6 := clientTooler.Client.getEnvResourceList(clientTooler,
+		api, clouddcEnvironmentIso)
+	if err6 != nil {
+		return nil, err6
+	}
+	ovaList, err7 := clientTooler.Client.getEnvResourceList(clientTooler,
+		api, clouddcEnvironmentOva)
+	if err7 != nil {
+		return nil, err7
+	}
+	backupPlanList, err8 := clientTooler.Client.getEnvResourceList(clientTooler,
+		api, clouddcEnvironmentBackupPlan)
+	if err8 != nil {
+		return nil, err8
+	}
+	vdcList,
+		err9 := clientTooler.Client.getEnvResourceList(clientTooler,
+		api, clouddcEnvironmentVdc)
+	if err9 != nil {
+		return nil, err9
+	}
+	logger := LoggerCreate("GetClouddcEnvMeta.log")
+	apiMeta.EnterpriseResourceList = resourceMetaDataList
+	logger.Println("resourceMetaDataList =", resourceMetaDataList)
+	apiMeta.EnterpriseVdcList = vdcList
+	logger.Println("vdcList =", vdcList)
+	apiMeta.DataCenterList = dataCenterList
+	logger.Println(" dataCenterList =", dataCenterList)
+	apiMeta.TemplateList = templateList
+	logger.Println("templateList =", templateList)
+	apiMeta.VlanList = vlanList
+	logger.Println("vlanList =", vlanList)
+	apiMeta.SnapshotList = snapshotList
+	logger.Println("snapshotList =", snapshotList)
+	apiMeta.IsoList = isoList
+	logger.Println("isoList =", isoList)
+	apiMeta.OvaList = ovaList
+	logger.Println("ovaList =", ovaList)
+	apiMeta.BackupPlanList = backupPlanList
+	logger.Println("backupPlanList =", backupPlanList)
 	// redmine ticket #37823 : resource's lists validation lack
-	return &apiMeta, err
+	return &apiMeta, nil
 }
 
 // CreateResource creates Sewan clouddc resource
@@ -149,12 +198,11 @@ func (apier AirDrumResourcesAPI) CreateResource(d *schema.ResourceData,
 		instanceName = d.Get(NameField).(string)
 	)
 	resourceInstance, err1 := resourceTooler.Resource.resourceInstanceCreate(d,
-		clientTooler,
 		templatesTooler,
 		resourceType,
 		sewan)
 	if err1 != nil {
-		return map[string]interface{}{}, err1.(error)
+		return map[string]interface{}{}, err1
 	}
 	resourceJSON, err2 := json.Marshal(resourceInstance)
 	if err2 != nil {
@@ -242,8 +290,9 @@ func updateSchemaReadVdcResource(d *schema.ResourceData,
 		resourcesList []interface{}
 	)
 	for _, resource := range readResource[VdcResourceField].([]interface{}) {
-		resourceName, err := getResourceName(resource.(map[string]interface{})[ResourceField].(string),
-			api.Meta)
+		resourceName,
+			err := getResourceName(resource.(map[string]interface{})[ResourceField].(string),
+			*api.Meta)
 		if err != nil {
 			return err
 		}
@@ -255,14 +304,14 @@ func updateSchemaReadVdcResource(d *schema.ResourceData,
 
 // getResourceName extracts from APIMeta and returns corresponding resource's name
 func getResourceName(resourceSlug string, meta APIMeta) (string, error) {
-	for _, resource := range meta.NonCriticalResourceList {
+	for _, resource := range meta.EnterpriseResourceList {
 		resourceExistsInMeta := (resource.(map[string]interface{})[SlugField] == resourceSlug)
 		isResourceMonoTyped := resource.(map[string]interface{})[ResourceCosField] == MonoResourceType
 		if resourceExistsInMeta && isResourceMonoTyped {
 			return resource.(map[string]interface{})[NameField].(string), nil
 		}
 	}
-	return "", errResourceNotExist(resourceSlug)
+	return "", errResourceNotExist(resourceSlug, "")
 }
 
 // UpdateResource update Sewan clouddc resource's
@@ -278,7 +327,6 @@ func (apier AirDrumResourcesAPI) UpdateResource(d *schema.ResourceData,
 	sewan *API) error {
 	resourceInstance,
 		err1 := resourceTooler.Resource.resourceInstanceCreate(d,
-		clientTooler,
 		templatesTooler,
 		resourceType,
 		sewan)

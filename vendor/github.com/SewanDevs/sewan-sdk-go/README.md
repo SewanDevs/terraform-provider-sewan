@@ -25,6 +25,7 @@ Doc
 --------------------
 
 * Architecture doc : Available under doc folder, it contains sequence diagrams and a module diagram.
+* developer doc : Available under private Sewan's wiki
 * Standard golang sdk doc :
 > prerequisite : current repository have been cloned in GOPATH
 > ```sh

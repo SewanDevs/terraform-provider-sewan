@@ -37,7 +37,7 @@ func resourceVdc() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
-			datacenterField: &schema.Schema{
+			dataCenterField: &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
 			},

@@ -42,22 +42,22 @@ type nicModifiableFields struct {
 }
 
 type templateCreatedVMOverride struct {
-	Name      string        `json:"name"`
-	OS        string        `json:"os"`
-	RAM       int           `json:"ram"`
-	CPU       int           `json:"cpu"`
-	Disks     []interface{} `json:"disks,omitempty"`
-	Nics      []interface{} `json:"nics,omitempty"`
-	Vdc       string        `json:"vdc"`
-	Boot      string        `json:"boot"`
-	Backup    string        `json:"backup"`
-	DiskImage string        `json:"disk_image"`
+	Name   string        `json:"name"`
+	OS     string        `json:"os"`
+	RAM    int           `json:"ram"`
+	CPU    int           `json:"cpu"`
+	Disks  []interface{} `json:"disks,omitempty"`
+	Nics   []interface{} `json:"nics,omitempty"`
+	Vdc    string        `json:"vdc"`
+	Boot   string        `json:"boot"`
+	Backup string        `json:"backup"`
+	Iso    string        `json:"disk_image"`
 }
 
 // FetchTemplateFromList extracts a template from the received list
 // Known implementation limitation :
 //  * Redmine ticket #35489/#36874
-func (templater TemplateTemplater) FetchTemplateFromList(templateName string,
+func (templater TemplateTemplater) FetchTemplateFromList(templateSlug string,
 	templateList []interface{}) (map[string]interface{}, error) {
 	var (
 		template          map[string]interface{}
@@ -66,10 +66,8 @@ func (templater TemplateTemplater) FetchTemplateFromList(templateName string,
 	for i := 0; i < len(templateList); i++ {
 		switch reflect.TypeOf(templateList[i]).Kind() {
 		case reflect.Map:
-			var (
-				listTemplateName = templateList[i].(map[string]interface{})[NameField].(string)
-			)
-			if listTemplateName == templateName {
+			listTemplateSlug := templateList[i].(map[string]interface{})[SlugField].(string)
+			if listTemplateSlug == templateSlug {
 				template = templateList[i].(map[string]interface{})
 				break
 			}
@@ -82,7 +80,7 @@ func (templater TemplateTemplater) FetchTemplateFromList(templateName string,
 		}
 	}
 	if template == nil && templateListError == nil {
-		templateListError = errors.New("template \"" + templateName +
+		templateListError = errors.New("template \"" + templateSlug +
 			"\" does not exists, please validate it's name")
 	}
 	return template, templateListError
@@ -143,12 +141,12 @@ func (templater TemplateTemplater) updateSchemaFromTemplateOnResourceCreation(d 
 func (templater TemplateTemplater) createVMTemplateOverrideConfig(d *schema.ResourceData,
 	template map[string]interface{}) (string, error) {
 	vm := templateCreatedVMOverride{
-		RAM:       d.Get(RAMField).(int),
-		CPU:       d.Get(CPUField).(int),
-		Vdc:       d.Get(VdcField).(string),
-		Boot:      d.Get(BootField).(string),
-		Backup:    d.Get(BackupField).(string),
-		DiskImage: d.Get(DiskImageField).(string),
+		RAM:    d.Get(RAMField).(int),
+		CPU:    d.Get(CPUField).(int),
+		Vdc:    d.Get(VdcField).(string),
+		Boot:   d.Get(BootField).(string),
+		Backup: d.Get(BackupField).(string),
+		Iso:    d.Get(IsoField).(string),
 	}
 	var (
 		schemaer     SchemaSchemaer
@@ -246,7 +244,7 @@ func updateSchemaFieldOnResourceCreation(d *schema.ResourceData,
 		case templateParamName == IDField:
 		case templateParamName == OsField:
 		case templateParamName == NameField:
-		case templateParamName == DatacenterField:
+		case templateParamName == DataCenterField:
 		case d.Get(templateParamName) == "":
 			d.Set(templateParamName, templateParamValue)
 		default:

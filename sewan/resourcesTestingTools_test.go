@@ -31,10 +31,15 @@ func resourceCRUDTestInit() *clientStruct {
 		config.APIURL,
 		config.Enterprise,
 	)
-	api.Meta = sdk.APIMeta{
-		NonCriticalResourceList: unitTestNonCriticalResourceList,
-		CriticalResourceList:    unitTestCriticalResourceList,
-		OtherResourceList:       unitTestOtherResourceList,
+	api.Meta = &sdk.APIMeta{
+		EnterpriseResourceList: unitTestMetaDataList,
+		DataCenterList:         unitTestMetaDataList,
+		TemplateList:           unitTestMetaDataList,
+		VlanList:               unitTestMetaDataList,
+		SnapshotList:           unitTestMetaDataList,
+		IsoList:                unitTestMetaDataList,
+		OvaList:                unitTestMetaDataList,
+		BackupPlanList:         unitTestMetaDataList,
 	}
 	return &clientStruct{api,
 		clientToolerStruct{
@@ -73,10 +78,15 @@ func resourceTestInit() *clientStruct {
 		config.APIURL,
 		config.Enterprise,
 	)
-	api.Meta = sdk.APIMeta{
-		NonCriticalResourceList: unitTestNonCriticalResourceList,
-		CriticalResourceList:    unitTestCriticalResourceList,
-		OtherResourceList:       unitTestOtherResourceList,
+	api.Meta = &sdk.APIMeta{
+		EnterpriseResourceList: unitTestMetaDataList,
+		DataCenterList:         unitTestMetaDataList,
+		TemplateList:           unitTestMetaDataList,
+		VlanList:               unitTestMetaDataList,
+		SnapshotList:           unitTestMetaDataList,
+		IsoList:                unitTestMetaDataList,
+		OvaList:                unitTestMetaDataList,
+		BackupPlanList:         unitTestMetaDataList,
 	}
 	return &clientStruct{api,
 		clientToolerStruct{

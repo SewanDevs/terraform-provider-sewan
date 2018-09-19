@@ -97,11 +97,11 @@ To consult the list of available templates for your company or create new ones, 
   [...]
   }
   ```
-  **Warning 3 :** No autocheck available to validate the .
+  **Warning 3 :** No auto check available to validate the field value.
 
 * `instance_number` - *(Required, string)* **only one accepted value** : "${count.index + 1}"
 
-  **Warning :** No autocheck available to validate the field value.
+  **Warning :** No auto check available to validate the field value.
 
 * `template` - *(Required, string)* optional field required for creating a vm from a template
 * Arguments handled by the template

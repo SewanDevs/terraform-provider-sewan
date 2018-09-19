@@ -90,9 +90,18 @@ To consult the list of available templates for your company or create new ones, 
 
   **Warning 1 :** Do not put dynamic name or the override configuration file will be inaccurate. As terraform does not provide access to meta resource data such as resource count index, it is not possible to pass "${count.index}" or other dynamic variable in resource name field. It prevents wrong resource name field value in override file. So this information must be passed through a specific field : `instance_number`
 
+  **Warning 2 :** **Name field value must be a duplicate of Terraform resource name field value** :
+  ```hcl
+  resource "sewan_clouddc_vm" "name-fields-that-must-be-identic" {
+    name = "name-fields-that-must-be-identic"
+  [...]
+  }
+  ```
+  **Warning 3 :** No autocheck available to validate the .
+
 * `instance_number` - *(Required, string)* **only one accepted value** : "${count.index + 1}"
 
-  **Warning 2 :** No autocheck available to validate the field value.
+  **Warning :** No autocheck available to validate the field value.
 
 * `template` - *(Required, string)* optional field required for creating a vm from a template
 * Arguments handled by the template

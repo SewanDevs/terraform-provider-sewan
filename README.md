@@ -21,14 +21,15 @@ Requirements
 - [Go](https://golang.org/doc/install) 1.10.x
 - [golint](https://github.com/golang/lint)
 
-Usage
+Usage : [Getting Started Guide](https://github.com/SewanDevs/docker-images/blob/master/terraform-provider-sewan/latest/Getting-Started.md)
 ---------------------
 
-Take a look in [the website folder](https://github.com/SewanDevs/terraform-provider-sewan/blob/github_release/website/docs) to get fully explained examples and documentation :
-- Infrastructure example : [main.tf.example](https://github.com/SewanDevs/terraform-provider-sewan/blob/github_release/main.tf.example)
-- [Global Sewan's provider usage](https://github.com/SewanDevs/terraform-provider-sewan/blob/github_release/website/docs/index.html.markdown)
-- [vm (virtual machine) configuration](https://github.com/SewanDevs/terraform-provider-sewan/blob/github_release/website/docs/r/vm.html.md)
-- [vdc (virtual data center) configuration](https://github.com/SewanDevs/terraform-provider-sewan/blob/github_release/website/docs/r/vdc.html.md)
+- [The website folder](https://github.com/SewanDevs/terraform-provider-sewan/blob/github_release/website/docs) contains fully explained examples and documentation :
+  - [Global Sewan's provider usage](https://github.com/SewanDevs/terraform-provider-sewan/blob/github_release/website/docs/index.html.markdown)
+  - [vm (virtual machine) configuration](https://github.com/SewanDevs/terraform-provider-sewan/blob/github_release/website/docs/r/vm.html.md)
+  - [vdc (virtual data center) configuration](https://github.com/SewanDevs/terraform-provider-sewan/blob/github_release/website/docs/r/vdc.html.md)
+- [Terraform guide](https://www.terraform.io/intro/getting-started/install.html) contains general terraform usage documentation:
+- [Getting Started Guide](https://github.com/SewanDevs/docker-images/blob/master/terraform-provider-sewan/latest/Getting-Started.md) can be used from a docker image or from any environment, after following the build instructions.
 
 Use the docker image for Sewan's plugin
 ---------------------------
@@ -37,7 +38,7 @@ Use the docker image for Sewan's plugin
 docker pull sewan/terraform-provider-sewan
 ```
 
-[Docker image description and source](https://hub.docker.com/r/sewan/terraform-provider-sewan/)
+[Docker image description and source](https://hub.docker.com/r/sewan/terraform-provider-sewan/), it contains a running environment containing terraform and current plugin, plus an example infrastructure configuration file.
 
 
 Building The Provider

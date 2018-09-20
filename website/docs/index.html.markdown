@@ -16,12 +16,19 @@ Use the navigation to the left to read about the available data sources, pay att
 
 Contact the support.
 
+## Provider arguments Reference
+
+* `api_url` - *(Required, string)* clouddc's url
+* `api_token` - *(Required, string)* session token
+* `enterprise` - *(Required, string)* your enterprise name available in the
+clouddc's url after login : "cloud-datacenter.fr/fr/enterprise/<enterprise name>/dashboard"
+
 ## Example Usage
 
 ```hcl
 provider "sewan" {
   api_token = "your-company token"
-  apiURL = "https://cloud-datacenter.fr/api/clouddc/"
+  api_url = "https://cloud-datacenter.fr/api/clouddc/"
   enterprise = "your enterprise account's name"
 }
 

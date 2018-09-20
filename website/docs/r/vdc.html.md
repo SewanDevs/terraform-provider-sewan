@@ -50,7 +50,7 @@ resource "sewan_clouddc_vdc" "vdc-example" {
 The following vdc creation arguments are supported :
 
 * `name` - (Required, string) vdc name
-* `datacenter` - (Required, string) name of the datacenter
+* `datacenter` - (Required, string) name of the datacenter (accepted values : "dc1", "dc2", "ha")
 * `vdc_resources` - (Required, list of maps) resources allocated to the vdc, minimum of 1 is required
   * `resource` - (Required, string) resource name (accepted resources for storage "storage_enterprise", "storage_performance", "storage_high_performance"), other resources : "ram" & "cpu"
   * `total` - (Required, int) size of the resource (GiB for RAM or storage class, number for CPU etc.)

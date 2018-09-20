@@ -133,9 +133,10 @@ func (templater TemplateTemplater) updateSchemaFromTemplateOnResourceCreation(d 
 	return nil
 }
 
-// Creation of a json override configuration file with additional vm resource
-// fields fetch from template. An override file is created because it is
-// not possible not wanted to modify initial configuration file.
+// createVMTemplateOverrideConfig creates a json override configuration file.
+// It adds additional vm resource fields fetch from template.
+// An override file is created because it is not possible and not wanted
+// to modify initial configuration file.
 // Warning : The override file must be manually deleted after a deletion of all
 // resource created from the template.
 func (templater TemplateTemplater) createVMTemplateOverrideConfig(d *schema.ResourceData,

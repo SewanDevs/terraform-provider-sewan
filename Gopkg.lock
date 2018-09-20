@@ -2,12 +2,12 @@
 
 
 [[projects]]
-  digest = "1:603a996fdc125974731926e29a085414399ba60321fd8cdce13ebfa87d1b9e22"
+  digest = "1:157834feccf30ca4159854e35339e02c09eae16dbc2bcfcd2ac329236ff19c2a"
   name = "github.com/SewanDevs/sewan-sdk-go"
   packages = ["."]
   pruneopts = "UT"
-  revision = "884efccae5321a73b2fa323415869ad58b3a428f"
-  version = "v0.1.4"
+  revision = "1ab766c03d1d8b8079a3e73dbc5c821662c9186f"
+  version = "v0.1.5"
 
 [[projects]]
   digest = "1:dc2ba13235a4c8f80a40599575a3f10acb4736cb372f1a68b88333c06564471d"
@@ -42,7 +42,7 @@
   version = "v1.0.0"
 
 [[projects]]
-  digest = "1:8fbc2e1f7d74b6a75816f6c9d397c5b5ad150f2f1123d1708c3a21c07c34ff7e"
+  digest = "1:37a08bd5c559ae4b943fba698f2063857aae06f87a6e56c7bc5cfaff39433ca5"
   name = "github.com/aws/aws-sdk-go"
   packages = [
     "aws",
@@ -78,8 +78,8 @@
     "service/sts",
   ]
   pruneopts = "UT"
-  revision = "34699de98eac41fa94737f6ce7b83d7a621c2634"
-  version = "v1.15.36"
+  revision = "949f7800d745d1df9af349380e5deec8de206144"
+  version = "v1.15.38"
 
 [[projects]]
   branch = "master"
@@ -483,11 +483,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:6eb2645d74b43d9c87b51947df39f7c668a4f422cd512053f7f6f75bfaad0197"
+  digest = "1:5744d700238812de2aa1eb87c16ed4018df60b15d141179557b68c5703eb8283"
   name = "golang.org/x/sys"
   packages = ["unix"]
   pruneopts = "UT"
-  revision = "d0be0721c37eeb5299f245a996a483160fc36940"
+  revision = "d641721ec2dead6fe5ca284096fe4b1fcd49e427"
 
 [[projects]]
   digest = "1:a2ab62866c75542dd18d2b069fec854577a20211d7c0ea6ae746072a1dccdd18"
@@ -514,11 +514,11 @@
 
 [[projects]]
   branch = "master"
-  digest = "1:4b89f7cb4fa89ee4b8ec3fff8e91105e7f1fee84761edcb063a738e376c53357"
+  digest = "1:56b0bca90b7e5d1facf5fbdacba23e4e0ce069d25381b8e2f70ef1e7ebfb9c1a"
   name = "google.golang.org/genproto"
   packages = ["googleapis/rpc/status"]
   pruneopts = "UT"
-  revision = "4b56f30a1fd96a133a036b62cdd2a249883dd89b"
+  revision = "c3f76f3b92d1ffa4c58a9ff842a58b8877655e0f"
 
 [[projects]]
   digest = "1:1b6d2676ea895d33cbd1999c75dfc8e25b103c754ccfc66dc06ae845ce3a47bc"
